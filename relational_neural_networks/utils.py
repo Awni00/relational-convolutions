@@ -3,14 +3,19 @@ import sklearn.metrics
 import numpy as np
 
 
-def plot_confusion_matrices(y_test, test_pred):
+def plot_confusion_matrices(y, pred):
     '''plot confusion matrices with each choice of normalization'''
+
+    if len(np.shape(pred))==2:
+        pred = pred[:, 1]
+    if len(np.shape(y))==2:
+        y = y[:,1]
 
     fig, axs = plt.subplots(figsize=(18,3.5), ncols=4)
 
     for ax, normalize in zip(axs, ('true', 'pred', 'all', None)):
 
-        cm = sklearn.metrics.confusion_matrix(y_test, test_pred, normalize=normalize)
+        cm = sklearn.metrics.confusion_matrix(y, pred, normalize=normalize)
         sklearn.metrics.ConfusionMatrixDisplay(cm, display_labels=('non-set', 'set')).plot(ax=ax);
         ax.set_title(f'Normalization: {normalize}');
 
@@ -41,7 +46,10 @@ def plot_history(history, plot_attrs, val=True, **plt_kwargs):
 def plot_roc_pr_curves(pred_probas, y, **kwargs):
     '''create subplots fig for ROC and PR curves'''
 
-    pred = pred_probas[:, 1]
+    if len(np.shape(pred))==2:
+        pred = pred_probas[:, 1]
+    if len(np.shape(y))==2:
+        y = y[:,1]
 
     subplot_kwargs = {'figsize': (8,3)}
     subplot_kwargs.update(kwargs)
@@ -51,5 +59,10 @@ def plot_roc_pr_curves(pred_probas, y, **kwargs):
     return fig
 
 def print_classification_report(model, X, y, **kwargs):
+
+    if len(np.shape(y))==2:
+        y = y[:,1]
+
     pred = np.argmax(model(X), axis=1)
+
     print(sklearn.metrics.classification_report(y, pred, **kwargs))
