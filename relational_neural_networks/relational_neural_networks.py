@@ -1,5 +1,9 @@
 import tensorflow as tf
 
+import numpy as np
+
+import itertools
+
 
 class RelationalLayer(tf.keras.layers.Layer):
     """
@@ -131,7 +135,7 @@ class LinearProjectionEncoder(tf.keras.layers.Layer):
         # define learnable projection vector
         self.proj_vec = tf.Variable(
             initial_value=w_init(shape=(self.in_dim,)),
-            trainable=True)
+            trainable=True, name='proj_vec')
 
     def call(self, inputs):
 
@@ -197,3 +201,120 @@ class MLPEncoder(tf.keras.layers.Layer):
 
         return x
 
+# TODO: test this. make sure its doing what it's supposed to.
+# can implementation be made more efficient? (single call to tensordot without stacking possible?)
+class GroupLayer(tf.keras.layers.Layer):
+    """
+    Grouping layer in relational neural network framework.
+    """
+
+    def __init__(self, num_groups, name=None):
+        """
+        create GroupLayer.
+
+        Given a relation tensor as input, GroupLayer groups entities and
+        produces feature vectors for each group which describes the relations within it.
+
+        Parameters
+        ----------
+        num_groups : int
+            number of groups.
+        name : str, optional
+            name of layer, by default None
+        """
+
+        super().__init__(name=name)
+        self.num_groups = num_groups
+
+    def build(self, input_shape):
+
+        batch_size, self.n_entities, _, self.rel_dim = input_shape
+
+        w_init = tf.random_normal_initializer() # group logits intializer
+
+        # define learnable group logits
+        self.group_logits = [
+            tf.Variable(
+                initial_value=w_init(shape=(self.n_entities,1)),
+                trainable=True,
+                name=f'group_{k}_logit')
+            for k in range(self.num_groups)
+            ]
+
+        self.out_shape = (batch_size, self.num_groups, self.rel_dim)
+
+
+    def call(self, inputs):
+
+        zs = []
+        for k in range(self.num_groups):
+            # normalized group membership logits
+            alpha_k = tf.nn.softmax(self.group_logits[k])
+
+            z_k = sum(
+                alpha_k[i]*alpha_k[j]*inputs[:, i, j] for i, j in
+                itertools.product(range(self.n_entities), repeat=2))
+
+            ## alternative implementation below
+            ## (prelim tests show the two methods are about the same speed)
+            # grouped_rels = [
+            #   tf.matmul(tf.matmul(tf.transpose(alpha_k), inputs[:, :, :, i]), alpha_k)
+            #   for i in range(self.rel_dim)]
+            # grouped_rels = tf.stack(grouped_rels, axis=-1)
+            # z_k = tf.squeeze(grouped_rels)
+
+            zs.append(z_k)
+
+
+        zs = tf.stack(zs, axis=1)
+
+        zs.set_shape(self.out_shape)
+
+
+        return zs
+
+class FlattenTriangular(tf.keras.layers.Layer):
+    """
+    Triangular Flatten Layer.
+    """
+    def __init__(self, include_diag=True, name=None):
+        """
+        Create FlattenTriangular layer.
+
+        Extracts triangle from [None, n_e, n_e, d_r] tensor as a flattened vector.
+        Useful for tensors which are symmetric in the first two axes.
+
+        Parameters
+        ----------
+        include_diag : bool, optional
+            Whether to include the diagonal in flattened vector, by default True
+        name : str, optional
+            name of layer, by default None
+        """
+
+        super().__init__(name=name)
+        self.flatten = tf.keras.layers.Flatten()
+        self.include_diag = include_diag
+
+    def build(self, input_shape):
+        batch_dim, n_e, _, d_r = input_shape
+
+        if n_e != _:
+            raise ValueError('Input is not a square relation tensor')
+
+        # create mask for extracting triangle
+        if self.include_diag:
+            self.mask = tf.convert_to_tensor(np.tril(np.ones(shape=(n_e,n_e)), k=0), dtype=bool)
+        else:
+            self.mask = tf.convert_to_tensor(np.tril(np.ones(shape=(n_e, n_e)), k=-1), dtype=bool)
+
+        self.out_dim = np.sum(self.mask.numpy()) * d_r
+        self.out_shape = (batch_dim, self.out_dim)
+
+
+    def call(self, inputs):
+        triangle = tf.boolean_mask(inputs, self.mask, axis=1) # get triangle for each d_r dim
+        flattened_vec = self.flatten(triangle) # flatten d_r vecs into single
+        flattened_vec.set_shape(self.out_shape) # set shape so tensorflow can do its thing
+
+        return flattened_vec
