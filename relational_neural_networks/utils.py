@@ -46,7 +46,7 @@ def plot_history(history, plot_attrs, val=True, **plt_kwargs):
 def plot_roc_pr_curves(pred_probas, y, **kwargs):
     '''create subplots fig for ROC and PR curves'''
 
-    if len(np.shape(pred))==2:
+    if len(np.shape(pred_probas))==2:
         pred = pred_probas[:, 1]
     if len(np.shape(y))==2:
         y = y[:,1]
