@@ -203,6 +203,9 @@ class MLPEncoder(tf.keras.layers.Layer):
 
 # TODO: test this. make sure its doing what it's supposed to.
 # can implementation be made more efficient? (single call to tensordot without stacking possible?)
+# TODO: consider adding option to exclude (i, i) from grouped relation vector
+# TODO: add different options for normalization in computing alpha_k from group_logits?
+# (e.g.: softmax, no normalization, divide by L1 norm, etc.)
 class GroupLayer(tf.keras.layers.Layer):
     """
     Grouping layer in relational neural network framework.
@@ -249,7 +252,7 @@ class GroupLayer(tf.keras.layers.Layer):
         zs = []
         for k in range(self.num_groups):
             # normalized group membership logits
-            alpha_k = tf.nn.softmax(self.group_logits[k])
+            alpha_k = tf.nn.softmax(self.group_logits[k], axis=0)
 
             z_k = sum(
                 alpha_k[i]*alpha_k[j]*inputs[:, i, j] for i, j in
