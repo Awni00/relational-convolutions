@@ -148,6 +148,9 @@ class LinearProjectionEncoder(tf.keras.layers.Layer):
 
         return projected_inputs
 
+    def get_config(self):
+        return super(LinearProjectionEncoder, self).get_config()
+
 
 class MLPEncoder(tf.keras.layers.Layer):
     """
@@ -200,6 +203,14 @@ class MLPEncoder(tf.keras.layers.Layer):
             x = layer(x)
 
         return x
+
+    def get_config(self):
+        config = super(MLPEncoder, self).get_config()
+        config.update(
+            {'layer_sizes': self.layer_sizes,
+            'activation': self.activation})
+
+        return config
 
 # TODO: test this. make sure its doing what it's supposed to.
 # can implementation be made more efficient? (single call to tensordot without stacking possible?)
@@ -276,6 +287,13 @@ class GroupLayer(tf.keras.layers.Layer):
 
         return zs
 
+    def get_config(self):
+        config = super(GroupLayer, self).get_config()
+        config.update({'num_groups': self.num_groups})
+
+        return config
+
+
 class FlattenTriangular(tf.keras.layers.Layer):
     """
     Triangular Flatten Layer.
@@ -321,3 +339,9 @@ class FlattenTriangular(tf.keras.layers.Layer):
         flattened_vec.set_shape(self.out_shape) # set shape so tensorflow can do its thing
 
         return flattened_vec
+
+    def get_config(self):
+        config = super(FlattenTriangular, self).get_config()
+        config.update({'include_diag': self.include_diag})
+
+        return config
