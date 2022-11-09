@@ -3,6 +3,25 @@ import sklearn.metrics
 import numpy as np
 
 
+def train_val_test_split(X, y, test_size, val_size):
+    train_idx, test_idx = sklearn.model_selection.train_test_split(range(len(y)), test_size=test_size, stratify=y)
+
+    X_test = np.array([X[i] for i in test_idx])
+    y_test = np.array([y[i] for i in test_idx])
+
+    y_train = [y[i] for i in train_idx]
+
+    train_idx, val_idx = sklearn.model_selection.train_test_split(train_idx, test_size=val_size/(1-test_size), stratify=y_train)
+
+    X_train = np.array([X[i] for i in train_idx])
+    y_train = np.array([y[i] for i in train_idx])
+    X_val = np.array([X[i] for i in val_idx])
+    y_val = np.array([y[i] for i in val_idx])
+
+
+    return X_train, y_train, X_val, y_val, X_test, y_test
+
+
 def plot_confusion_matrices(y, pred):
     '''plot confusion matrices with each choice of normalization'''
 
