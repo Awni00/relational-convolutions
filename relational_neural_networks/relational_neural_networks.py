@@ -3,6 +3,8 @@ import tensorflow as tf
 import numpy as np
 
 import itertools
+import copy
+
 
 
 class RelationalLayer(tf.keras.layers.Layer):
@@ -13,25 +15,26 @@ class RelationalLayer(tf.keras.layers.Layer):
     across attributes given by a set of encoders.
     """
 
-    def __init__(self, attribute_encoder_constructors, name=None):
+    def __init__(self, encoder_layers, name=None):
         """
         create RelationalLayer
 
         Parameters
         ----------
-        attribute_encoder_constructors : List[callable]
-            list of constructors for encoder layers
+        encoder_layers : List[tf.keras.layers.Layer]
+            list of encoder layers
         name : str, optional
             name of layer, by default None
         """
 
         super().__init__(name=name)
-        self.attr_enc_constructors = attribute_encoder_constructors
+
+        self.encoder_layers = encoder_layers
 
         # construct encoders
         self.entity_encoders = [
-            EntityEncoder(attr_enc_constructor, name=f'attr_{i}_entity_encoder')
-            for i, attr_enc_constructor in enumerate(self.attr_enc_constructors)
+            tf.keras.layers.TimeDistributed(attr_enc, name=f'attr_{i}_entity_encoder')
+            for i, attr_enc in enumerate(encoder_layers)
             ]
 
         # relational inner product layer
@@ -55,12 +58,26 @@ class RelationalLayer(tf.keras.layers.Layer):
 
         return relation_tensor
 
+    def get_config(self):
+        config = {"encoder_layers": [tf.keras.layers.serialize(encoder_layer) for encoder_layer in self.encoder_layers]}
+        base_config = super().get_config()
+        return dict(list(base_config.items()) + list(config.items()))
+
+    @classmethod
+    def from_config(cls, config, custom_objects=None):
+
+        # Avoid mutating the input dict
+        config = copy.deepcopy(config)
+        encoder_layers = [tf.keras.layers.deserialize(encoder_layer, custom_objects=custom_objects)
+                          for encoder_layer in config.pop("encoder_layers")]
+        return cls(encoder_layers, **config)
+
 
 class RelInnerProduct(tf.keras.layers.Layer):
     """
     Relational Inner Product Layer.
 
-    computes the pairwise inner product similarities between the feature vectors
+    Computes the pairwise inner product similarities between the feature vectors
     of a sequence of entities.
     """
 
@@ -78,34 +95,6 @@ class RelInnerProduct(tf.keras.layers.Layer):
 
     def call(self, inputs):
         return tf.matmul(inputs, tf.transpose(inputs, perm=(0,2,1)))
-
-
-class EntityEncoder(tf.keras.layers.Layer):
-    """
-    Entity Encoder Layer
-
-    transforms the feature vector representation of each entity in a sequence
-    using a given encoder.
-    """
-
-    def __init__(self, encoder_constructor, name=None):
-        """
-        create EntityEncoder layer
-
-        Parameters
-        ----------
-        encoder_constructor : callable
-            function which creates the encoder layer
-        name : str, optional
-            name of layer, by default None
-        """
-
-        super().__init__(name=name)
-        self.encoder = encoder_constructor()
-
-    def call(self, inputs):
-        return tf.map_fn(self.encoder, inputs)
-
 
 
 class LinearProjectionEncoder(tf.keras.layers.Layer):
@@ -296,7 +285,7 @@ class GroupLayer(tf.keras.layers.Layer):
 
 class FlattenTriangular(tf.keras.layers.Layer):
     """
-    Triangular Flatten Layer.
+    Triangular Flattening Layer.
     """
     def __init__(self, include_diag=True, name=None):
         """
