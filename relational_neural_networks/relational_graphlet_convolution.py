@@ -6,8 +6,8 @@ class RelationalGraphletConvolution(tf.keras.layers.Layer):
     def __init__(
             self,
             n_filters,
-            kernel_size,
-            sym_inner_prod=False,
+            graphlet_size,
+            symmetric_inner_prod=False,
             groups_type='permutations',
             permutation_aggregator='mean',
             filter_initializer='random_normal',
@@ -22,14 +22,14 @@ class RelationalGraphletConvolution(tf.keras.layers.Layer):
         ----------
         n_filters : int
             number of graphlet filters.
-        kernel_size : int
-            size of kernel.
-        sym_inner_prod : bool, optional
+        graphlet_size : int
+            size of graphlet.
+        symmetric_inner_prod : bool, optional
             whether to use symmetric version of relational inner product, by default False.
         groups_type : str, optional
-            whether groups should be permutations or combinations of size kernel_size, by default 'permutations'.
+            whether groups should be permutations or combinations of size graphlet_size, by default 'permutations'.
         permutation_aggregator: 'mean', 'max', or 'maxabs', optional
-            how to aggregate over permutations of the groups. used when sym_inner_prod is True, by default 'mean'.
+            how to aggregate over permutations of the groups. used when symmetric_inner_prod is True, by default 'mean'.
         filter_initializer : str, optional
             initializer for graphlet filters, by default 'random_normal'.
         **kwargs
@@ -39,13 +39,13 @@ class RelationalGraphletConvolution(tf.keras.layers.Layer):
         super(RelationalGraphletConvolution, self).__init__(**kwargs)
 
         self.n_filters = n_filters
-        self.kernel_size = kernel_size
-        self.sym_inner_prod = sym_inner_prod
+        self.graphlet_size = graphlet_size
+        self.symmetric_inner_prod = symmetric_inner_prod
         self.groups_type = groups_type
         self.filter_initializer = filter_initializer
 
-        if self.sym_inner_prod:
-            self.group_permutations = list(itertools.permutations(range(self.kernel_size)))
+        if self.symmetric_inner_prod:
+            self.group_permutations = list(itertools.permutations(range(self.graphlet_size)))
             # print(f'group_permutations: {self.group_permutations}')
 
             # TODO: are there any other useful aggregation functions we should consider?
@@ -64,14 +64,14 @@ class RelationalGraphletConvolution(tf.keras.layers.Layer):
         _, self.n_objects, _, self.rel_dim = input_shape
 
         self.filters_init = tf.keras.initializers.GlorotNormal()
-        self.filters = self.add_weight(shape=(self.n_filters, self.kernel_size, self.kernel_size, self.rel_dim),
+        self.filters = self.add_weight(shape=(self.n_filters, self.graphlet_size, self.graphlet_size, self.rel_dim),
             initializer=self.filter_initializer, trainable=True)
         # print(f'filter.shape: {self.filters.shape}')
 
         if self.groups_type == 'permutations':
-            self.object_groups = list(itertools.permutations(range(self.n_objects), self.kernel_size))
+            self.object_groups = list(itertools.permutations(range(self.n_objects), self.graphlet_size))
         elif self.groups_type == 'combinations':
-            self.object_groups = list(itertools.combinations(range(self.n_objects), self.kernel_size))
+            self.object_groups = list(itertools.combinations(range(self.n_objects), self.graphlet_size))
         else:
             raise ValueError(f'groups_type must be permutations or combinations, not {self.groups_type}')
 
@@ -81,7 +81,7 @@ class RelationalGraphletConvolution(tf.keras.layers.Layer):
 
     @tf.function
     def rel_inner_prod(self, R_g, filters):
-        if not self.sym_inner_prod:
+        if not self.symmetric_inner_prod:
             return rel_inner_prod_filters(R_g, filters)
         else:
             permutation_rel_inner_prods = tf.stack(
@@ -95,26 +95,38 @@ class RelationalGraphletConvolution(tf.keras.layers.Layer):
             return agg_perm_rel_inner_prods
 
     def call(self, inputs):
-        # inputs: (batch_size, n_objects, n_objects, rel_dim)
+        """
+        computes relational convolution between inputs and graphlet filters.
+
+        Parameters
+        ----------
+        inputs : tf.Tensor
+            relation tensor of shape (batch_size, n_objects, n_objects, rel_dim).
+
+        Returns
+        -------
+        tf.Tensor
+            result of relational convolution of shape (batch_size, n_groups, n_filters)
+        """
 
         # get sub-relations
         sub_rel_tensors = tf.stack([get_sub_rel_tensor(inputs, group_indices) for group_indices in self.object_groups], axis=0)
-        # sub_rel_tensors: (n_groups, batch_size, kernel_size, kernel_size, rel_dim)
+        # sub_rel_tensors: (n_groups, batch_size, graphlet_size, graphlet_size, rel_dim)
         # print(f'sub_rel_tensors.shape: {sub_rel_tensors.shape}')
 
         # compute relational inner product
-        rel_inner_prods = tf.stack([self.rel_inner_prod(sub_rel_tensors[i], self.filters) for i in range(self.n_groups)], axis=1)
-        # rel_inner_prods: (batch_size, n_groups, n_filters)
-        # print(f'rel_inner_prods.shape: {rel_inner_prods.shape}')
+        rel_convolution = tf.stack([self.rel_inner_prod(sub_rel_tensors[i], self.filters) for i in range(self.n_groups)], axis=1)
+        # rel_convolution: (batch_size, n_groups, n_filters)
+        # print(f'rel_convolution.shape: {rel_convolution.shape}')
 
-        return rel_inner_prods
+        return rel_convolution
 
     def get_config(self):
         config = super(RelationalGraphletConvolution, self).get_config()
         config.update({
             'n_filters': self.n_filters,
-            'kernel_size': self.kernel_size,
-            'sym_inner_prod': self.sym_inner_prod,
+            'graphlet_size': self.graphlet_size,
+            'symmetric_inner_prod': self.symmetric_inner_prod,
             'groups_type': self.groups_type,
             'filter_initializer': self.filter_initializer,
         })
