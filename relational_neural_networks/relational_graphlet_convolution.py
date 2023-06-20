@@ -94,7 +94,7 @@ class RelationalGraphletConvolution(tf.keras.layers.Layer):
             # print(f'agg_perm_rel_inner_prods.shape: {agg_perm_rel_inner_prods.shape}')
             return agg_perm_rel_inner_prods
 
-    def call(self, inputs):
+    def call(self, inputs, groups=None):
         """
         computes relational convolution between inputs and graphlet filters.
 
@@ -102,6 +102,9 @@ class RelationalGraphletConvolution(tf.keras.layers.Layer):
         ----------
         inputs : tf.Tensor
             relation tensor of shape (batch_size, n_objects, n_objects, rel_dim).
+        groups: tf.Tensor, optional
+            tensor assigning weights to each object in each group,
+            of shape (n_groups, n_objects) or (batch_size, n_groups, n_objects).
 
         Returns
         -------
@@ -118,6 +121,31 @@ class RelationalGraphletConvolution(tf.keras.layers.Layer):
         rel_convolution = tf.stack([self.rel_inner_prod(sub_rel_tensors[i], self.filters) for i in range(self.n_groups)], axis=1)
         # rel_convolution: (batch_size, n_groups, n_filters)
         # print(f'rel_convolution.shape: {rel_convolution.shape}')
+
+
+        # if group logits are given, group the relational convolution output according to it
+        if groups is not None:
+            groups = tf.nn.softplus(groups) # apply softplus to ensure positive weights
+
+            # gather weight attached to each object in group
+            group_object_weights = tf.gather(tf.nn.softplus(groups), rel_graphlet_conv.object_groups, axis=-1)
+            # group_weights: ([batch_size,] n_groups, graphlet_size)
+            group_weights = tf.reduce_prod(group_object_weights, axis=-1)
+            # group_weights: ([batch_size,] n_groups, n_graphlets)
+
+            beta = 1 # TODO: decide whether to make this a hyperparameter/learnable parameter
+            normalized_group_weights = tf.nn.softmax(beta*group_weights, axis=-1)
+            # normalized_group_weights: ([batch_size,] n_groups, n_graphlets)
+
+            if len(tf.shape(groups)) == 2:
+                # y_bgr = sum_n alpha_gn x_bnr
+                rel_convolution = tf.einsum('bnr,gn->bgr', rel_convolution, normalized_group_weights)
+            elif len(tf.shape(groups)) == 3:
+                # y_bgr = sum_n alpha_bgn x_bnr
+                rel_convolution = tf.einsum('bnr,bgn->bgr', rel_convolution, normalized_group_weights)
+            else:
+                raise ValueError(f'groups must have shape (n_groups, n_objects) or (batch_size, n_groups, n_objects), not {tf.shape(groups)}')
+            # rel_convolutions: (batch_size, n_groups, n_filters)
 
         return rel_convolution
 
