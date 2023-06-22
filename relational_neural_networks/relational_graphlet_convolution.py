@@ -63,7 +63,6 @@ class RelationalGraphletConvolution(tf.keras.layers.Layer):
         # print(f'input_shape: {input_shape}')
         _, self.n_objects, _, self.rel_dim = input_shape
 
-        self.filters_init = tf.keras.initializers.GlorotNormal()
         self.filters = self.add_weight(shape=(self.n_filters, self.graphlet_size, self.graphlet_size, self.rel_dim),
             initializer=self.filter_initializer, trainable=True)
         # print(f'filter.shape: {self.filters.shape}')
