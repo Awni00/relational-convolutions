@@ -2,6 +2,10 @@ import tensorflow as tf
 import tensorflow_models as tfm
 from cnn_embedder import CNNEmbedder
 
+import sys; sys.path.append('..'); sys.path.append('../..')
+from relational_neural_networks.multi_head_relation import MultiHeadRelation
+from relational_neural_networks.relational_graphlet_convolution import RelationalGraphletConvolution
+
 
 # RelConvNet
 mhr_kwargs = dict(rel_dim=4, proj_dim=4, symmetric=True)
