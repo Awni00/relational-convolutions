@@ -1,5 +1,6 @@
 import matplotlib.pyplot as plt
 import sklearn.metrics
+import sklearn.model_selection
 import numpy as np
 
 
@@ -21,6 +22,22 @@ def train_val_test_split(X, y, test_size, val_size):
 
     return X_train, y_train, X_val, y_val, X_test, y_test
 
+def split_ds(ds, val_size, test_size):
+    n_train = int(len(ds) * (1 - val_size - test_size))
+    n_val = int(len(ds) * (val_size))
+    n_test = int(len(ds) * test_size)
+
+    ds = ds.shuffle(buffer_size=len(ds))
+
+    train_ds = ds.take(n_train)    
+    val_ds = ds.skip(n_train).take(n_val)
+    test_ds = ds.skip(n_train).skip(n_val)
+
+    assert(len(train_ds)==n_train)
+    assert(len(val_ds)==n_val)
+    assert(len(test_ds)==n_test)
+
+    return train_ds, val_ds, test_ds
 
 def plot_confusion_matrices(y, pred):
     '''plot confusion matrices with each choice of normalization'''
@@ -85,3 +102,44 @@ def print_classification_report(model, X, y, **kwargs):
     pred = np.argmax(model(X), axis=1)
 
     print(sklearn.metrics.classification_report(y, pred, **kwargs))
+
+def print_section(section_title):
+    print('\n')
+    print('='*60)
+    print(section_title)
+    print('='*60)
+    print('\n')
+
+def get_wandb_project_table(project_name, entity='Awni00', attr_cols=('group', 'name'), config_cols='all', summary_cols='all'):
+    import wandb
+    import pandas as pd
+
+    api = wandb.Api()
+
+    runs = api.runs(entity + "/" + project_name)
+
+    if summary_cols == 'all':
+        summary_cols = set().union(*tuple(run.summary.keys() for run in runs))
+
+    if config_cols == 'all':
+        config_cols = set().union(*tuple(run.config.keys() for run in runs))
+
+    all_cols = list(attr_cols) + list(summary_cols) + list(config_cols)
+    if len(all_cols) > len(set(all_cols)):
+        raise ValueError("There is overlap in the `config_cols`, `attr_cols`, and `summary_cols`")
+
+    data = {key: [] for key in all_cols}
+
+    for run in runs:
+        for summary_col in summary_cols:
+            data[summary_col].append(run.summary.get(summary_col, None))
+
+        for config_col in config_cols:
+            data[config_col].append(run.config.get(config_col, None))
+
+        for attr_col in attr_cols:
+            data[attr_col].append(getattr(run, attr_col, None))
+
+    runs_df = pd.DataFrame(data)
+
+    return runs_df
