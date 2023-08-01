@@ -58,7 +58,7 @@ filename = f'{data_path}/1task_between_stripes.npz'
 # task_datasets = data_utils.load_task_datasets(args.task, data_path)
 
 # train_split_ds = task_datasets[args.train_split]
-train_split_ds = data_utils.load_ds(filename)
+train_split_ds = data_utils.load_ds_from_npz(filename)
 
 train_ds, val_ds, test_ds = utils.split_ds(train_split_ds, val_size=0.1, test_size=0.2)
 del train_split_ds
@@ -77,13 +77,14 @@ metrics = [
         tf.keras.metrics.BinaryAccuracy(name='acc'),
         tf.keras.metrics.Precision(class_id=1, name='precision'),
         tf.keras.metrics.Recall(class_id=1, name='recall'),
+        tf.keras.metrics.F1Score(average='weighted', name='f1'),
         tf.keras.metrics.AUC(curve='ROC', multi_label=True, name='auc')
         ]
 
 def create_callbacks(data_size=None, batch_size=None):
     callbacks = [
-        wandb.keras.WandbMetricsLogger(log_freq='epoch'),
-        TqdmCallback(data_size=data_size, batch_size=batch_size)
+        # TqdmCallback(data_size=data_size, batch_size=batch_size),
+        wandb.keras.WandbMetricsLogger(log_freq='epoch')
     ]
 
     if args.early_stopping:
