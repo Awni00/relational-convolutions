@@ -42,13 +42,13 @@ def load_ds_from_tfrecord(tfrecord_filename, x_shape, y_shape, ds_len):
             'y': tf.io.FixedLenFeature([], tf.string)
         }
         example = tf.io.parse_single_example(example_proto, feature_description)
-        
+
         x = tf.io.parse_tensor(example['x'], out_type=tf.float64)
         x = tf.ensure_shape(x, x_shape) # set shape after parsing
-        
+
         y = tf.io.parse_tensor(example['y'], out_type=tf.float32)
         y = tf.ensure_shape(y, y_shape) # set shape after parsing
-        
+
         return x, y
 
     dataset = tf.data.TFRecordDataset(tfrecord_filename)
@@ -84,7 +84,7 @@ def load_task_datasets(task, data_dir, data_format='tfrecord'):
         file_prefix = '1task_match_patt'
     else:
         raise ValueError(f'invalid task {task}')
-    
+
     if data_format=='npz':
         task_datasets = {split: load_ds_from_npz(f'{data_dir}/{file_prefix}_{split}.npz') for split in ('stripes', 'pentos', 'hexos')}
     elif data_format == 'tfrecord':
