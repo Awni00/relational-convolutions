@@ -35,24 +35,27 @@ def load_ds_from_npz(filename):
 
     return ds
 
-def load_ds_from_tfrecord(tfrecord_filename):
+def load_ds_from_tfrecord(tfrecord_filename, x_shape, y_shape, ds_len):
     def parse_example(example_proto):
         feature_description = {
             'x': tf.io.FixedLenFeature([], tf.string),
             'y': tf.io.FixedLenFeature([], tf.string)
         }
         example = tf.io.parse_single_example(example_proto, feature_description)
+        
         x = tf.io.parse_tensor(example['x'], out_type=tf.float64)
+        x = tf.ensure_shape(x, x_shape) # set shape after parsing
+        
         y = tf.io.parse_tensor(example['y'], out_type=tf.float32)
+        y = tf.ensure_shape(y, y_shape) # set shape after parsing
+        
         return x, y
 
     dataset = tf.data.TFRecordDataset(tfrecord_filename)
     dataset = dataset.map(parse_example)
-    return dataset
+    dataset = dataset.apply(tf.data.experimental.assert_cardinality(ds_len)) # set cardinality
 
-def get_shape_from_ds(ds):
-    x, y = dataset.take(1).__iter__().next()
-    return x.shape, y.shape
+    return dataset
 
 def write_ds_to_tfrecord(dataset, rfrecord_filename):
     with tf.io.TFRecordWriter(rfrecord_filename) as writer:
