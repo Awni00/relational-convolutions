@@ -35,7 +35,7 @@ def load_ds_from_npz(filename):
 
     return ds
 
-def load_ds_from_tfrecord(tfrecord_filename, x_shape, y_shape, ds_len):
+def load_ds_from_tfrecord(tfrecord_filename, x_shape, y_shape, ds_card):
     def parse_example(example_proto):
         feature_description = {
             'x': tf.io.FixedLenFeature([], tf.string),
@@ -53,7 +53,7 @@ def load_ds_from_tfrecord(tfrecord_filename, x_shape, y_shape, ds_len):
 
     dataset = tf.data.TFRecordDataset(tfrecord_filename)
     dataset = dataset.map(parse_example)
-    dataset = dataset.apply(tf.data.experimental.assert_cardinality(ds_len)) # set cardinality
+    dataset = dataset.apply(tf.data.experimental.assert_cardinality(ds_card)) # set cardinality
 
     return dataset
 
@@ -77,18 +77,13 @@ def write_ds_to_tfrecord(dataset, rfrecord_filename):
             # serialize to string and write example
             writer.write(example_proto.SerializeToString())
 
-def load_task_datasets(task, data_dir, data_format='tfrecord'):
-    if task == 'between':
-        file_prefix = '1task_between'
-    elif task == 'match_patt':
-        file_prefix = '1task_match_patt'
-    else:
-        raise ValueError(f'invalid task {task}')
+def load_task_datasets(task, data_dir, data_format='tfrecord', ds_specs=None):
 
     if data_format=='npz':
-        task_datasets = {split: load_ds_from_npz(f'{data_dir}/{file_prefix}_{split}.npz') for split in ('stripes', 'pentos', 'hexos')}
+        task_datasets = {split: load_ds_from_npz(f'{data_dir}/{task}_{split}.npz') for split in ('stripes', 'pentos', 'hexos')}
     elif data_format == 'tfrecord':
-        task_datasets = {split: load_ds_from_tfrecord(f'{data_dir}/{file_prefix}_{split}.tfrecord') for split in ('stripes', 'pentos', 'hexos')}
+        task_datasets = {split: load_ds_from_tfrecord(f'{data_dir}/{task}_{split}.tfrecord', **ds_specs[f'{task}_{split}'])
+            for split in ('stripes', 'pentos', 'hexos')}
     else:
         raise ValueError(f'invalid data_format {data_format}')
 
