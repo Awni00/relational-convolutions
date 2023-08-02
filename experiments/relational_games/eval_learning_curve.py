@@ -17,9 +17,12 @@ parser = argparse.ArgumentParser()
 parser.add_argument('--model', type=str,
     choices=('transformer', 'relconvnet', 'corelnet', 'abstractor'),
     help='the model to evaluate learning curves on')
-parser.add_argument('--task', type=str, choices=('between', 'match_patt'), help='the relational games task')
+parser.add_argument('--task', type=str, help='the relational games task')
 parser.add_argument('--train_split', type=str, choices=('stripes', 'hexos', 'pentos'))
+parser.add_argument('--test_split_size', type=int, default=5000,
+    help='size of sample from hold out sets to evaluate on')
 parser.add_argument('--n_epochs', default=500, type=int, help='number of epochs to train each model for')
+parser.add_argument('--batch_size', default=32, help='batch size')
 parser.add_argument('--early_stopping', default=True, type=bool, help='whether to use early stopping')
 parser.add_argument('--min_train_size', default=500, type=int, help='minimum training set size')
 parser.add_argument('--max_train_size', default=5000, type=int, help='maximum training set size')
@@ -53,12 +56,14 @@ wandb_project_name = args.wandb_project_name
 utils.print_section('LOADING DATA')
 data_path = '../../data/relational_games'
 # filename = f'{data_path}/1task_match_patt_pentos.npz'
-filename = f'{data_path}/1task_between_stripes.npz'
+# filename = f'{data_path}/1task_between_stripes.npz'
 
-# task_datasets = data_utils.load_task_datasets(args.task, data_path)
+dataset_specs = np.load(f'{data_path}/dataset_specs.npy', allow_pickle=True).item()
 
-# train_split_ds = task_datasets[args.train_split]
-train_split_ds = data_utils.load_ds_from_npz(filename)
+task_datasets = data_utils.load_task_datasets(args.task, data_path, data_format='tfrecord', ds_specs=dataset_specs)
+
+train_split_ds = task_datasets[args.train_split]
+# train_split_ds = data_utils.load_ds_from_npz(filename)
 
 train_ds, val_ds, test_ds = utils.split_ds(train_split_ds, val_size=0.1, test_size=0.2)
 del train_split_ds
@@ -67,7 +72,8 @@ batch_size = 32
 val_ds = val_ds.batch(batch_size)
 test_ds = test_ds.batch(batch_size)
 
-# eval_datasets = {split: ds for split, ds in task_datasets.items() if split != args.train_split}
+eval_datasets = {split: ds.take(args.test_split_size).batch(batch_size) for split, ds in task_datasets.items() if split != args.train_split}
+
 #endregion
 
 #region training setup
@@ -136,12 +142,12 @@ def evaluate_learning_curves(
             del model, train_ds_sample
 
 def eval_model(model):
-    eval_metrics = model.evaluate(test_ds, return_dict=True)
-    # for split, ds in eval_datasets.items():
-    #     ds_metrics = {f'{split}_{metric_name}': metric 
-    #         for metric_name, metric in model.evaluate(ds, return_dict=True).items()}
-    #     eval_metrics = {**eval_metrics, **ds_metrics}
-    
+    eval_metrics = model.evaluate(test_ds, return_dict=True, verbose=0)
+    for split, ds in eval_datasets.items():
+        ds_metrics = {f'{split}_{metric_name}': metric
+            for metric_name, metric in model.evaluate(ds, return_dict=True, verbose=0).items()}
+        eval_metrics = {**eval_metrics, **ds_metrics}
+
     return eval_metrics
 
 # endregion
