@@ -7,20 +7,19 @@ from tqdm import tqdm, trange
 import gc
 gc.enable(); gc.set_threshold(0)
 
-data_path = '../../data/relational_games'
+import argparse
+parser = argparse.ArgumentParser()
+parser.add_argument('--data_path', type=str, default='../../data/relational_games')
+parser.add_argument('--npz_files', type=str, nargs='+', required=True)
+parser.add_argument('--all_npz_files', type=bool, default=False)
+args = parser.parse_args()
 
-# get the file paths for all .npz files in the directory
-# npz_files = [os.path.join(data_path, f) for f in os.listdir(data_path) if f.endswith('.npz')]
+if args.all_npz_files:
+    npz_files = [os.path.join(args.data_path, f) for f in os.listdir(data_path) if f.endswith('.npz')]
+else:
+    npz_files = [f'{args.data_path}/{npz_file}' for npz_file in args.npz_files]
 
-tasks = ('1task_between', '1task_match_patt')
-splits = ('hexos', 'pentos', 'stripes')
-
-filename_prefixes = [f'{task}_{split}' for task in tasks for split in splits]
-
-npz_files = [f'{data_path}/{filename_prefix}.npz' for filename_prefix in filename_prefixes]
-
-
-dataspec_path = f'{data_path}/dataset_specs.npy'
+dataspec_path = f'{args.data_path}/dataset_specs.npy'
 if os.path.exists(dataspec_path):
     dataset_specs = np.load(dataspec_path, allow_pickle=True).item()
 else:
@@ -33,15 +32,14 @@ def get_ds_spec(ds):
     return {'ds_card': ds_card, 'x_shape': x_shape, 'y_shape': y_shape}
 
 
-# Convert each .npz file to a .tfrecord file
+# convert each .npz file to a .tfrecord file
 for npz_file in tqdm(npz_files):
     filename_prefix = os.path.splitext(os.path.basename(npz_file))[0]
-    tfrecord_file = f'{data_path}/{filename_prefix}.tfrecord'
+    tfrecord_file = f'{args.data_path}/{filename_prefix}.tfrecord'
 
-    if not os.path.exists(tfrecord_file):
-        npz_ds = data_utils.load_ds_from_npz(npz_file)
-        dataset_specs[filename_prefix] = get_ds_spec(npz_ds)
-        data_utils.write_ds_to_tfrecord(npz_ds, f'{data_path}/{filename_prefix}.tfrecord')
-        del npz_ds
-
-np.save(dataspec_path, dataset_specs, allow_pickle=True)
+    # if not os.path.exists(tfrecord_file):
+    npz_ds = data_utils.load_ds_from_npz(npz_file)
+    dataset_specs[filename_prefix] = get_ds_spec(npz_ds)
+    np.save(dataspec_path, dataset_specs, allow_pickle=True)
+    data_utils.write_ds_to_tfrecord(npz_ds, f'{args.data_path}/{filename_prefix}.tfrecord')
+    del npz_ds
