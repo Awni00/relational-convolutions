@@ -6,16 +6,18 @@ import sys; sys.path.append('..'); sys.path.append('../..')
 from relational_neural_networks.multi_head_relation import MultiHeadRelation
 from relational_neural_networks.relational_graphlet_convolution import RelationalGraphletConvolution
 
+# global parameters
+cnn_embedder_kwargs = dict(n_f=(16,16), s_f=(3,3), pool_size=2)
 
 # RelConvNet
-mhr_kwargs = dict(rel_dim=4, proj_dim=4, symmetric=True)
+relconv_mhr_kwargs = dict(rel_dim=4, proj_dim=4, symmetric=True)
 relconv_kwargs = dict(n_filters=8, graphlet_size=3,
         symmetric_inner_prod=True, groups_type='combinations',
         permutation_aggregator='max')
 cnn_embedder_kwargs = dict(n_f=(16,16), s_f=(3,3), pool_size=2)
 
 def create_relconvnet():
-    mhr = MultiHeadRelation(**mhr_kwargs, name='mhr')
+    mhr = MultiHeadRelation(**relconv_mhr_kwargs, name='mhr')
     rel_conv = RelationalGraphletConvolution(
         **relconv_kwargs, name='rgc')
 
@@ -32,6 +34,24 @@ def create_relconvnet():
 
     return model
 
+# CorelNet
+corelnet_mhr_kwargs = dict(rel_dim=1, proj_dim=None, symmetric=True)
+def create_corelnet():
+    mhr = MultiHeadRelation(**corelnet_mhr_kwargs, name='mhr')
+
+    cnn_embedder = CNNEmbedder(**cnn_embedder_kwargs)
+    softmax = tf.keras.layers.Softmax(axis=1)
+
+    model = tf.keras.Sequential(
+        [
+            cnn_embedder,
+            mhr,
+            softmax,
+            tf.keras.layers.Flatten(name='flatten'),
+            tf.keras.layers.Dense(2, name='output')],
+        name='corelnet')
+
+    return model
 
 ## Transformer
 encoder_kwargs = dict(num_layers=1,
@@ -48,10 +68,14 @@ def create_transformer():
     encoder = tfm.nlp.models.TransformerEncoder(
         **encoder_kwargs)
 
-    cnn_embedder = CNNEmbedder()
+    cnn_embedder = CNNEmbedder(**cnn_embedder_kwargs)
 
     model = tf.keras.Sequential([cnn_embedder, encoder, tf.keras.layers.GlobalAveragePooling1D(), tf.keras.layers.Dense(2)])
     return model
 
-
-## CoRelNet
+# put all model creators into a dictionary to interface with `eval_learning_curve.py`
+model_creators = dict(
+    relconvnet=create_relconvnet,
+    transformer=create_transformer,
+    corelnet=create_corelnet
+    )
