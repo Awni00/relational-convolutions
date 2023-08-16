@@ -15,7 +15,7 @@ import utils
 # parse script arguments
 parser = argparse.ArgumentParser()
 parser.add_argument('--model', type=str,
-    choices=('transformer', 'relconvnet', 'corelnet', 'abstractor'),
+    choices=models.model_creators.keys(),
     help='the model to evaluate learning curves on')
 parser.add_argument('--task', type=str, help='the relational games task')
 parser.add_argument('--train_split', type=str, choices=('stripes', 'hexos', 'pentos'))
@@ -153,14 +153,8 @@ def eval_model(model):
 # endregion
 
 #region evaluate learning curves
-create_model_dict = dict(
-    relconvnet=models.create_relconvnet,
-    transformer=models.create_transformer
-    )
-
-create_model = create_model_dict[args.model]
 def create_model():
-    model = create_model_dict[args.model]()
+    model = models.model_creators[args.model]()
     model.compile(loss=loss, optimizer=create_opt(), metrics=metrics) # compile
     model.build(input_shape=(None, *train_ds.element_spec[0].shape)) # build
     return model
