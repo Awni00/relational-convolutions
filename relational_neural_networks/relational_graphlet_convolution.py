@@ -127,7 +127,7 @@ class RelationalGraphletConvolution(tf.keras.layers.Layer):
             groups = tf.nn.softplus(groups) # apply softplus to ensure positive weights
 
             # gather weight attached to each object in group
-            group_object_weights = tf.gather(tf.nn.softplus(groups), rel_graphlet_conv.object_groups, axis=-1)
+            group_object_weights = tf.gather(tf.nn.softplus(groups), self.object_groups, axis=-1)
             # group_weights: ([batch_size,] n_groups, graphlet_size)
             group_weights = tf.reduce_prod(group_object_weights, axis=-1)
             # group_weights: ([batch_size,] n_groups, n_graphlets)
