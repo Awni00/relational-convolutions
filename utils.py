@@ -23,13 +23,22 @@ def train_val_test_split(X, y, test_size, val_size):
     return X_train, y_train, X_val, y_val, X_test, y_test
 
 def split_ds(ds, val_size, test_size):
-    n_train = int(len(ds) * (1 - val_size - test_size))
-    n_val = int(len(ds) * (val_size))
-    n_test = int(len(ds) * test_size)
+    if isinstance(val_size, float) and isinstance(test_size, float):
+        n_train = int(len(ds) * (1 - val_size - test_size))
+        n_val = int(len(ds) * (val_size))
+        n_test = int(len(ds) * test_size)
+    elif isinstance(val_size, int) and isinstance(test_size, int):
+        n_val = val_size
+        n_test = test_size
+        n_train = len(ds) - n_test - n_val
+        if n_train < 0:
+            raise ValueError(f'requested val_size {val_size} and test_size {test_size} but len(ds) is {len(ds)}.')
+    else:
+        raise ValueError('val_size and test_size must be either both floats or both integers')
 
     ds = ds.shuffle(buffer_size=len(ds))
 
-    train_ds = ds.take(n_train)    
+    train_ds = ds.take(n_train)
     val_ds = ds.skip(n_train).take(n_val)
     test_ds = ds.skip(n_train).skip(n_val)
 
