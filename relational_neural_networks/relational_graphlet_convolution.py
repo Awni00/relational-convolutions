@@ -8,7 +8,7 @@ class RelationalGraphletConvolution(tf.keras.layers.Layer):
             n_filters,
             graphlet_size,
             symmetric_inner_prod=False,
-            groups_type='permutations',
+            groups='permutations',
             permutation_aggregator='mean',
             filter_initializer='random_normal',
             **kwargs
@@ -26,7 +26,7 @@ class RelationalGraphletConvolution(tf.keras.layers.Layer):
             size of graphlet.
         symmetric_inner_prod : bool, optional
             whether to use symmetric version of relational inner product, by default False.
-        groups_type : str, optional
+        groups : 'permutations', 'combinations', or list of groups of size graphlet_size, optional
             whether groups should be permutations or combinations of size graphlet_size, by default 'permutations'.
         permutation_aggregator: 'mean', 'max', or 'maxabs', optional
             how to aggregate over permutations of the groups. used when symmetric_inner_prod is True, by default 'mean'.
@@ -41,7 +41,7 @@ class RelationalGraphletConvolution(tf.keras.layers.Layer):
         self.n_filters = n_filters
         self.graphlet_size = graphlet_size
         self.symmetric_inner_prod = symmetric_inner_prod
-        self.groups_type = groups_type
+        self.groups = groups
         self.filter_initializer = filter_initializer
 
         if self.symmetric_inner_prod:
@@ -67,12 +67,14 @@ class RelationalGraphletConvolution(tf.keras.layers.Layer):
             initializer=self.filter_initializer, trainable=True)
         # print(f'filter.shape: {self.filters.shape}')
 
-        if self.groups_type == 'permutations':
+        if self.groups == 'permutations':
             self.object_groups = list(itertools.permutations(range(self.n_objects), self.graphlet_size))
-        elif self.groups_type == 'combinations':
+        elif self.groups == 'combinations':
             self.object_groups = list(itertools.combinations(range(self.n_objects), self.graphlet_size))
+        elif isinstance(self.groups, list) and all(isinstance(x, tuple) and len(x) == self.graphlet_size for x in self.groups):
+            self.object_groups = list(self.groups)
         else:
-            raise ValueError(f'groups_type must be permutations or combinations, not {self.groups_type}')
+            raise ValueError(f"groups_type must be 'permutations' or 'combinations' or list of groups of graphlet size. recieved: {self.groups}")
 
         # print(f'object_groups: {self.object_groups}')
         self.n_groups = len(self.object_groups)
@@ -154,7 +156,7 @@ class RelationalGraphletConvolution(tf.keras.layers.Layer):
             'n_filters': self.n_filters,
             'graphlet_size': self.graphlet_size,
             'symmetric_inner_prod': self.symmetric_inner_prod,
-            'groups_type': self.groups_type,
+            'groups_type': self.groups,
             'filter_initializer': self.filter_initializer,
         })
         return config
