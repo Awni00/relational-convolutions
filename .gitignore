@@ -4,6 +4,17 @@ wandb/
 # vscode
 .vscode/
 
+# ignore certain files in paper directory
+paper/*.pdf
+paper/*.aux
+paper/*.blg
+paper/*.log
+paper/*.out
+paper/*.bbl
+paper/*.synctex.gz
+paper/*.bcf
+paper/*.xml
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
