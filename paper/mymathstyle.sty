@@ -1,0 +1,201 @@
+%% pacakges
+\usepackage{amsthm, amsmath, amssymb, mathtools, bm}
+\usepackage{cleveref}
+\usepackage{xspace}
+\usepackage{xcolor}
+
+\usepackage{algorithm2e}
+\RestyleAlgo{ruled}
+
+\crefname{algocf}{alg.}{algs.}
+\Crefname{algocf}{Algorithm}{Algorithms}
+
+
+
+%% theorem environments
+
+\newtheorem{definition}{Definition}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}{Lemma}
+\newtheorem{assumption}{Assumption}
+\newtheorem{claim}{Claim}
+\newtheorem{corollary}{Corollary}
+\newtheorem{fact}{Fact}
+\newtheorem{remark}{Remark}
+\newtheorem{conjecture}{Conjecture}
+
+\newtheorem*{definition*}{Definition}
+\newtheorem*{theorem*}{Theorem}
+\newtheorem*{lemma*}{Lemma}
+\newtheorem*{assumption*}{Assumption}
+\newtheorem*{claim*}{Claim}
+\newtheorem*{corollary*}{Corollary}
+\newtheorem*{fact*}{Fact}
+\newtheorem*{remark*}{Remark}
+\newtheorem*{conjecture*}{Conjecture}
+
+%% editing shortcuts
+\newcommand{\edit}[1]{\textcolor{orange}{\texttt{#1}}}
+\newcommand{\alert}[1]{\textcolor{red}{\texttt{#1}}}
+\newcommand{\comment}[1]{\textcolor{blue}{\texttt{#1}}}
+
+
+%% operators
+\DeclareMathOperator*{\argmax}{arg\,max}
+\DeclareMathOperator*{\argmin}{arg\,min}
+\newcommand{\iprod}[2]{\left \langle #1, #2 \right\rangle}
+\newcommand{\Iprod}[2]{\langle #1, #2 \rangle}
+\newcommand{\ind}[1]{{\bm{1}}_{\left\{#1\right\}}}
+\newcommand{\Ind}[1]{{\bm{1}}{\left\{#1\right\}}}
+
+
+%% norms
+\newcommand{\norm}[1]{\left\lVert#1\right\rVert}
+\newcommand{\opnorm}[1]{\left\lVert#1\right\rVert_{\mathrm{op}}}
+\newcommand{\fnorm}[1]{\left\lVert#1\right\rVert_{\mathrm{F}}}
+\newcommand{\onenorm}[1]{\left\lVert#1\right\rVert_{1}}
+\newcommand{\twonorm}[1]{\left\lVert#1\right\rVert_{2}}
+\newcommand{\infnorm}[1]{\left\lVert#1\right\rVert_{\infty}}
+\newcommand{\abs}[1]{\left\lvert#1\right\rvert}
+% \newcommand{\spnorm}[1]{\|#1\|_{\mathrm{sp}}}
+
+\newcommand{\TV}[1]{\mathrm{TV}\left(#1\right)}
+
+%% matrices and vectors
+\newcommand{\Tr}{\mathsf{Tr}}
+\newcommand{\identity}{\mathbf{I}}
+\newcommand{\allones}{\mathbf{J}}
+\newcommand{\ones}{\mathbf{1}}
+\newcommand{\zeros}{\mathbf{0}}
+\newcommand{\Span}{\text{span}}
+
+
+%% probability (distributions, symbols)
+
+\newcommand{\Unif}{\mathrm{Unif}}
+\newcommand{\Bern}{\mathrm{Bern}}
+\newcommand{\Rad}{\mathrm{Rad}}
+\newcommand{\Binomdist}{\mathrm{Binom}}
+\newcommand{\Poi}{\mathrm{Poi}}
+\newcommand{\Hyp}{\mathrm{Hypergeometric}}
+\newcommand{\Normal}{\mathcal{N}}
+\newcommand{\Betadist}{\mathrm{Beta}}
+\newcommand{\Gammadist}{\mathrm{Gamma}}
+
+\newcommand{\unif}[1]{\mathrm{Unif}\left(#1\right)}
+\newcommand{\bern}[1]{\mathrm{Bern}\left(#1\right)}
+\newcommand{\rad}[1]{\mathrm{Rad}\left(#1\right)}
+\newcommand{\binomdist}[1]{\mathrm{Binom}\left(#1\right)}
+\newcommand{\poi}[1]{\mathrm{Poi}\left(#1\right)}
+\newcommand{\hyp}[1]{\mathrm{Hypergeometric}\left(#1\right)}
+\newcommand{\normal}[1]{\mathcal{N}\left(#1\right)}
+\newcommand{\betadist}[1]{\mathrm{Beta}\left(#1\right)}
+\newcommand{\gammadist}[1]{\mathrm{Gamma}\left(#1\right)}
+
+
+\newcommand{\indep}{\perp \!\!\! \perp}
+\newcommand{\simiid}{{\overset{\text{\iid}}{\sim}}}
+\newcommand{\var}[1]{\mathrm{\bbV ar}\left[#1\right]}
+\newcommand{\cov}[1]{\mathrm{Cov}\left[#1\right]}
+
+\newcommand{\toprob}{{\xrightarrow{\Prob}}}
+\newcommand{\tolp}[1]{{\xrightarrow{L^{#1}}}}
+\newcommand{\toas}{{\xrightarrow{{\rm a.s.}}}}
+\newcommand{\toae}{{\xrightarrow{{\rm a.e.}}}}
+\newcommand{\todistr}{{\xrightarrow{{d}}}}
+\newcommand{\eqdistr}{{\stackrel{d}{=}}}
+\newcommand{\iid}{i.i.d.\xspace}
+
+\newcommand{\Expect}{\mathbb{E}}
+\newcommand{\expect}[1]{\mathbb{E}\left[#1\right]}
+\newcommand{\eexpect}[1]{\mathbb{E}[#1]}
+\newcommand{\Prob}{\mathbb{P}}
+\newcommand{\prob}[1]{\mathbb{P}\left[#1\right]}
+\newcommand{\pprob}[1]{\mathbb{P}[#1]}
+
+\newcommand{\given}{\;\middle|\;}
+
+%% Sets
+\newcommand{\reals}{\mathbb{R}}
+\newcommand{\naturals}{\mathbb{N}}
+\newcommand{\integers}{\mathbb{Z}}
+
+%% caligraphic letters
+\newcommand{\calA}{{\mathcal{A}}}
+\newcommand{\calB}{{\mathcal{B}}}
+\newcommand{\calC}{{\mathcal{C}}}
+\newcommand{\calD}{{\mathcal{D}}}
+\newcommand{\calE}{{\mathcal{E}}}
+\newcommand{\calF}{{\mathcal{F}}}
+\newcommand{\calG}{{\mathcal{G}}}
+\newcommand{\calH}{{\mathcal{H}}}
+\newcommand{\calI}{{\mathcal{I}}}
+\newcommand{\calJ}{{\mathcal{J}}}
+\newcommand{\calK}{{\mathcal{K}}}
+\newcommand{\calL}{{\mathcal{L}}}
+\newcommand{\calM}{{\mathcal{M}}}
+\newcommand{\calN}{{\mathcal{N}}}
+\newcommand{\calO}{{\mathcal{O}}}
+\newcommand{\calP}{{\mathcal{P}}}
+\newcommand{\calQ}{{\mathcal{Q}}}
+\newcommand{\calR}{{\mathcal{R}}}
+\newcommand{\calS}{{\mathcal{S}}}
+\newcommand{\calT}{{\mathcal{T}}}
+\newcommand{\calU}{{\mathcal{U}}}
+\newcommand{\calV}{{\mathcal{V}}}
+\newcommand{\calW}{{\mathcal{W}}}
+\newcommand{\calX}{{\mathcal{X}}}
+\newcommand{\calY}{{\mathcal{Y}}}
+\newcommand{\calZ}{{\mathcal{Z}}}
+
+%% blackboard letters
+\newcommand{\bbA}{{\mathbb{A}}}
+\newcommand{\bbB}{{\mathbb{B}}}
+\newcommand{\bbC}{{\mathbb{C}}}
+\newcommand{\bbD}{{\mathbb{D}}}
+\newcommand{\bbE}{{\mathbb{E}}}
+\newcommand{\bbF}{{\mathbb{F}}}
+\newcommand{\bbG}{{\mathbb{G}}}
+\newcommand{\bbH}{{\mathbb{H}}}
+\newcommand{\bbI}{{\mathbb{I}}}
+\newcommand{\bbJ}{{\mathbb{J}}}
+\newcommand{\bbK}{{\mathbb{K}}}
+\newcommand{\bbL}{{\mathbb{L}}}
+\newcommand{\bbM}{{\mathbb{M}}}
+\newcommand{\bbN}{{\mathbb{N}}}
+\newcommand{\bbO}{{\mathbb{O}}}
+\newcommand{\bbP}{{\mathbb{P}}}
+\newcommand{\bbQ}{{\mathbb{Q}}}
+\newcommand{\bbR}{{\mathbb{R}}}
+\newcommand{\bbS}{{\mathbb{S}}}
+\newcommand{\bbT}{{\mathbb{T}}}
+\newcommand{\bbU}{{\mathbb{U}}}
+\newcommand{\bbV}{{\mathbb{V}}}
+\newcommand{\bbW}{{\mathbb{W}}}
+\newcommand{\bbX}{{\mathbb{X}}}
+\newcommand{\bbY}{{\mathbb{Y}}}
+\newcommand{\bbZ}{{\mathbb{Z}}}
+
+
+%% proof utilities
+\newcommand{\stepa}[1]{\overset{(a)}{#1}}
+\newcommand{\stepb}[1]{\overset{(b)}{#1}}
+\newcommand{\stepc}[1]{\overset{(c)}{#1}}
+\newcommand{\stepd}[1]{\overset{(d)}{#1}}
+\newcommand{\stepe}[1]{\overset{(e)}{#1}}
+\newcommand{\stepf}[1]{\overset{(f)}{#1}}
+
+\newcommand{\termI}{\mathrm{(I)}}
+\newcommand{\termII}{\mathrm{(II)}}
+\newcommand{\termIII}{\mathrm{(III)}}
+
+%% misc
+\newcommand{\eg}{e.g.\xspace}
+\newcommand{\ie}{i.e.\xspace}
+\newcommand{\termIV}{\mathrm{(IV)}}
+
+%% brackets/parenthesis/etc
+\newcommand{\paren}[1]{\left(#1\right)}
+\newcommand{\bra}[1]{\left[#1\right]}
+\newcommand{\cbra}[1]{\left\{#1\right\}}
+\newcommand{\set}[1]{\left\{#1\right\}}
