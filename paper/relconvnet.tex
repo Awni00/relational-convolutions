@@ -1,0 +1,46 @@
+\documentclass{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{mymathstyle}
+\usepackage{algorithm2e}
+\usepackage{graphicx}
+
+\usepackage{tikz}
+\usetikzlibrary{positioning}
+\pgfmathtruncatemacro\distance{1}
+\usepackage{fp}
+
+
+\usepackage[style=authoryear,backend=biber,url=false,isbn=false]{biblatex}
+\addbibresource{references.bib}
+
+\title{Relational Convolution Networks}
+\author{Awni \& John}
+\date{Date created: June 27, 2023\\Last edited: \today}
+
+\begin{document}
+\maketitle
+
+\section{Introduction}
+\input{intro.tex}
+
+\section{Multi-Head Relational Layer: modeling relations via inner products}
+\input{mhr.tex}
+
+\section{Relational (Graphlet) Convolutions}
+\input{rel_graphlet_conv.tex}
+
+\section{Experiments}
+\input{experiments.tex}
+
+\section{Grouping Layers}
+\input{grouping_layers.tex}
+
+\section{Function Class of Multi-Head Relation Module}
+\input{mhr_function_class.tex}
+
+\section{Discussion}
+\input{discussion.tex}
+
+\printbibliography
+
+\end{document}

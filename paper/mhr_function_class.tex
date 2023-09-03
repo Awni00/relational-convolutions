@@ -1,0 +1,243 @@
+In previous work, we characterized the class of functions which can be modeled by \textit{symmetric} multi-head relation modules~\parencite{altabaaAbstractorsTransformer2023}. In particular, we showed that this class of functions is the set of relation functions which are symmetric kernels of positive type (i.e., Mercer kernels) in each relation dimension.
+
+Symmetric relation functions modeled in this way are natural \textit{measures of similarity}. To see this, suppose we have a normalized symmetric positive definite kernel $K$, such that $K(x,x) = 1$ for all $x \in \calX$. Then, the Cauchy-Schwarz inequality for Mercer kernels states that
+\begin{equation}
+    K(x, y)^2 \leq K(x, x) K(y, y) = 1, \ \forall x, y \in \calX.
+\end{equation}
+
+Thus, $K(x,y)$ is large and close to $1$ when $x$ and $y$ are similar, and close to $0$ when $x, y$ are dissimilar. 
+
+In some applications (e.g., where the relations are indeed measures of `similarity'), this property will be desirable and hence modeling relations as symmetric will be a useful inductive bias. However, in other applications, this may be a restrictive assumption---the underlying relations may be more complex than simple measures of similarity. In such cases, we don't want to restrict the modeled relations to be symmetric and positive definite. In this section, we characterize the class of functions which can be modeled by multi-head relation modules and prove a universal approximation result stating that this includes any continuous function on $\calX \times \calX$. We begin by drawing a connection to reproducing kernel Banach spaces. This is a generalization of reproducing kernel Hilbert spaces which is what we used in our earlier analysis in~\parencite{altabaaAbstractorsTransformer2023}.
+
+
+\subsection{Background on reproducing kernel Banach spaces}
+
+Recall that a reproducing kernel hilbert space (RKHS) $\calH$ is a hilbert space of functions on a space $\calX$ in which the point evaluation functionals $f \mapsto f(x)$ are continuous. There is a one-to-one identification between RKHSs and symmetric positive definite kernels $K: \calX \times \calX \to \reals$ such that $\iprod{K(x, \cdot)}{f}_\calH = f(x)$ \parencite{moore-aronszajn}. \parencite{mercerFunctionsPositive1909} further shows that an RKHS can be identified with a feature map via the spectral decomposition of the integral operator $T_K: L_2(\calX) \to L_2(\calX)$ defined by $T_K f(x) = \int_\calX K(x, y) f(y) dy$. Every feature map $\phi: \calX \to \calW$ defines a symmetric positive definite kernel $K(x, y) = \iprod{\phi(x)}{\phi(y)}_\calW$ (hence, an RKHS) and every symmetric positive definite kernel has infinitely many feature map representations.
+
+As discussed above, modeling relations as symmetric positive definite kernels may be restrictive in some applications. Hence, we choose to model relations as multi-dimensional asymmetric functions, while maintaining the inductive bias of modeling relations as inner products.
+\begin{equation*}
+    r(x,y) = \begin{pmatrix} \iprod{\phi_1(x)}{\psi_1(y)} \\ \vdots \\ \iprod{\phi_{d_r}(x)}{\psi_{d_r}(y)}\end{pmatrix}
+\end{equation*}
+
+To analyze the class of functions realizable by such models, we make use of another tool in functional analysis: reproducing kernel \textit{Banach} spaces (RKBS) \parencite{zhangReproducingKernel2009}. RKBS generalize RKHS, allowing for a richer class of kernels. We begin by presenting some of the relevant background on RKBS before proceeding to analyze the function class of multi-head relation modules.
+
+\begin{definition}[Reproducing Kernel Banach Space]
+    A \textbf{reproducing kernel Banach space} on a space $\calX$ is a Banach space $\calB$ of functions on $\calX$, satisfying:
+    \begin{enumerate}
+        \item $\calB$ is \textit{reflexive}. That is, $(\calB^*)^* = \calB$, where $\calB^*$ is the dual space of $\calB$. Furthermore, $\calB^*$ is isometric to a Banach space $\calB^\#$ of functions on $\calX$.
+        \item The point evaluation functionals $f \mapsto f(x)$ are continuous on both $\calB$ and $\calB^\#$.
+    \end{enumerate}
+\end{definition}
+
+This definition is a strict generalization of reproducing kernel Hilbert spaces, as any RKHS $\calH$ on $\calX$ is also an RKBS ((1) is satisfied by the Riez representation theorem). While the identification $\calB^\#$ is not unique, we can choose some identification arbitrarily and denote it by $\calB^*$ for ease of notation (by assumption, all identifications are isometric to each other). Thus, if $\calB$ is an RKBS, $\calB^*$ is also an RKBS.
+
+Similar to an RKHS, an RKBS also has a \textit{reproducing kernel}. To state the result, for a normed vector space $\calV$ and its dual space $\calV^*$, we define the bilinear form
+\begin{equation}\label{eq:bilinear_form}
+    \begin{split}
+        \calV \times \calV^* &\to \reals\\
+        (u, v^*)_\calV &\mapsto v^*(u).
+    \end{split}
+\end{equation}
+
+\parencite[Theorem 2]{zhangReproducingKernel2009} shows that for any RKBS $\calB$ there exists a unique reproducing kernel $K: \calX \times \calX \to \bbC$ which recovers point evaluations,
+\begin{align}
+    f(x) &= \paren{f, K(\cdot, x)}_\calB, \forall f \in \calB, \\
+    f^*(x) &= \paren{K(x, \cdot), f^*}_\calB \forall f^* \in \calB^*,
+\end{align}
+
+and such that the span of $K(x, \cdot)$ is dense in $\calB$ and the span of $K(\cdot, x)$ is dense in $\calB^*$,
+\begin{align}
+    \overline{\text{span}}\{K(x, \cdot): x \in \calX\} &= \calB, \\
+    \overline{\text{span}}\{K(\cdot, x): x \in \calX\} &= \calB^*.
+\end{align}
+
+Finally,
+
+\begin{equation}
+    K(x, y) = \paren{K(x, \cdot), K(\cdot, y)}_\calB, \ \forall x, y \in \calX.
+\end{equation}
+
+Unlike RKHSs, while each RKBS has a unique reproducing kernel, different RKBSs may have the same reproducing kernels.
+
+Furthermore,~\parencite[Theorems 3 and 4]{zhangReproducingKernel2009} show that a kernel $K: \calX \times \calX \to \bbC$ is the reproducing kernel of some RKBS if and only if it has a feature map representation. Crucially for us, the feature map representation is more versatile than the one for RKHSs. Let $\calW$ be a reflexive Banach space with dual space $\calW^*$. Consider a pair of feature maps $\Phi$ and $\Phi^*$, mapping to each feature space, respectively. That is,
+\begin{equation*}
+    \Phi: \calX \to \calW, \ \Phi^*: \calX \to \calW^*,
+\end{equation*}
+
+\noindent where we call $\Phi, \Phi^*$ the \textit{pair} of feature maps and $\calW, \calW^*$ the pair of feature spaces. Suppose that the span of the image of the feature maps under $\calX$ is dense in their respective feature spaces. That is,
+\begin{equation}
+    \overline{\text{span}}\{\Phi(x): x \in \calX\} = \calW, \ \overline{\text{span}}\{\Phi^*(x): x \in \calX\} = \calW^*.
+\end{equation}
+
+Then, by~\parencite[Theorem 3]{zhangReproducingKernel2009}, the feature maps $\Phi, \Phi^*$ induce an RKBS defined by
+
+\begin{align}
+    \calB &:= \set{f_w: x \mapsto (\Phi^*(x))(w), w \in \calW} \\
+    \norm{f_w}_\calB &:= \norm{w}_\calW,
+\end{align}
+
+\noindent with the dual space $\calB^*$ defined by
+\begin{align}
+    \calB^* &:= \set{f_{w^*}: x \mapsto w^*(\Phi(x)), w^* \in \calW^*} \\
+    \norm{f_{w^*}}_{\calB^*} &:= \norm{w^*}_{\calW^*}.
+\end{align}
+
+Furthermore, for any RKBS, there exists some feature spaces $\calW, \calW^*$ and feature maps $\Phi, \Phi^*$ such that the above construction yields that RKBS~\parencite[Theorem 4]{zhangReproducingKernel2009}.
+
+\subsection{MHR layers model kernels of reproducing kernel Banach spaces}
+
+Observe that for a RKBS with feature-map representation given by $\Phi, \Phi^*$, it's reproducing kernel is given by
+\begin{equation}
+    K(x, y) = \paren{\Phi(x), \Phi^*(y)}_{\calW}, \ x, y \in \calX,
+\end{equation}
+
+\noindent where $\paren{\cdot, \cdot}_{\calW}$ is the bilinear form on $\calW$ defined in~\Cref{eq:bilinear_form}.
+
+We motivate the following analysis by noting the similarity with our model of relation functions. Recall that the $k$-th dimension of the relation function $r: \calX \times \calX \to \reals^{d_r}$ is modeled as
+\begin{equation}
+    r_k(x, y) = \iprod{\phi_k(x)}{\psi_k(y)}, \ x, y \in \calX,
+\end{equation}
+\noindent where $\phi_k, \psi_k \to \reals^{d_r^{(k)}}$ is a pair of learned feature maps. Typically, $\phi_k, \psi_k$ are neural networks with vector outputs into the common feature space $\reals^{d_r^{(k)}}$.
+
+\begin{theorem}\label{thm:mhr_approximates_rkbs}
+   Suppose $\calX$ is a compact metric space. Suppose the ground truth relation function $r: \calX \times \calX \to \reals^{d_r}$ is such that each component $r_i$ is the reproducing kernel of some RKBS $\calB$ on $\calX$ which admits a feature map representation with a feature space $\calW$ which is a Hilbert space. Consider the model,
+
+   \begin{equation}
+    \tilde{r}(x, y) = \paren{\iprod{\phi_1(x)}{\psi_1(y)}, \ldots, \iprod{\phi_{d_r}(x)}{\psi_{d_r}(y)}},
+   \end{equation}
+
+   \noindent where $\phi_i, \psi_i: \calX \to \reals^{d_r^{(i)}}$ are multi-layer perceptrons. Then, for any $\varepsilon > 0$, there exists multi-layer perceptrons with parameters $\theta_\phi^{(i)}, \theta_{\psi}^{(i)}, i \in [d_r]$ such that
+   \begin{equation*}
+        \sup_{x,y} \infnorm{r(x, y) - \tilde{r}(x, y)} \leq \varepsilon
+   \end{equation*}
+\end{theorem}
+
+\begin{proof}
+    \hphantom{~}
+
+    We will focus on each dimension of the relation function's $d_r$ components individually. That is, we will show the existence of $\phi_i, \psi_i$ such that $\tilde{r}_i(x, y) = \iprod{\phi_i(x)}{\psi_i(y)}$ approximates $r_i$. By assumption, there exists a Hilbert space $\calW$ and a pair of feature maps $\Phi_i: \calX \to \calW, \Phi_i^*: \calX \to \calW$ such that,
+    \begin{equation*}
+        r_i(x, y) = \paren{\Phi(x), \Phi^*(y)}_{\calW} \equiv (\Phi^*(y))(x), \ x, y \in \calX.
+    \end{equation*}
+
+    By~\parencite{}, any two Hilbert spaces with equal dimension are isometrically isomorphic. Hence, without loss of generality, we can restrict our attention to the feature space $\calW = \ell^2(\bbN)$. The dual space is $\calW^* = \ell^2(\bbN)$. Hence, for feature maps $\Phi_i, \Phi_i^*$, the ground truth relation to be approximated is,
+    \begin{equation*}
+        r_i(x, y) = \paren{\Phi_i(x), \Phi_i^*(y)}_{\ell^2(\bbN)} \equiv (\Phi_i^*(y))(\Phi_i(x)), \ x, y \in \calX.
+    \end{equation*}
+
+    By the Riesz representation theorem~\parencite{riesz_citation}, there exists a unique element in $u_{\Phi^*(y)} \in \ell^2(\bbN)$ such that,
+    \begin{equation*}
+        (\Phi^*(y))(w) = \iprod{w}{u_{\Phi^*(y)}}_{\ell^2(\bbN)}, \ \forall w \in \ell^2(\bbN).
+    \end{equation*}
+
+    Let $\sigma: \ell^2(\bbN)^* \to \ell^2(\bbN)$ denote the mapping from an element in the dual space to its Riesz representation. $\sigma$ is a bijective isometric antilinear isomorphism. (e.g., the riesz representation can be cosntructed via an orthonormal basis through $\sigma(w^*) = \sum_{i \in I} w^{*}(e_i) e_i$, where $\set{e_i}_{i \in I}$ is some basis for $\calW$).
+
+    Thus, the relation function on $\calX \times \calX$ that we need to approximate is,
+    \begin{equation*}
+        r_i(x, y) = \iprod{\sigma \circ \Phi_i^* (y)}{\Phi_i(x)}_{\calW}, \ x, y \in \calX.
+    \end{equation*}
+
+    We do this by approximating $\Phi_i: \calX \to \calW$ with the MLP $\psi_i$ and approximating $\sigma \circ \Phi_i^*: \calX \to \calW$ with the MLP $\phi_i$.
+
+    First, since $\Phi_i(x), \sigma \circ \Phi^*_i(y) \in \ell^2(\bbN), \forall x, y$, and $\calX$ is compact, we have
+    \begin{equation*}
+        \lim_{n \to \infty} \sup_{x,y \in \calX} \abs{r_i(x, y) - \sum_{j=1}^{n} (\Phi_i(x))_j \cdot (\sigma(\Phi^*(y)))_j} = 0.
+    \end{equation*}
+
+    Thus, let $\tilde{n}_i$ be such that,
+    \begin{equation}\label{eq:thm1_proof_eq1}
+        \sup_{x,y \in \calX} \abs{r_i(x, y) - \sum_{j=1}^{\tilde{n}_i} (\Phi_i(x))_j \cdot (\sigma(\Phi^*(y)))_j} < \frac{\varepsilon}{2}.
+    \end{equation}
+
+    Now, let the $i$th MLPs, $\phi_i, \psi_i$ be functions from $\calX$ to $\reals^{\tilde{n}_i}$ (i.e., we specify the architecture of the MLPs such that the output space is $\tilde{n}_i$-dimensional). Let $\paren{(\Phi_i(x))_1, \ldots, (\Phi_i(x))_{\tilde{n}_i}}$ be the function to be approximated by the MLP $\phi_i$ and let $\paren{(\sigma(\Phi^*(y)))_1, \ldots, (\sigma(\Phi^*(y)))_{\tilde{n}_i}}$ be the function to be approximated by the MLP $\psi_i$. By universal approximation results on MLPs (e.g.,~\parencite{barronUniversalApproximation1993, cybenkoApproximationSuperpositions1989, hornikMultilayerFeedforward1989}), for any $\tilde{\varepsilon} > 0$, there exists parameters $\theta_{\phi}^{(i)}, \theta_{\psi}^{(i)}$ such that,
+
+    \begin{equation}\label{eq:thm1_proof_eq2}
+        \sup_{x \in \calX} \abs{(\phi_i(x))_j - (\Phi_i(x))_{j}} < \tilde{\varepsilon} \ \text{ and } \ \sup_{x \in \calX} \abs{(\psi_i(y))_j - (\sigma(\Phi^*(x)))_{j}} < \tilde{\varepsilon}, \ \forall j \in \set{1, \ldots, \tilde{n}_i}.
+    \end{equation}
+
+    Now, 
+    \begin{align*}
+        &\sup_{x,y \in \calX} \abs{r_i(x,y) - \tilde{r}_i(x,y)} \\
+        &= \sup_{x,y \in \calX} \abs{r_i(x,y) - \iprod{\phi_i(x)}{\psi_i(y)}} \\
+        &\leq \sup_{x,y\in \calX} \paren{\abs{r_i(x,y) - \sum_{j=1}^{\tilde{n}_i} (\Phi_i(x))_j \cdot (\sigma(\Phi^*(y)))_j} + \abs{\sum_{j=1}^{\tilde{n}_i} (\Phi_i(x))_j \cdot (\sigma(\Phi^*(y)))_j - \iprod{\phi_i(x)}{\psi_i(y)}}} \\
+    \end{align*}
+
+    The first term is less than $\varepsilon / 2$ by~\Cref{eq:thm1_proof_eq1}. Now, we bound the second term uniformly on $x,y \in \calX$,
+    \begin{align*}
+        &\abs{\sum_{j=1}^{\tilde{n}_i} (\Phi_i(x))_j \cdot (\sigma(\Phi^*(y)))_j - \iprod{\phi_i(x)}{\psi_i(y)}} \\
+        &\leq \sum_{j=1}^{\tilde{n}_i} \abs{(\Phi_i(x))_j \cdot (\sigma(\Phi^*(y)))_j - (\phi_i(x))_j(\psi_j(y))_j} \\
+        &\leq \sum_{j=1}^{\tilde{n}_i} \abs{(\phi_i(x))_j} \abs{(\sigma(\Phi^*(y)))_j - (\psi_j(y))_j} + \abs{(\psi_i(y))_j} \abs{(\Phi_i(x))_j - (\phi_i(x))_j}\\
+    \end{align*}
+
+    Let $\tilde{\varepsilon}$ in~\Cref{eq:thm1_proof_eq2} be small enough such that the above is smaller than $\varepsilon / 2$. This shows that
+
+    \begin{equation*}
+        \sup_{x,y \in \calX} \abs{r_i(x,y) - \tilde{r}_i(x,y)} \leq \frac{\varepsilon}{2} + \frac{\varepsilon}{2} = \varepsilon.
+    \end{equation*}
+
+    We repeat this procedure to obtain the MLP parameters $\theta_\phi^{(i)}, \theta_{\psi}^{(i)}$ for each dimension $i = 1, \ldots, d_r$. Thus, the error is bounded for each dimension, and $\sup_{x,y} \norm{r(x, y) - \tilde{r}(x, y)}_2 \leq \varepsilon$.
+\end{proof}
+
+\begin{remark}
+    The reason we assume that the underlying RKBS $\calB$ admits a feature map representation with feature space $\calW$ which is a Hilbert space is so that we can use the Riesz representation theorem. The Riesz representation theorem is what links the broad framework of reproducing kernel Banach spaces back to the inductive bias of modeling relations as inner products. In the next section, we show that we don't lose much expressivity by making this assumption. In particular, we can model any continuous relation function.
+\end{remark}
+
+\begin{remark}
+    In~\parencite{zhangReproducingKernel2009}, the authors explore a specialization of reproducing kernel Banach spaces in which $\calB$ has a semi-inner product. This added structure grants semi-inner product RKBSs some desirable properties which RKHSs have but general RKBSs lack (e.g., convergence in the space implies pointwise convergence, weak universality of kernels, etc.). However, their notion of a semi-inner product is too restrictive to allow for our model $\iprod{\phi(x)}{\psi(x)}$.
+\end{remark}
+
+\subsection{MHR layers can model any continuous relation}
+
+A reproducing kernel Hilbert space is, as the name suggests, a \textit{Hilbert space} of functions on some space, $\calX$. The linear structure of a Hilbert space makes the kinds of geometries it can capture relatively restrictive. In particular, any two Hilbert spaces with the same dimension are isometrically isomorphic. Banach spaces, which have fewer structural assumptions, can capture richer geometric structures. Hence, an RKBS can capture richer geometries between functions than an RKHS. In particular, in contrast to an RKHS, the reproducing kernel of an RKBS need not be symmetric or positive definite. In this section, we show that any continuous relation function can be captured by an asymmetric multi-head relation module.
+
+\begin{theorem}\label{thm:mhr_approximates_finite_rels}
+    Suppose $\calX$ is a finite space. Let $r: \calX \times \calX \to \reals^{d_r}$ be any relation function. Then, there exists $d_r$ reproducing kernel Banach spaces whose reproducing kernels are the $d_r$ components of $r$. Furthermore, each RKBS admits a feature map representation where the feature space is a Hilbert space. Hence, the multi-head relation module can approximate $r$ with arbitrarily small error.
+\end{theorem}
+
+\begin{proof}
+    \hphantom{~}
+
+    We prove the claim by explicitly constructing a feature map representation. Let $x_1, \ldots, x_m$ be an enumeration of $\calX$ where $m = \abs{\calX}$. Let $r_k$ be the $k$th component of $r$. We would like to construct a pair of feature maps $\Phi_k: \calX \to \calW_k, \Phi_k^*: \calX \to \calW_k^*$ such that $r_k(x_i, x_j) = \paren{\Phi_k(x_i), \Phi_k^*(x_j)}_{\calW_k}$.
+
+    Let $R_k$ be the $m \times m$ matrix denoting the pairwise relations on $\calX$. That is, $\bra{R_k}_{ij} = r_k(x_i, x_j)$. There exists many decompositions of $R_k$ which induce valid RKBS feature maps. One example is rank decomposition. Let $d_k = \mathrm{rank}(R_k)$. Then, there exists matrices $P_k \in \reals^{m \times d_k}, Q_k \in \reals^{d_k \times m}$ such that $R_k = P_k Q_k$.
+
+    Let $\Phi_k(x_i) = \bra{P_k}_{i, \cdot}$ and $\Phi_k^*(x_i) = \bra{Q_k}_{\cdot, i}$, with $\calW_k = \calW_k^* = \ell^2([d_k])$. Then, by the above, we have
+    \begin{equation*}
+        r_k(x_i, x_j) = \paren{\Phi_k(x_i), \Phi_k^*(x_j)}_{\calW_k}, \forall x_i, x_j \in \calX
+    \end{equation*}
+
+    Hence, $r_k$ is the reproducing kernel of some RKBS. Furthermore, since $\calW_k$ is a Hilbert space,~\Cref{thm:mhr_approximates_rkbs} implies that $r$ can be approximated by the multi-head relation module.
+\end{proof}
+
+\begin{theorem}\label{thm:mhr_approximates_cts_rels}
+    Suppose $\calX$ is a compact euclidean space. Let $r: \calX \times \calX \to \reals^{d_r}$ be any continuous relation function. Then the multi-head relation module can approximate $r$ with arbitrarily small error. That is, for any $\varepsilon > 0$, there exists parameters $\theta_{\phi}^{(i)}, \theta_{\psi}^{(i)}$ for a a multi-head relation module $\tilde{r}$ such that $\sup_{x,y \in \calX} \infnorm{r(x,y) - \tilde{r}(x,y)} \leq \varepsilon$.
+\end{theorem}
+
+\begin{proof}
+    \hphantom{~}
+
+    Let $\calN_\delta(\calX)$ be a $\delta$-net of $\calX$. That is, a finite subset of $\calX$ such that $\max_{x \in \calX} \min_{y \in \calN_\delta(\calX)} \norm{x - y} < \delta$. Let $q$ be a projection from $\calX$ on to the $\delta$-net. That is, $q(x) \in \argmin_{y \in \calN_\delta(\calX)} \norm{x - y}$. Let $\bar{r}: \calN_\delta(\calX) \times \calN_{\delta}(\calX) \to \reals$ be the restriction of $r$ to $\calN_{\delta}(\calX)$. By the continuity of $r$ and compactness of $\calX$, for any $\varepsilon > 0$, there exists $\delta > 0$ such that
+    \begin{equation*}
+        \sup_{x, y \in \calX} \infnorm{r(x,y) - \bar{r}(q(x), q(y))} < \varepsilon / 2.
+    \end{equation*}
+
+    Since $\calN_\delta(\calX)$ is a finite set, by~\Cref{thm:mhr_approximates_finite_rels}, for any $\varepsilon_1$, there exists MLPs $\phi_1, \psi_1, \ldots, \phi_{d_r}, \psi_{d_r}$ such that the multi-head relation module $\tilde{\bar{r}}$ approximates $\bar{r}$ with error smaller than $\varepsilon_1$. That is, 
+
+    \begin{equation*}
+        \sup_{x, y \in \calN_\delta(\calX)} \infnorm{\bar{r}(x,y) - \tilde{\bar{r}}(x,y)} < \varepsilon_1.
+    \end{equation*}
+
+    Finally, since $q$ is piecewise constant, it can also be approximated by an MLP, call it $\tilde{q}$. Letting $\varepsilon_1$ be small enough, by the continuity of  $\tilde{\bar{r}}(x,y)$, there exists an MLP $\tilde{q}$ such that
+    \begin{align*}
+        \sup_{x, y \in \calX} \infnorm{\bar{r}(q(x), q(y)) - \tilde{\bar{r}}(\tilde{q}(x), \tilde{q}(y))} < \frac{\varepsilon}{2}.
+    \end{align*}
+
+    Hence, letting the multi-head relation module be given by $\tilde{r}(x,y) = \tilde{\bar{r}}(\tilde{q}(x), \tilde{q}(y))$, we have
+    \begin{align*}
+        &\sup_{x, y \in \calX} \infnorm{r(x,y) - \tilde{r}(x,y)} \\
+        &\leq \sup_{x, y \in \calX} \infnorm{r(x,y) - \bar{r}(q(x), q(y))} + \sup_{x, y \in \calX} \infnorm{\bar{r}(q(x), q(y)) - \tilde{\bar{r}}(\tilde{q}(x), \tilde{q}(y))} \\
+        &< \varepsilon.
+    \end{align*}
+
+
+\end{proof}
