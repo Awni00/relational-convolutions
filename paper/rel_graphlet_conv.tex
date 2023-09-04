@@ -1,5 +1,4 @@
-\newcommand{\softreliprod}[3]{\left\langle #1, #2 \, \vert \, #3 \right\rangle_\mathrm{rel}}
-\newcommand{\reliprod}[2]{\left\langle #1, #2 \right\rangle_\mathrm{rel}}
+\section{Relational Convolutions}\label{sec:relconv}
 
 \subsection{Relational convolutions with discrete groups}
 Suppose that we have a sequence of objects $(x_1, ..., x_n) \in (\mathbb{R}^{d})^m$ and a relation tensor $R \in \mathbb{R}^{n \times n \times d_r}$ describing the pairwise relations between them. $R$ should be thought of as obtained by a multi-head relation layer. The operation we will define does two things: 1) extracts relations between larger groups of objects using pairwise relations 2) transforms the relation tensor back into a sequence of objects, allowing it be composed with another relational layer.
@@ -83,7 +82,7 @@ With this modification, the number of objects in the output sequence is fixed an
     (R \ast \bm{f})(G) = \left( \softreliprod{R}{\bm{f}}{G_1}, \ldots, \softreliprod{R}{\bm{f}}{G_{n_g}} \right) \in \left(\mathbb{R}^{n_f}\right)^{n_g}
 \end{equation}
 
-\comment{TODO: is this notation good?}
+\texttt{TODO: is this notation good?}
 
 \subsection{Efficiency of `convolutions'}
 The operation we have defined here is a `convolution' in the sense that we take a patch of the relation tensor, given by a group, and compare the relations within it to a template graphlet filter via an appropriately-defined inner product. This is similar to how, in a convolutional neural network, we would take a patch of an image and compare it to an image filter. Another similarity to CNNs is that the same graphlet filters are used for all groupings, thus enabling weight-sharing. This is similar to how the same convolutional filters are used for all image patches in a CNN. This makes our framework quite efficient when it comes to the number of parameters and, hopefully, makes learning easier.

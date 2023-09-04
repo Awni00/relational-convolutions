@@ -1,3 +1,5 @@
+\section{Grouping Layers}\label{sec:grouping_layers}
+
 A grouping layer is a layer which outputs a group matrix $G \in \reals^{m \times n_g}$ representing the degree to which each object $i \in [m]$ belongs to each group $j \in [n_g]$. The number of groups $n_g$ is a configurable hyperparameter. In this section, we briefly describe some proposals for grouping layers with different properties.
 
 \textbf{Temporal Grouping.} In the temporal grouping layer, the groups are a function only of the temporal order of the objects. That is, whether object $i$ belongs to group $j$ depends only on the value of $i$. This can be achieved by learning the group matrix $G$ directly as a parameter of the model. $G$ will be optimized along with the rest of the model parameters as a function of its effect on the relational convolution layer. Temporal grouping would be appropriate in situations where the order in which objects appear is predetermined. For instance, objects may appear in groups in the sequence. It would also be appropriate in situations where the relevant groups for solving the task are independent of the objects' features.

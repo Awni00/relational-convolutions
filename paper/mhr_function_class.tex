@@ -1,4 +1,6 @@
-In previous work, we characterized the class of functions which can be modeled by \textit{symmetric} multi-head relation modules~\parencite{altabaaAbstractorsTransformer2023}. In particular, we showed that this class of functions is the set of relation functions which are symmetric kernels of positive type (i.e., Mercer kernels) in each relation dimension.
+\section{Function Class of Multi-Head Relation Module}\label{mhr_function_class}
+
+In previous work, we characterized the class of functions which can be modeled by \textit{symmetric} multi-head relation modules~\citep{altabaaAbstractorsTransformer2023}. In particular, we showed that this class of functions is the set of relation functions which are symmetric kernels of positive type (i.e., Mercer kernels) in each relation dimension.
 
 Symmetric relation functions modeled in this way are natural \textit{measures of similarity}. To see this, suppose we have a normalized symmetric positive definite kernel $K$, such that $K(x,x) = 1$ for all $x \in \calX$. Then, the Cauchy-Schwarz inequality for Mercer kernels states that
 \begin{equation}
@@ -7,19 +9,19 @@ Symmetric relation functions modeled in this way are natural \textit{measures of
 
 Thus, $K(x,y)$ is large and close to $1$ when $x$ and $y$ are similar, and close to $0$ when $x, y$ are dissimilar. 
 
-In some applications (e.g., where the relations are indeed measures of `similarity'), this property will be desirable and hence modeling relations as symmetric will be a useful inductive bias. However, in other applications, this may be a restrictive assumption---the underlying relations may be more complex than simple measures of similarity. In such cases, we don't want to restrict the modeled relations to be symmetric and positive definite. In this section, we characterize the class of functions which can be modeled by multi-head relation modules and prove a universal approximation result stating that this includes any continuous function on $\calX \times \calX$. We begin by drawing a connection to reproducing kernel Banach spaces. This is a generalization of reproducing kernel Hilbert spaces which is what we used in our earlier analysis in~\parencite{altabaaAbstractorsTransformer2023}.
+In some applications (e.g., where the relations are indeed measures of `similarity'), this property will be desirable and hence modeling relations as symmetric will be a useful inductive bias. However, in other applications, this may be a restrictive assumption---the underlying relations may be more complex than simple measures of similarity. In such cases, we don't want to restrict the modeled relations to be symmetric and positive definite. In this section, we characterize the class of functions which can be modeled by multi-head relation modules and prove a universal approximation result stating that this includes any continuous function on $\calX \times \calX$. We begin by drawing a connection to reproducing kernel Banach spaces. This is a generalization of reproducing kernel Hilbert spaces which is what we used in our earlier analysis in~\citep{altabaaAbstractorsTransformer2023}.
 
 
 \subsection{Background on reproducing kernel Banach spaces}
 
-Recall that a reproducing kernel hilbert space (RKHS) $\calH$ is a hilbert space of functions on a space $\calX$ in which the point evaluation functionals $f \mapsto f(x)$ are continuous. There is a one-to-one identification between RKHSs and symmetric positive definite kernels $K: \calX \times \calX \to \reals$ such that $\iprod{K(x, \cdot)}{f}_\calH = f(x)$ \parencite{moore-aronszajn}. \parencite{mercerFunctionsPositive1909} further shows that an RKHS can be identified with a feature map via the spectral decomposition of the integral operator $T_K: L_2(\calX) \to L_2(\calX)$ defined by $T_K f(x) = \int_\calX K(x, y) f(y) dy$. Every feature map $\phi: \calX \to \calW$ defines a symmetric positive definite kernel $K(x, y) = \iprod{\phi(x)}{\phi(y)}_\calW$ (hence, an RKHS) and every symmetric positive definite kernel has infinitely many feature map representations.
+Recall that a reproducing kernel hilbert space (RKHS) $\calH$ is a hilbert space of functions on a space $\calX$ in which the point evaluation functionals $f \mapsto f(x)$ are continuous. There is a one-to-one identification between RKHSs and symmetric positive definite kernels $K: \calX \times \calX \to \reals$ such that $\iprod{K(x, \cdot)}{f}_\calH = f(x)$ \citep{moore-aronszajn}. \citep{mercerFunctionsPositive1909} further shows that an RKHS can be identified with a feature map via the spectral decomposition of the integral operator $T_K: L_2(\calX) \to L_2(\calX)$ defined by $T_K f(x) = \int_\calX K(x, y) f(y) dy$. Every feature map $\phi: \calX \to \calW$ defines a symmetric positive definite kernel $K(x, y) = \iprod{\phi(x)}{\phi(y)}_\calW$ (hence, an RKHS) and every symmetric positive definite kernel has infinitely many feature map representations.
 
 As discussed above, modeling relations as symmetric positive definite kernels may be restrictive in some applications. Hence, we choose to model relations as multi-dimensional asymmetric functions, while maintaining the inductive bias of modeling relations as inner products.
 \begin{equation*}
     r(x,y) = \begin{pmatrix} \iprod{\phi_1(x)}{\psi_1(y)} \\ \vdots \\ \iprod{\phi_{d_r}(x)}{\psi_{d_r}(y)}\end{pmatrix}
 \end{equation*}
 
-To analyze the class of functions realizable by such models, we make use of another tool in functional analysis: reproducing kernel \textit{Banach} spaces (RKBS) \parencite{zhangReproducingKernel2009}. RKBS generalize RKHS, allowing for a richer class of kernels. We begin by presenting some of the relevant background on RKBS before proceeding to analyze the function class of multi-head relation modules.
+To analyze the class of functions realizable by such models, we make use of another tool in functional analysis: reproducing kernel \textit{Banach} spaces (RKBS) \citep{zhangReproducingKernel2009}. RKBS generalize RKHS, allowing for a richer class of kernels. We begin by presenting some of the relevant background on RKBS before proceeding to analyze the function class of multi-head relation modules.
 
 \begin{definition}[Reproducing Kernel Banach Space]
     A \textbf{reproducing kernel Banach space} on a space $\calX$ is a Banach space $\calB$ of functions on $\calX$, satisfying:
@@ -39,7 +41,7 @@ Similar to an RKHS, an RKBS also has a \textit{reproducing kernel}. To state the
     \end{split}
 \end{equation}
 
-\parencite[Theorem 2]{zhangReproducingKernel2009} shows that for any RKBS $\calB$ there exists a unique reproducing kernel $K: \calX \times \calX \to \bbC$ which recovers point evaluations,
+\citep[Theorem 2]{zhangReproducingKernel2009} shows that for any RKBS $\calB$ there exists a unique reproducing kernel $K: \calX \times \calX \to \bbC$ which recovers point evaluations,
 \begin{align}
     f(x) &= \paren{f, K(\cdot, x)}_\calB, \forall f \in \calB, \\
     f^*(x) &= \paren{K(x, \cdot), f^*}_\calB \forall f^* \in \calB^*,
@@ -59,7 +61,7 @@ Finally,
 
 Unlike RKHSs, while each RKBS has a unique reproducing kernel, different RKBSs may have the same reproducing kernels.
 
-Furthermore,~\parencite[Theorems 3 and 4]{zhangReproducingKernel2009} show that a kernel $K: \calX \times \calX \to \bbC$ is the reproducing kernel of some RKBS if and only if it has a feature map representation. Crucially for us, the feature map representation is more versatile than the one for RKHSs. Let $\calW$ be a reflexive Banach space with dual space $\calW^*$. Consider a pair of feature maps $\Phi$ and $\Phi^*$, mapping to each feature space, respectively. That is,
+Furthermore,~\citep[Theorems 3 and 4]{zhangReproducingKernel2009} show that a kernel $K: \calX \times \calX \to \bbC$ is the reproducing kernel of some RKBS if and only if it has a feature map representation. Crucially for us, the feature map representation is more versatile than the one for RKHSs. Let $\calW$ be a reflexive Banach space with dual space $\calW^*$. Consider a pair of feature maps $\Phi$ and $\Phi^*$, mapping to each feature space, respectively. That is,
 \begin{equation*}
     \Phi: \calX \to \calW, \ \Phi^*: \calX \to \calW^*,
 \end{equation*}
@@ -69,7 +71,7 @@ Furthermore,~\parencite[Theorems 3 and 4]{zhangReproducingKernel2009} show that 
     \overline{\text{span}}\{\Phi(x): x \in \calX\} = \calW, \ \overline{\text{span}}\{\Phi^*(x): x \in \calX\} = \calW^*.
 \end{equation}
 
-Then, by~\parencite[Theorem 3]{zhangReproducingKernel2009}, the feature maps $\Phi, \Phi^*$ induce an RKBS defined by
+Then, by~\citep[Theorem 3]{zhangReproducingKernel2009}, the feature maps $\Phi, \Phi^*$ induce an RKBS defined by
 
 \begin{align}
     \calB &:= \set{f_w: x \mapsto (\Phi^*(x))(w), w \in \calW} \\
@@ -82,7 +84,7 @@ Then, by~\parencite[Theorem 3]{zhangReproducingKernel2009}, the feature maps $\P
     \norm{f_{w^*}}_{\calB^*} &:= \norm{w^*}_{\calW^*}.
 \end{align}
 
-Furthermore, for any RKBS, there exists some feature spaces $\calW, \calW^*$ and feature maps $\Phi, \Phi^*$ such that the above construction yields that RKBS~\parencite[Theorem 4]{zhangReproducingKernel2009}.
+Furthermore, for any RKBS, there exists some feature spaces $\calW, \calW^*$ and feature maps $\Phi, \Phi^*$ such that the above construction yields that RKBS~\citep[Theorem 4]{zhangReproducingKernel2009}.
 
 \subsection{MHR layers model kernels of reproducing kernel Banach spaces}
 
@@ -120,12 +122,12 @@ We motivate the following analysis by noting the similarity with our model of re
         r_i(x, y) = \paren{\Phi(x), \Phi^*(y)}_{\calW} \equiv (\Phi^*(y))(x), \ x, y \in \calX.
     \end{equation*}
 
-    By~\parencite{}, any two Hilbert spaces with equal dimension are isometrically isomorphic. Hence, without loss of generality, we can restrict our attention to the feature space $\calW = \ell^2(\bbN)$. The dual space is $\calW^* = \ell^2(\bbN)$. Hence, for feature maps $\Phi_i, \Phi_i^*$, the ground truth relation to be approximated is,
+    By~\citep{}, any two Hilbert spaces with equal dimension are isometrically isomorphic. Hence, without loss of generality, we can restrict our attention to the feature space $\calW = \ell^2(\bbN)$. The dual space is $\calW^* = \ell^2(\bbN)$. Hence, for feature maps $\Phi_i, \Phi_i^*$, the ground truth relation to be approximated is,
     \begin{equation*}
         r_i(x, y) = \paren{\Phi_i(x), \Phi_i^*(y)}_{\ell^2(\bbN)} \equiv (\Phi_i^*(y))(\Phi_i(x)), \ x, y \in \calX.
     \end{equation*}
 
-    By the Riesz representation theorem~\parencite{riesz_citation}, there exists a unique element in $u_{\Phi^*(y)} \in \ell^2(\bbN)$ such that,
+    By the Riesz representation theorem~\citep{riesz_citation}, there exists a unique element in $u_{\Phi^*(y)} \in \ell^2(\bbN)$ such that,
     \begin{equation*}
         (\Phi^*(y))(w) = \iprod{w}{u_{\Phi^*(y)}}_{\ell^2(\bbN)}, \ \forall w \in \ell^2(\bbN).
     \end{equation*}
@@ -149,7 +151,7 @@ We motivate the following analysis by noting the similarity with our model of re
         \sup_{x,y \in \calX} \abs{r_i(x, y) - \sum_{j=1}^{\tilde{n}_i} (\Phi_i(x))_j \cdot (\sigma(\Phi^*(y)))_j} < \frac{\varepsilon}{2}.
     \end{equation}
 
-    Now, let the $i$th MLPs, $\phi_i, \psi_i$ be functions from $\calX$ to $\reals^{\tilde{n}_i}$ (i.e., we specify the architecture of the MLPs such that the output space is $\tilde{n}_i$-dimensional). Let $\paren{(\Phi_i(x))_1, \ldots, (\Phi_i(x))_{\tilde{n}_i}}$ be the function to be approximated by the MLP $\phi_i$ and let $\paren{(\sigma(\Phi^*(y)))_1, \ldots, (\sigma(\Phi^*(y)))_{\tilde{n}_i}}$ be the function to be approximated by the MLP $\psi_i$. By universal approximation results on MLPs (e.g.,~\parencite{barronUniversalApproximation1993, cybenkoApproximationSuperpositions1989, hornikMultilayerFeedforward1989}), for any $\tilde{\varepsilon} > 0$, there exists parameters $\theta_{\phi}^{(i)}, \theta_{\psi}^{(i)}$ such that,
+    Now, let the $i$th MLPs, $\phi_i, \psi_i$ be functions from $\calX$ to $\reals^{\tilde{n}_i}$ (i.e., we specify the architecture of the MLPs such that the output space is $\tilde{n}_i$-dimensional). Let $\paren{(\Phi_i(x))_1, \ldots, (\Phi_i(x))_{\tilde{n}_i}}$ be the function to be approximated by the MLP $\phi_i$ and let $\paren{(\sigma(\Phi^*(y)))_1, \ldots, (\sigma(\Phi^*(y)))_{\tilde{n}_i}}$ be the function to be approximated by the MLP $\psi_i$. By universal approximation results on MLPs (e.g.,~\citep{barronUniversalApproximation1993, cybenkoApproximationSuperpositions1989, hornikMultilayerFeedforward1989}), for any $\tilde{\varepsilon} > 0$, there exists parameters $\theta_{\phi}^{(i)}, \theta_{\psi}^{(i)}$ such that,
 
     \begin{equation}\label{eq:thm1_proof_eq2}
         \sup_{x \in \calX} \abs{(\phi_i(x))_j - (\Phi_i(x))_{j}} < \tilde{\varepsilon} \ \text{ and } \ \sup_{x \in \calX} \abs{(\psi_i(y))_j - (\sigma(\Phi^*(x)))_{j}} < \tilde{\varepsilon}, \ \forall j \in \set{1, \ldots, \tilde{n}_i}.
@@ -183,7 +185,7 @@ We motivate the following analysis by noting the similarity with our model of re
 \end{remark}
 
 \begin{remark}
-    In~\parencite{zhangReproducingKernel2009}, the authors explore a specialization of reproducing kernel Banach spaces in which $\calB$ has a semi-inner product. This added structure grants semi-inner product RKBSs some desirable properties which RKHSs have but general RKBSs lack (e.g., convergence in the space implies pointwise convergence, weak universality of kernels, etc.). However, their notion of a semi-inner product is too restrictive to allow for our model $\iprod{\phi(x)}{\psi(x)}$.
+    In~\citep{zhangReproducingKernel2009}, the authors explore a specialization of reproducing kernel Banach spaces in which $\calB$ has a semi-inner product. This added structure grants semi-inner product RKBSs some desirable properties which RKHSs have but general RKBSs lack (e.g., convergence in the space implies pointwise convergence, weak universality of kernels, etc.). However, their notion of a semi-inner product is too restrictive to allow for our model $\iprod{\phi(x)}{\psi(x)}$.
 \end{remark}
 
 \subsection{MHR layers can model any continuous relation}
