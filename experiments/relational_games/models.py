@@ -11,7 +11,6 @@ from relational_neural_networks.relational_graphlet_convolution import Relationa
 cnn_embedder_kwargs = dict(n_f=(16,16), s_f=(3,3), pool_size=2)
 
 # RelConvNet
-groups = [tuple(group) for group in itertools.combinations(range(9), r=3) if all(x in (0,1,2,6,7,8) for x in group)]
 relconv_mhr_kwargs = dict(rel_dim=16, proj_dim=4, symmetric=True)
 relconv_kwargs = dict(n_filters=16, graphlet_size=3,
         symmetric_inner_prod=False)
@@ -19,25 +18,22 @@ cnn_embedder_kwargs = dict(n_f=(16,16), s_f=(3,3), pool_size=2)
 
 def create_relconvnet():
     mhr1 = MultiHeadRelation(**relconv_mhr_kwargs, name='mhr1')
-    # mhr2 = MultiHeadRelation(**relconv_mhr_kwargs, name='mhr2')
-
+    groups = [tuple(group) for group in itertools.combinations(range(9), r=3) if all(x in (0,1,2,6,7,8) for x in group)]
     rel_conv1 = RelationalGraphletConvolution(
         **relconv_kwargs, groups=groups, name='rgc1')
     cnn_embedder = CNNEmbedder(**cnn_embedder_kwargs)
     l2_normalizer = tf.keras.layers.UnitNormalization(name='l2_normalization')
 
-    inputs = tf.keras.layers.Input(shape=train_ds.element_spec[0].shape)
-    embedded_objects = cnn_embedder(inputs)
-    embedded_objects = l2_normalizer(embedded_objects)
-    rel_tensor = mhr1(embedded_objects)
-    convolution = rel_conv1(rel_tensor)
-
-    x = tf.keras.layers.Flatten(name='flatten')(convolution)
-    x = tf.keras.layers.Dense(64, activation='relu', name='hidden_dense1')(x)
-    x = tf.keras.layers.Dense(2, name='output')(x)
-    outputs = x
-
-    model = tf.keras.Model(inputs=inputs, outputs=outputs, name='relconvent')
+    model = tf.keras.Sequential([
+        cnn_embedder,
+        l2_normalizer,
+        mhr1,
+        rel_conv1,
+        tf.keras.layers.Flatten(name='flatten'),
+        tf.keras.layers.Dense(64, activation='relu', name='hidden_dense1'),
+        tf.keras.layers.Dense(2, name='output')
+        ], name='relconv'
+    )
 
     return model
 
@@ -86,6 +82,5 @@ def create_transformer():
 model_creators = dict(
     relconvnet=create_relconvnet,
     transformer=create_transformer,
-    corelnet=create_corelnet,
-    relconvnet_row_match=create_relconvnet_matchrow
+    corelnet=create_corelnet
     )
