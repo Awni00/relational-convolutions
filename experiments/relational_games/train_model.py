@@ -30,7 +30,7 @@ parser.add_argument('--early_stopping', default=True, type=bool, help='whether t
 parser.add_argument('--train_size', default=-1, type=int, help='training set size')
 parser.add_argument('--num_trials', default=1, type=int, help='number of trials per training set size')
 parser.add_argument('--start_trial', default=0, type=int, help='what to call first trial')
-parser.add_argument('--wandb_project_name',  type=str, help='W&B project name')
+parser.add_argument('--wandb_project_name', default=None, type=str, help='W&B project name')
 args = parser.parse_args()
 
 utils.print_section("SET UP")
@@ -50,14 +50,14 @@ logger = logging.getLogger("wandb")
 logger.setLevel(logging.ERROR)
 
 wandb_project_name = args.wandb_project_name
+if wandb_project_name is None:
+    wandb_project_name = f'relational_games-{args.task}'
 
 #endregion
 
 #region load data
 utils.print_section('LOADING DATA')
 data_path = '../../data/relational_games'
-# filename = f'{data_path}/1task_match_patt_pentos.npz'
-# filename = f'{data_path}/1task_between_stripes.npz'
 
 dataset_specs = np.load(f'{data_path}/dataset_specs.npy', allow_pickle=True).item()
 
@@ -92,7 +92,7 @@ metrics = ['acc']
 def create_callbacks(data_size=None, batch_size=None):
     callbacks = [
         # TqdmCallback(data_size=data_size, batch_size=batch_size),
-        wandb.keras.WandbMetricsLogger(log_freq='epoch')
+        wandb.keras.WandbMetricsLogger(log_freq='batch')
     ]
 
     if args.early_stopping:
@@ -108,9 +108,6 @@ train_size = args.train_size
 
 num_trials = args.num_trials # num of trials per train set size
 start_trial = args.start_trial
-
-print(f'will evaluate learning curve for `train_sizes` from {min_train_size} to {max_train_size} in increments of {train_size_step}.')
-print(f'will run {num_trials} trials for each of the {len(train_sizes)} training set sizes for a total of {num_trials * len(train_sizes)} trials')
 # endregion
 
 #region functions
@@ -122,8 +119,8 @@ def train_model(
     ):
 
     for trial in trange(start_trial, start_trial + num_trials, desc='trial', leave=False):
-        run = wandb.init(project=wandb_project_name, group=group_name, name=f'train size = {train_size}; trial = {trial}',
-                        config={'train size': train_size, 'trial': trial, 'group': group_name, 'train split': args.train_split})
+        run = wandb.init(project=wandb_project_name, group=group_name, name=f'trial = {trial}',
+                        config={'trial': trial, 'group': group_name, 'train split': args.train_split})
         model = create_model()
 
         train_ds_sample = train_ds.shuffle(buffer_size=len(train_ds)).take(train_size).batch(batch_size)
