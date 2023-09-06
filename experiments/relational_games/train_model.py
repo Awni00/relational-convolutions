@@ -31,11 +31,15 @@ parser.add_argument('--train_size', default=-1, type=int, help='training set siz
 parser.add_argument('--num_trials', default=1, type=int, help='number of trials per training set size')
 parser.add_argument('--start_trial', default=0, type=int, help='what to call first trial')
 parser.add_argument('--wandb_project_name', default=None, type=str, help='W&B project name')
+parser.add_argument('--seed', default=314159, help='random seed')
 args = parser.parse_args()
 
 utils.print_section("SET UP")
 
 print(f'received the following arguments: {args}')
+
+# set random seed
+tf.random.set_seed(args.seed)
 
 # check if GPU is being used
 print(tf.config.list_physical_devices())
