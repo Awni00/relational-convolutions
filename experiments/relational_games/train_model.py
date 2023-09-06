@@ -149,7 +149,7 @@ def eval_model(model):
 
 # endregion
 
-#region evaluate learning curves
+#region train & evaluate model
 def create_model():
     model = models.model_creators[args.model]()
     model.compile(loss=loss, optimizer=create_opt(), metrics=metrics) # compile
@@ -158,7 +158,7 @@ def create_model():
 
 group_name = args.model
 
-utils.print_section("EVALUATING LEARNING CURVES")
+utils.print_section("TRAINING & EVALUATING MODEL")
 train_model(
     create_model, eval_model, fit_kwargs, create_callbacks,
     wandb_project_name, group_name,
