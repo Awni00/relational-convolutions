@@ -72,6 +72,24 @@ def create_nosoftmaxcorelnet():
 
     return model
 
+
+def create_tcncorelnet():
+    mhr = MultiHeadRelation(**corelnet_mhr_kwargs, name='mhr')
+    cnn_embedder = CNNEmbedder(**cnn_embedder_kwargs)
+
+    model = tf.keras.Sequential(
+        [
+        cnn_embedder,
+        tf.keras.layers.LayerNormalization(axis=1), # TCN? axis=1 is the temporal axis
+        mhr,
+        tf.keras.layers.Softmax(axis=-1, name='softmax'),
+        tf.keras.layers.Flatten(name='flatten'),
+        tf.keras.layers.Dense(32, activation='relu', name='hidden_dense1'),
+        tf.keras.layers.Dense(2, name='output')],
+        name='tcn_corelnet')
+
+    return model
+
 ## Transformer
 encoder_kwargs = dict(num_layers=1,
         num_attention_heads=8,
@@ -99,5 +117,6 @@ model_creators = dict(
     relconvnet=create_relconvnet,
     transformer=create_transformer,
     corelnet=create_corelnet,
-    nosoftmax_corelnet=create_nosoftmaxcorelnet
+    nosoftmax_corelnet=create_nosoftmaxcorelnet,
+    tcn_corelnet=create_tcncorelnet
     )
