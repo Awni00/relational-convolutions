@@ -91,6 +91,23 @@ def create_tcncorelnet():
 
     return model
 
+def create_grouptcn_corelnet():
+    mhr = MultiHeadRelation(**corelnet_mhr_kwargs, name='mhr')
+    cnn_embedder = CNNEmbedder(**cnn_embedder_kwargs)
+
+    model = tf.keras.Sequential(
+        [
+            cnn_embedder,
+            GroupTCN(groups=[(0,1,2), (6,7,8)]), # this encodes additional information about the problem
+            mhr,
+            tf.keras.layers.Softmax(axis=-1, name='softmax'),
+            tf.keras.layers.Flatten(name='flatten'),
+            tf.keras.layers.Dense(32, activation='relu', name='hidden_dense1'),
+            tf.keras.layers.Dense(2, name='output')],
+        name='corelnet')
+
+    return model
+
 predinet_kwargs = dict(key_dim=4, n_heads=4, n_relations=16, add_temp_tag=False)
 def create_predinet():
     cnn_embedder = CNNEmbedder(**cnn_embedder_kwargs)
