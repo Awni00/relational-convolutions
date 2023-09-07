@@ -6,6 +6,7 @@ from cnn_embedder import CNNEmbedder
 import sys; sys.path.append('..'); sys.path.append('../..')
 from relational_neural_networks.multi_head_relation import MultiHeadRelation
 from relational_neural_networks.relational_graphlet_convolution import RelationalGraphletConvolution
+from relational_neural_networks.tcn import TCN, GroupTCN
 
 # global parameters
 cnn_embedder_kwargs = dict(n_f=(16,16), s_f=(3,3), pool_size=2)
@@ -90,6 +91,20 @@ def create_tcncorelnet():
 
     return model
 
+predinet_kwargs = dict(key_dim=4, n_heads=4, n_relations=16, add_temp_tag=False)
+def create_predinet():
+    cnn_embedder = CNNEmbedder(**cnn_embedder_kwargs)
+
+    model = tf.keras.Sequential(
+        [
+            cnn_embedder,
+            PrediNet(**predinet_kwargs),
+            tf.keras.layers.Dense(64, activation='relu', name='hidden_dense1'),
+            tf.keras.layers.Dense(2, name='output')],
+        name='predinet')
+
+    return modedl
+
 ## Transformer
 encoder_kwargs = dict(num_layers=1,
         num_attention_heads=8,
@@ -118,5 +133,6 @@ model_creators = dict(
     transformer=create_transformer,
     corelnet=create_corelnet,
     nosoftmax_corelnet=create_nosoftmaxcorelnet,
-    tcn_corelnet=create_tcncorelnet
+    tcn_corelnet=create_tcncorelnet,
+    predinet=create_predinet
     )
