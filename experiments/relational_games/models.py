@@ -7,6 +7,7 @@ import sys; sys.path.append('..'); sys.path.append('../..')
 from relational_neural_networks.multi_head_relation import MultiHeadRelation
 from relational_neural_networks.relational_graphlet_convolution import RelationalGraphletConvolution
 from relational_neural_networks.tcn import TCN, GroupTCN
+from relational_neural_networks.predinet import PrediNet
 
 # global parameters
 cnn_embedder_kwargs = dict(n_f=(16,16), s_f=(3,3), pool_size=2)
