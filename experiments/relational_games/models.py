@@ -121,7 +121,7 @@ def create_predinet():
             tf.keras.layers.Dense(2, name='output')],
         name='predinet')
 
-    return modedl
+    return model
 
 ## Transformer
 encoder_kwargs = dict(num_layers=1,
