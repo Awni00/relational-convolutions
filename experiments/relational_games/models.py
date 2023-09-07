@@ -81,7 +81,7 @@ def create_tcncorelnet():
     model = tf.keras.Sequential(
         [
         cnn_embedder,
-        tf.keras.layers.LayerNormalization(axis=1), # TCN? axis=1 is the temporal axis
+        TCN(), # TCN? axis=1 is the temporal axis
         mhr,
         tf.keras.layers.Softmax(axis=-1, name='softmax'),
         tf.keras.layers.Flatten(name='flatten'),
@@ -151,5 +151,6 @@ model_creators = dict(
     corelnet=create_corelnet,
     nosoftmax_corelnet=create_nosoftmaxcorelnet,
     tcn_corelnet=create_tcncorelnet,
-    predinet=create_predinet
+    grouptcn_corelnet=create_grouptcn_corelnet,
+    predinet=create_predinet,
     )
