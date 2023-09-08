@@ -162,7 +162,7 @@ else:
     object_selection = None
 
 def create_model():
-    model = models.model_creators[args.model](args.normalizer, args.freeze_embedder, args.object_selection)
+    model = models.model_creators[args.model](args.normalizer, args.freeze_embedder, object_selection)
     model.compile(loss=loss, optimizer=create_opt(), metrics=metrics) # compile
     model.build(input_shape=(None, *train_ds.element_spec[0].shape)) # build
     return model
