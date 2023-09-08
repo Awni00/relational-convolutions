@@ -12,6 +12,10 @@ __pycache__/
 # data
 data/
 
+# ignore jobs
+jobs/*/*.out
+jobs/*/*.job
+
 # C extensions
 *.so
 
