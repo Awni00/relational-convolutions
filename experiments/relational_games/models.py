@@ -164,7 +164,7 @@ def create_transformer(normalizer=None, freeze_embedder=False, object_selection=
 # region utilities for model configurations
 def get_normalizer(normalizer):
     if normalizer is None or normalizer=='None':
-        return tf.keras.layers.Identity(name='identity')
+        return tf.keras.layers.Identity(name='identity_normalizer')
     elif normalizer == 'l2':
         return tf.keras.layers.UnitNormalization(name='l2_norm')
     elif normalizer == 'tcn':
@@ -174,7 +174,7 @@ def get_normalizer(normalizer):
 
 def get_obj_selector(object_selection):
     if object_selection is None or object_selection=='None':
-        return tf.keras.layers.Identity(name='identity')
+        return tf.keras.layers.Identity(name='identity_obj_selector')
     else:
         return tf.keras.layers.Lambda(lambda x: tf.gather(x, object_selection, axis=1), name='object_selector')
 
