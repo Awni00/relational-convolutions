@@ -17,7 +17,7 @@ parser = argparse.ArgumentParser()
 parser.add_argument('--model', type=str,
     choices=models.model_creators.keys(),
     help='the model to evaluate learning curves on')
-parser.add_argument('--normalizer', type=str, default=None, choices=('l2', 'tcn', None))
+parser.add_argument('--normalizer', type=str, default=None, choices=('l2', 'tcn', 'None', None))
 parser.add_argument('--freeze_embedder', type=bool, default=False)
 parser.add_argument('--object_selection', type=bool, default=False)
 parser.add_argument('--task', type=str, help='the relational games task')
@@ -156,8 +156,10 @@ def eval_model(model):
 
 #region train & evaluate model
 
-if args.object_selection is not None:
-    args.object_selection = models.get_obj_selection_by_task(args.task)
+if args.object_selection:
+    object_selection = models.get_obj_selection_by_task(args.task)
+else:
+    object_selection = None
 
 def create_model():
     model = models.model_creators[args.model](args.normalizer, args.freeze_embedder, args.object_selection)
@@ -165,7 +167,7 @@ def create_model():
     model.build(input_shape=(None, *train_ds.element_spec[0].shape)) # build
     return model
 
-group_name = models.get_group_name(args.model, args.normalizer, args.freeze_embedder, args.object_selection)
+group_name = models.get_group_name(args.model, args.normalizer, args.freeze_embedder, object_selection)
 
 utils.print_section("TRAINING & EVALUATING MODEL")
 train_model(
