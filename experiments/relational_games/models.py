@@ -11,6 +11,7 @@ from relational_neural_networks.predinet import PrediNet
 
 # global parameters
 cnn_embedder_kwargs = dict(n_f=(16,16), s_f=(3,3), pool_size=2)
+hidden_dense_size = 64
 
 # RelConvNet
 relconv_mhr_kwargs = dict(rel_dim=16, proj_dim=4, symmetric=True)
@@ -32,7 +33,7 @@ def create_relconvnet():
         mhr1,
         rel_conv1,
         tf.keras.layers.Flatten(name='flatten'),
-        tf.keras.layers.Dense(64, activation='relu', name='hidden_dense1'),
+        tf.keras.layers.Dense(hidden_dense_size, activation='relu', name='hidden_dense1'),
         tf.keras.layers.Dense(2, name='output')
         ], name='relconv'
     )
@@ -52,7 +53,7 @@ def create_corelnet():
             mhr,
             tf.keras.layers.Softmax(axis=-1, name='softmax'),
             tf.keras.layers.Flatten(name='flatten'),
-            tf.keras.layers.Dense(32, activation='relu', name='hidden_dense1'),
+            tf.keras.layers.Dense(hidden_dense_size, activation='relu', name='hidden_dense1'),
             tf.keras.layers.Dense(2, name='output')],
         name='corelnet')
 
@@ -68,7 +69,7 @@ def create_nosoftmaxcorelnet():
             tf.keras.layers.UnitNormalization(),
             mhr,
             tf.keras.layers.Flatten(name='flatten'),
-            tf.keras.layers.Dense(32, activation='relu', name='hidden_dense1'),
+            tf.keras.layers.Dense(hidden_dense_size, activation='relu', name='hidden_dense1'),
             tf.keras.layers.Dense(2, name='output')],
         name='nosoftmax_corelnet')
 
@@ -86,7 +87,7 @@ def create_tcncorelnet():
         mhr,
         tf.keras.layers.Softmax(axis=-1, name='softmax'),
         tf.keras.layers.Flatten(name='flatten'),
-        tf.keras.layers.Dense(32, activation='relu', name='hidden_dense1'),
+        tf.keras.layers.Dense(hidden_dense_size, activation='relu', name='hidden_dense1'),
         tf.keras.layers.Dense(2, name='output')],
         name='tcn_corelnet')
 
@@ -103,7 +104,7 @@ def create_grouptcn_corelnet():
             mhr,
             tf.keras.layers.Softmax(axis=-1, name='softmax'),
             tf.keras.layers.Flatten(name='flatten'),
-            tf.keras.layers.Dense(32, activation='relu', name='hidden_dense1'),
+            tf.keras.layers.Dense(hidden_dense_size, activation='relu', name='hidden_dense1'),
             tf.keras.layers.Dense(2, name='output')],
         name='corelnet')
 
@@ -140,7 +141,11 @@ def create_transformer():
 
     cnn_embedder = CNNEmbedder(**cnn_embedder_kwargs)
 
-    model = tf.keras.Sequential([cnn_embedder, encoder, tf.keras.layers.GlobalAveragePooling1D(), tf.keras.layers.Dense(2)])
+    model = tf.keras.Sequential([
+        cnn_embedder,
+        encoder,
+        tf.keras.layers.GlobalAveragePooling1D(),
+        tf.keras.layers.Dense(2)])
     return model
 
 
