@@ -17,6 +17,9 @@ parser = argparse.ArgumentParser()
 parser.add_argument('--model', type=str,
     choices=models.model_creators.keys(),
     help='the model to evaluate learning curves on')
+parser.add_argument('--normalizer', type=str, default=None, choices=('l2', 'tcn', None))
+parser.add_argument('--freeze_embedder', type=bool, default=False)
+parser.add_argument('--object_selection', type=bool, default=False)
 parser.add_argument('--task', type=str, help='the relational games task')
 parser.add_argument('--train_split', type=str, choices=('stripes', 'hexos', 'pentos'))
 parser.add_argument('--test_split_size', type=int, default=5_000,
@@ -32,6 +35,7 @@ parser.add_argument('--num_trials', default=1, type=int, help='number of trials 
 parser.add_argument('--start_trial', default=0, type=int, help='what to call first trial')
 parser.add_argument('--wandb_project_name', default=None, type=str, help='W&B project name')
 parser.add_argument('--seed', default=314159, help='random seed')
+parser.add_argument('--ignore_gpu_assert', action='store_true')
 args = parser.parse_args()
 
 utils.print_section("SET UP")
@@ -43,7 +47,8 @@ tf.random.set_seed(args.seed)
 
 # check if GPU is being used
 print(tf.config.list_physical_devices())
-assert len(tf.config.list_physical_devices('GPU')) > 0
+if not args.ignore_gpu_assert:
+    assert len(tf.config.list_physical_devices('GPU')) > 0
 
 # set up W&B logging
 import wandb
@@ -150,13 +155,17 @@ def eval_model(model):
 # endregion
 
 #region train & evaluate model
+
+if args.object_selection is not None:
+    args.object_selection = models.get_obj_selection_by_task(args.task)
+
 def create_model():
-    model = models.model_creators[args.model]()
+    model = models.model_creators[args.model](args.normalizer, args.freeze_embedder, args.object_selection)
     model.compile(loss=loss, optimizer=create_opt(), metrics=metrics) # compile
     model.build(input_shape=(None, *train_ds.element_spec[0].shape)) # build
     return model
 
-group_name = args.model
+group_name = models.get_group_name(args.model, args.normalizer, args.freeze_embedder, args.object_selection)
 
 utils.print_section("TRAINING & EVALUATING MODEL")
 train_model(
