@@ -163,7 +163,7 @@ def create_transformer(normalizer=None, freeze_embedder=False, object_selection=
 
 # region utilities for model configurations
 def get_normalizer(normalizer):
-    if normalizer is None:
+    if normalizer is None or normalizer=='None':
         return tf.keras.layers.Identity(name='identity')
     elif normalizer == 'l2':
         return tf.keras.layers.UnitNormalization(name='l2_norm')
@@ -173,7 +173,7 @@ def get_normalizer(normalizer):
         raise ValueError(f'unknown normalizer {normalizer}')
 
 def get_obj_selector(object_selection):
-    if object_selection is None:
+    if object_selection is None or object_selection=='None':
         return tf.keras.layers.Identity(name='identity')
     else:
         return tf.keras.layers.Lambda(lambda x: tf.gather(x, object_selection, axis=1), name='object_selector')
@@ -188,7 +188,7 @@ def get_obj_selection_by_task(task):
 
 def get_group_name(model_name, normalizer=None, freeze_embedder=False, object_selection=None):
     group_name = model_name
-    if normalizer is not None:
+    if normalizer is not None or object_selection=='None':
         group_name += f'-{normalizer}'
     if freeze_embedder:
         group_name += '-freeze_embedder'
