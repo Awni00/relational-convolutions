@@ -40,6 +40,32 @@ def create_relconvnet():
 
     return model
 
+def create_randomgroup_relconvnet():
+    mhr1 = MultiHeadRelation(**relconv_mhr_kwargs, name='mhr1')
+
+    n_groups = 30
+    groups = [tuple(group) for group in itertools.combinations(range(9), r=3)]
+    groups_choice_idx = np.random.choice(len(groups), n_groups, replace=False)
+    groups = [group for i,group in enumerate(groups) if i in groups_choice_idx]
+    rel_conv1 = RelationalGraphletConvolution(
+        **relconv_kwargs, groups=groups, name='rgc1')
+
+    cnn_embedder = CNNEmbedder(**cnn_embedder_kwargs)
+    l2_normalizer = tf.keras.layers.UnitNormalization(name='l2_normalization')
+
+    model = tf.keras.Sequential([
+        cnn_embedder,
+        l2_normalizer,
+        mhr1,
+        rel_conv1,
+        tf.keras.layers.Flatten(name='flatten'),
+        tf.keras.layers.Dense(hidden_dense_size, activation='relu', name='hidden_dense1'),
+        tf.keras.layers.Dense(2, name='output')
+        ], name='relconv'
+    )
+
+    return model
+
 
 def create_nofilter_relconvnet():
     mhr1 = MultiHeadRelation(**relconv_mhr_kwargs, name='mhr1')
@@ -72,6 +98,27 @@ def create_tcn_relconvnet():
     model = tf.keras.Sequential([
         cnn_embedder,
         TCN(),
+        mhr1,
+        rel_conv1,
+        tf.keras.layers.Flatten(name='flatten'),
+        tf.keras.layers.Dense(hidden_dense_size, activation='relu', name='hidden_dense1'),
+        tf.keras.layers.Dense(2, name='output')
+        ], name='relconv'
+    )
+
+    return model
+
+
+def create_grouptcn_relconvnet():
+    mhr1 = MultiHeadRelation(**relconv_mhr_kwargs, name='mhr1')
+    rel_conv1 = RelationalGraphletConvolution(
+        **relconv_kwargs, groups='combinations', name='rgc1')
+    cnn_embedder = CNNEmbedder(**cnn_embedder_kwargs)
+    l2_normalizer = tf.keras.layers.UnitNormalization(name='l2_normalization')
+
+    model = tf.keras.Sequential([
+        cnn_embedder,
+        GroupTCN(groups=[(0,1,2), (6,7,8)]), # this encodes additional information about the problem
         mhr1,
         rel_conv1,
         tf.keras.layers.Flatten(name='flatten'),
@@ -196,6 +243,7 @@ def create_transformer():
 model_creators = dict(
     relconvnet=create_relconvnet,
     nofilter_relconvnet=create_nofilter_relconvnet,
+    randomgroup_relconvnet=create_randomgroup_relconvnet,
     tcn_relconvnet=create_tcn_relconvnet,
     transformer=create_transformer,
     corelnet=create_corelnet,
