@@ -13,32 +13,44 @@ import utils
 
 #region setup
 # parse script arguments
+# parse script arguments
 parser = argparse.ArgumentParser()
 parser.add_argument('--model', type=str,
     choices=models.model_creators.keys(),
     help='the model to evaluate learning curves on')
+parser.add_argument('--normalizer', type=str, default=None, choices=('l2', 'tcn', 'None', None))
+parser.add_argument('--freeze_embedder', type=bool, default=False)
+parser.add_argument('--object_selection', type=bool, default=False)
 parser.add_argument('--task', type=str, help='the relational games task')
 parser.add_argument('--train_split', type=str, choices=('stripes', 'hexos', 'pentos'))
-parser.add_argument('--test_split_size', type=int, default=5000,
+parser.add_argument('--test_split_size', type=int, default=5_000,
     help='size of sample from hold out sets to evaluate on')
-parser.add_argument('--n_epochs', default=500, type=int, help='number of epochs to train each model for')
-parser.add_argument('--batch_size', default=32, help='batch size')
-parser.add_argument('--early_stopping', default=True, type=bool, help='whether to use early stopping')
 parser.add_argument('--min_train_size', default=500, type=int, help='minimum training set size')
 parser.add_argument('--max_train_size', default=5000, type=int, help='maximum training set size')
 parser.add_argument('--train_size_step', default=50, type=int, help='training set step size')
+parser.add_argument('--val_size', type=int, default=1_000)
+parser.add_argument('--test_size', type=int, default=5_000)
+parser.add_argument('--n_epochs', default=100, type=int, help='number of epochs to train each model for')
+parser.add_argument('--batch_size', default=512, help='batch size')
+parser.add_argument('--learning_rate', default=0.001, help='learning rate')
+parser.add_argument('--early_stopping', default=False, type=bool, help='whether to use early stopping')
+parser.add_argument('--train_size', default=-1, type=int, help='training set size')
 parser.add_argument('--num_trials', default=1, type=int, help='number of trials per training set size')
 parser.add_argument('--start_trial', default=0, type=int, help='what to call first trial')
-parser.add_argument('--wandb_project_name',  type=str, help='W&B project name')
+parser.add_argument('--wandb_project_name', default=None, type=str, help='W&B project name')
+parser.add_argument('--seed', default=314159, help='random seed')
+parser.add_argument('--ignore_gpu_assert', action='store_true')
 args = parser.parse_args()
 
 utils.print_section("SET UP")
 
 print(f'received the following arguments: {args}')
 
+
 # check if GPU is being used
 print(tf.config.list_physical_devices())
-assert len(tf.config.list_physical_devices('GPU')) > 0
+if not args.ignore_gpu_assert:
+    assert len(tf.config.list_physical_devices('GPU')) > 0
 
 # set up W&B logging
 import wandb
@@ -49,14 +61,14 @@ logger = logging.getLogger("wandb")
 logger.setLevel(logging.ERROR)
 
 wandb_project_name = args.wandb_project_name
+if wandb_project_name is None:
+    wandb_project_name = f'relational_games-{args.task}'
 
 #endregion
 
 #region load data
 utils.print_section('LOADING DATA')
 data_path = '../../data/relational_games'
-# filename = f'{data_path}/1task_match_patt_pentos.npz'
-# filename = f'{data_path}/1task_between_stripes.npz'
 
 dataset_specs = np.load(f'{data_path}/dataset_specs.npy', allow_pickle=True).item()
 
@@ -65,10 +77,10 @@ task_datasets = data_utils.load_task_datasets(args.task, data_path, data_format=
 train_split_ds = task_datasets[args.train_split]
 # train_split_ds = data_utils.load_ds_from_npz(filename)
 
-train_ds, val_ds, test_ds = utils.split_ds(train_split_ds, val_size=0.1, test_size=0.2)
+train_ds, val_ds, test_ds = utils.split_ds(train_split_ds, val_size=args.val_size, test_size=args.val_size)
 del train_split_ds
 
-batch_size = 32
+batch_size = args.batch_size
 val_ds = val_ds.batch(batch_size)
 test_ds = test_ds.batch(batch_size)
 
@@ -99,7 +111,6 @@ def create_callbacks(data_size=None, batch_size=None):
     return callbacks
 
 fit_kwargs = dict(epochs=args.n_epochs)
-batch_size = 32
 #endregion
 
 # region evaluate learning curves
@@ -153,13 +164,19 @@ def eval_model(model):
 # endregion
 
 #region evaluate learning curves
+
+if args.object_selection:
+    object_selection = models.get_obj_selection_by_task(args.task)
+else:
+    object_selection = None
+
 def create_model():
-    model = models.model_creators[args.model]()
+    model = models.model_creators[args.model](args.normalizer, args.freeze_embedder, object_selection)
     model.compile(loss=loss, optimizer=create_opt(), metrics=metrics) # compile
     model.build(input_shape=(None, *train_ds.element_spec[0].shape)) # build
     return model
 
-group_name = args.model
+group_name = models.get_group_name(args.model, args.normalizer, args.freeze_embedder, object_selection)
 
 utils.print_section("EVALUATING LEARNING CURVES")
 evaluate_learning_curves(
