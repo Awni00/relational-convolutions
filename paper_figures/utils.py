@@ -1,7 +1,8 @@
+import wandb
+import pandas as pd
+from tqdm import tqdm
 
 def get_wandb_project_table(project_name, entity='Awni00', attr_cols=('group', 'name'), config_cols='all', summary_cols='all'):
-    import wandb
-    import pandas as pd
 
     api = wandb.Api()
 
@@ -36,17 +37,26 @@ def get_wandb_project_table(project_name, entity='Awni00', attr_cols=('group', '
 def get_project_run_histories(project_name, entity='Awni00', attr_cols=('group', 'name'), config_cols='all'):
     '''gets the log history of all runs in a project'''
 
-    import wandb
-    import pandas as pd
+    def get_run_history(run):
+        history_scan = run.scan_history()
+        keys = history_scan.next().keys()
+        run_history_data = {key: [] for key in keys}
+        for row in history_scan:
+            for key in keys:
+                run_history_data[key].append(row[key])
+        return pd.DataFrame(run_history_data)
 
-    api = wandb.Api()
+    api = wandb.Api(timeout=60)
 
     runs = api.runs(entity + "/" + project_name)
 
+    if config_cols == 'all':
+        config_cols = set().union(*tuple(run.config.keys() for run in runs))
+
     run_history_dfs = []
 
-    for run in runs:
-        run_history = run.history()
+    for run in tqdm(runs, leave=False):
+        run_history = get_run_history(run)
 
         for config_col in config_cols:
             run_history[config_col] = run.config.get(config_col, None)
@@ -57,5 +67,7 @@ def get_project_run_histories(project_name, entity='Awni00', attr_cols=('group',
         run_history_dfs.append(run_history)
 
     runs_history_df = pd.concat(run_history_dfs, axis=0)
+
+    runs_history_df = runs_history_df.reset_index(drop=True)
 
     return runs_history_df
