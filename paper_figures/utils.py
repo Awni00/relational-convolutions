@@ -39,7 +39,11 @@ def get_project_run_histories(project_name, entity='Awni00', attr_cols=('group',
 
     def get_run_history(run):
         history_scan = run.scan_history()
-        keys = history_scan.next().keys()
+        try:
+            keys = history_scan.next().keys()
+        except StopIteration:
+            print(f'{run.group}-{run.name} has no history. Skipping...')
+            return pd.DataFrame()
         run_history_data = {key: [] for key in keys}
         for row in history_scan:
             for key in keys:
