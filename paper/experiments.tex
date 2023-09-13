@@ -1,13 +1,27 @@
 \section{Experiments}\label{sec:experiments}
 
-\texttt{[TODO]}
+The \textit{relational games} dataset was contributed as a benchmark for relational reasoning by~\citep{shanahanExplicitlyRelationalNeural}. It consists of a family of binary classification tasks for identifying abstract relational rules between a set of objects represented as images. The objects consist of three sets of simple geometric shapes, referred to as ``pentominoes'', ``hexominoes'', and ``stripes'' (\Cref{fig:relational_games_objects}). The objects are arranged in a $3 \times 3$ grid. Each relational game task corresponds to some relationship between the objects (see~\Cref{tab:relational_games_tasks} and~\Cref{fig:relational_games_tasks}), and the target is to classify whether the relationship holds among a given sequence of objects or not.
 
-\texttt{Description of relational games}
+In our experiments, we evaluate out-of-distribution generalization by training all models on the pentominoes objects and evaluating on the hexominoes and stripes objects. The input to all models is presented as a sequence of $9$ objects, each represented as a $12 \times 12 \times 3$ RGB image. In all models, the objects are processed independently by a CNN with a shared architecture. This produces a sequence of $9$ $d$-dimensional vectors. The sequence of objects is then passed to the relation-processing component of the model. The results are then flattened and passed through an MLP with a shared architecture to produce the final prediction. We compare four models: a relational convolution model (abbreviated RelConvNet), CoRelNet~\citep{kergNeuralArchitecture2022}, PrediNet~\citep{shanahanExplicitlyRelationalNeural}, and a Transformer~\citep{vaswani2017attention}. The architectural details of each model are described in~\Cref{tab:architectures}.
+
+\begin{table}[ht]
+    \centering
+    \input{figs/experiments/tasks_table.tex}
+    \caption{Relational games tasks.}
+    \label{tab:relational_games_tasks}
+\end{table}
+
+\begin{table}[ht]
+    \centering
+    \input{figs/experiments/architectures_table.tex}
+    \caption{Model architectures.}
+    \label{tab:architectures}
+\end{table}
 
 \begin{table}
     \centering
     \input{figs/experiments/generalization_table.tex}
-    \caption{Out-of-distribution Generalization results on relational games.}
+    \caption{Out-of-distribution Generalization results on relational games. We report means $\pm$ standard error of mean over 5 trials.}
 \end{table}
 
 \begin{figure}
@@ -21,5 +35,5 @@
         \includegraphics[width=\textwidth]{figs/experiments/hexos_acc.pdf}
         \caption{OoD generalization on Hexos objects}
     \end{subfigure}
-    \caption{OoD generalization.}\label{fig:ood_generalization}
+    \caption{OoD generalization. Error bars are a bootstrap 95\% confidence interval. 5 trials. bar height is mean.}\label{fig:ood_generalization}
 \end{figure}
