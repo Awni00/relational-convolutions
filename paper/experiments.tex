@@ -27,8 +27,8 @@ The pentominoes split of the relational games dataset is used for training. We h
         % \caption{Examples of problem instances for each task. The top row is an example where the relation holds and the bottom row is an example where the relation does not hold.}
         \label{fig:relational_games_tasks}
     \end{subfigure}
-    \caption{Relational games dataset. \textbf{Left} Examples of objects from each split. \textbf{Right} Examples of problem instances for each task. The top row is an example where the relation holds and the bottom row is an example where the relation does not hold.}
-    \label{fig:figurelabel}
+    \caption{Relational games dataset.~\textbf{Left} Examples of objects from each split.~\textbf{Right} Examples of problem instances for each task. The top row is an example where the relation holds and the bottom row is an example where the relation does not hold.}
+    \label{fig:relational_games_dataset}
 \end{figure}
 
 \begin{table}[ht]
@@ -38,28 +38,37 @@ The pentominoes split of the relational games dataset is used for training. We h
     \label{tab:architectures}
 \end{table}
 
-\begin{table}
-    \centering
-    \input{figs/experiments/generalization_table.tex}
-    \caption{Out-of-distribution Generalization results on relational games. We report means $\pm$ standard error of mean over 5 trials.}
-\end{table}
 
-\begin{figure}
-    \begin{subfigure}{0.5\textwidth}
-        \centering
-        \includegraphics[width=\textwidth]{figs/experiments/stripes_acc.pdf}
-        \caption{OoD generalization on Stripes objects}
-    \end{subfigure}
-    \begin{subfigure}{0.5\textwidth}
-        \centering
-        \includegraphics[width=\textwidth]{figs/experiments/hexos_acc.pdf}
-        \caption{OoD generalization on Hexos objects}
-    \end{subfigure}
-    \caption{Out-of-distribution generalization on hold-out object sets. Bar heights indicate the mean over 5 trials and the errror bars indicate a bootstrap 95\% confidence interval.}\label{fig:ood_generalization}
-\end{figure}
 
 \begin{figure}
     \centering
     \includegraphics[width=\textwidth]{figs/experiments/all_training_curves.pdf}
     \caption{Training curves for each relational games task. Showing curves up to 2,000 batch steps. Solid lines indicate the mean over 5 trials and the shaded regions indicate a bootstrap 95\% confidence interval.}\label{fig:training_curves}
 \end{figure}
+
+\textbf{Sample efficiency.} We observe that the relational inductive biases of RelConvNet, and relational models more generally, grant a significant advantage in sample-efficiency.~\Cref{fig:training_curves} shows the training accuracy over the first 2,000 batches for each model. RelConvNet, CoRelNet, and PrediNet are explicitly relational architectures, whereas the Transformer is not. The Transformer is able to process relational information through its attention mechanism, but this information is entangled with the features of individual objects (which, for these relational tasks, is extraneous information). The Transformer consistently requires the largest amount of data to learn the relational games tasks. PrediNet tends to be more sample-efficient. RelConvNet and CoRelNet are the most sample-efficient, with RelConvNet only slightly more sample-efficient on the `same', `occurs', `xoccurs', and `between' tasks.
+
+On the `match pattern' task, however, RelConvNet is significantly more sample-efficient. We attribute this to the fact that RelConvNet is able to model higher-order relations through its relational convolution module. The `match pattern' task can be thought of as a simple second-order relational tasks---it involves computing relations between two groups objects, and comparing those relations between the two groups. The relational convolution module naturally models this kind of situation since it considers groups of objects and describes the relations between them. The performance we observe here indicates that the relational games dataset is in some sense saturated by models like RelConvNet and CoRelnet and that more complex relational benchmarks are needed to evaluate this class of models. In particular, benchmarks which test the ability to model higher-order relations.
+
+\begin{table}
+    \centering
+    \input{figs/experiments/generalization_table.tex}
+    \caption{Out-of-distribution Generalization results on relational games. We report means $\pm$ standard error of mean over 5 trials.}\label{tab:ood_generalization}
+
+\end{table}
+
+\begin{figure}
+    \begin{subfigure}{0.5\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{figs/experiments/hexos_acc.pdf}
+        \caption{OoD generalization on Hexos objects}\label{fig:ood_generalization_hexos}
+    \end{subfigure}
+    \begin{subfigure}{0.5\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{figs/experiments/stripes_acc.pdf}
+        \caption{OoD generalization on Stripes objects}\label{fig:ood_generalization_stripes}
+    \end{subfigure}
+    \caption{Out-of-distribution generalization on hold-out object sets. Bar heights indicate the mean over 5 trials and the errror bars indicate a bootstrap 95\% confidence interval.}\label{fig:ood_generalization}
+\end{figure}
+
+\textbf{Out-of-distribution generalization}~\Cref{fig:ood_generalization} and~\Cref{tab:ood_generalization} report model performance on the two hold-out object sets after training. On the hexominoes objects, which are similar-looking to the pentominoes objects used for training, RelConvNet and CoRelNet do nearly perfectly. PrediNet and the Transformer do well on the simpler tasks, but struggle with the more difficult `match pattern' task. The stripes objects are visually more distinct from the pentominoes of the training split, making generalization more difficult. We observe an overall drop in performance for all models. The drop is particularly dramatic for CoRelNet\footnote{Unlike~\citep{kergNeuralArchitecture2022}, we do not use temporal context normalization in our experiments. We believe this is the appropriate choice for evaluating relational architectures such as RelConvNet and CoRelNet. We discuss this choice in~\Cref{sec:tcn_discussion}.}. We conjecture that this is due to CoRelNet's inability to model multi-dimensional relations as well as the use of Softmax in the similarity matrix. \texttt{TODO: elaborate or remove this comment?}. The separation between RelConvNet and the other models is largest on the ``match pattern'' task of the stripes split (the most difficult task and the most difficult generalization split). Here, RelConvNet maintain a mean accuracy of 87\% while the other models drop below 65\%. We conjecture that this is due to RelConvNet's natural ability to model such higher-order relations as well as its ability to model multi-dimensional relations.
