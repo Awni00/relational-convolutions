@@ -102,3 +102,22 @@ class MultiHeadRelation(tf.keras.layers.Layer):
             )
 
         return config
+
+class MaskDiagonal(tf.keras.layers.Layer):
+    '''masks diagonal of relation tensor to remove non-relational information'''
+
+    def __init__(self, **kwargs):
+        super(MaskDiagonal, self).__init__(**kwargs)
+
+    def build(self, input_shape):
+        _, n_objs, _, rel_dim = input_shape
+        self.mask = 1 - tf.eye(n_objs)
+        self.mask = tf.expand_dims(self.mask, axis=-1)
+
+    def call(self, inputs):
+        return inputs * self.mask
+
+    def get_config(self):
+        config = super(MaskDiagonal, self).get_config()
+
+        return config
