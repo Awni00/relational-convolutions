@@ -1,4 +1,5 @@
 import tensorflow as tf
+import tensorflow_models as tfm
 
 import sys; sys.path.append('..'); sys.path.append('../..')
 from relational_neural_networks.multi_head_relation import MultiHeadRelation
