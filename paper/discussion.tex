@@ -3,7 +3,17 @@
 
 \texttt{[TODO]}
 
-\begin{itemize}
-    \item parameter-efficiency and paramter sharing; learnability.
-    \item composability w GNNs (learn graph then perform message-passing on it)
-\end{itemize}
+\textbf{Summary of strengths of RelConvNet architecture.}
+
+\textit{Parameter-efficiency and parameter sharing.} Analogous to CNNs for image-processing, allows for learned `filters' to applied across different groups of objects to compare against templates of learned relational patterns. This accelerates learning and enables improved generalization.
+
+\textit{Grouping and learning higher-order relations}
+
+
+\textbf{Future work.} 
+
+\textit{Evaluating RelConvNet on relational tasks which more explicitly rely on higher-order relations}.
+
+\textit{Evaluating RelConvNet in more realistic settings as a module embedded in a larger architecture}. E.g., in a reinforcement learning setting. \texttt{We can mention something like codenames or other relational games. Set embeddings are another possible benchmark (though we need to find tasks which are relational, ideally compositionally-relational.)}
+
+\textit{Composability with GNNs}. E.g., learn higher-order relational objects along with relation tensor between them to form an annotated graph then apply a GNN to it. \texttt{Not sure what kinds of tasks would benifit from this.}
