@@ -2,9 +2,9 @@
 
 A relation function is a function which maps a pair of objects $o_1, o_2 \in \calX$ to a vector representing the relation between the two objects. For example, a relation may represent the information ``object 1 has the same color as object 2'', ``object 1 is larger than object 2'', and ``object 1 is to the left of object 2''. In principle, this can be modeled by an arbitrary learnable function on the concatenation of the two objects' representations. For example,~\citep{santoroSimpleNeural2017} models relations by MLPs applied to the concatenation of pairs of objects, $g_\theta(o_1, o_2)$. While this approach may work in some cases, it is missing some crucial inductive biases. In particular, there is no restriction that the learned pairwise function is in fact \textit{relational}. That is, $g_\theta(o_1, o_2)$ may just as well represent non-relational information like ``$o_1$ is bright'' and ``$o_2$ is small'', as opposed to relational information like ``$o_1$ is the same color as $o_2$'' and ``$o_1$ is larger than $o_2$''.
 
-Recent work has explored using \textit{inner products} to model relations between objects~\citep{webbEmergentSymbols2021, kergNeuralArchitecture2022, altabaaAbstractorsTransformer2023}. The advantage of such an approach is that it provides added pressure to learn explicitly relational functions. In particular, it induces a geometry on the object space $\calX$ which allows objects to be described in relation to each other. To see this, we can first consider the case of symmetric relations modeled as inner products between feature maps. Let $\phi: \calX \to \reals^d$ be some feature map which represents a particular attribute of the object (e.g., color). Then, the inner product $\iprod{\phi(o_1)}{\phi(o_2)}$ induces a metric on $\calX$. In fact, $\iprod{\phi(o_1)}{\phi(o_2)}$ turns $\calX$ into an inner product space with well-defined notions of distance, angles, and orthogonality. Thus, we can say that the attribute $\phi$ is similar between two objects $o_1, o_2$ when the inner product $\iprod{\phi(o_1)}{\phi(o_2)}$ is large.
+Recent work has explored using \textit{inner products} to model relations between objects~\citep{webbEmergentSymbols2021, kergNeuralArchitecture2022, altabaaAbstractorsTransformer2023}. The advantage of such an approach is that it provides added pressure to learn explicitly relational functions. In particular, it induces a geometry on the object space $\calX$ which allows objects to be described in relation to each other. To see this, we can first consider the case of symmetric relations modeled as inner products between feature maps. Let $\phi: \calX \to \reals^d$ be some feature map which represents a particular attribute of the object (e.g., color). Then, the inner product $\iprod{\phi(o_1)}{\phi(o_2)}$ induces a metric on $\calX$. In fact, the relation $\iprod{\phi(o_1)}{\phi(o_2)}$ attaches well-defined notions of distance, angles, and orthogonality to the space $\calX$. Thus, we can say that the `attribute $\phi$' is similar between two objects $o_1, o_2$ when the inner product $\iprod{\phi(o_1)}{\phi(o_2)}$ is large.
 
-More generally, we can allow for multi-dimensional relations by having multiple encoding functions prior to the inner product. Furthermore, we can allow for asymmetric relations by having different encoding functions for the first and second object. This is the approach we take in~\citep{altabaaAbstractorsTransformer2023}. In particular, we model relations by,
+More generally, we can allow for multi-dimensional relations by having multiple encoding functions, each extracting a feature to compute a relation on. Furthermore, we can allow for asymmetric relations by having different encoding functions for the first and second object. Hence, we model relations by,
 \begin{equation}\label{eq:relation_function}
     r(x, y) = \begin{pmatrix}
         \iprod{\phi_1(x)}{\psi_1(y)} \\
@@ -25,10 +25,23 @@ To promote weight sharing, we can have one common non-linear map $\phi$ across a
     \end{pmatrix},
 \end{equation}
 
-\noindent where the learnable parameters are $\phi$ and $W_1^{(k)}, \ldots, W_1^{(k)}, k \in [d_r]$. $\phi: \calX \to \reals^{d_\phi}$ may be an MLP, for example, and $W_1^{(k)}, W_2^{(k)}$ are $d_i \times d_\phi$ matrices. The class of functions realizable by~\Cref{eq:relation_function_lin_proj} is the same as~\Cref{eq:relation_function} but enables greater weight sharing.
+\noindent where the learnable parameters are $\phi$ and $W_1^{(k)}, W_2^{(k)}, k \in [d_r]$. $\phi: \calX \to \reals^{d_\phi}$ may be an MLP, for example, and $W_1^{(k)}, W_2^{(k)}$ are $d_{\mathrm{proj}} \times d_\phi$ matrices. The class of functions realizable by~\Cref{eq:relation_function_lin_proj} is the same as~\Cref{eq:relation_function} but enables greater weight sharing (e.g., need to only learn one good represntation of objects in $\calX$ along with several simple projections of individual attributes).
 
 The ``Multi-Head Relation'' module receives a sequence of objects $x_1, \ldots, x_m$ as input and models the pairwise relations between them by~\Cref{eq:relation_function_lin_proj}, returning an $m \times m \times d_r$ relation tensor describing the pairwise relations between each pair of objects.
 
 \subsection{Universal approximation of inner product relations}
 
-\awni{TODO: state result and cite writeup of these results.}
+\awni{todo---post to arxiv and add citation. Also, is statement as a theorem necessary, or should we just state the result in text?}
+
+\citep{arxivInnerprodUnivApprox} analyzes the function class of relation functions on $\calX \times \calX$ realizable by inner products of neural network transformations of the form $\iprod{\phi(x)}{\psi(y)}$. The result implies that when $\phi_i, \psi_i$ are multi-layer perceptrons, $r(x,y)$ in~\Cref{eq:relation_function} can approximate any continuous function from $\calX \times \calX$ to $\reals^{d_r}$ uniformly and with arbitrary precision, provided that $\calX$ is a compact subset of euclidean space.
+
+\begin{theorem}[Theorem 3.1 in~\citep{arxivInnerprodUnivApprox}]
+    Suppose $\calX$ is a compact subset of euclidean space. Consider the relation model,
+    \begin{equation*}
+        \hat{r}(x, y) := \paren{\iprod{\phi_\theta^{(1)}(x)}{\psi_\theta^{(1)}(y)}, \ldots, \iprod{\phi_\theta^{(d_r)}(x)}{\psi_\theta^{(d_r)}(y)}},
+    \end{equation*}
+    \noindent where $\phi_\theta^{(i)}, \psi_\theta^{(i)}: \calX \to \reals^d$ are multi-layer perceptrons with parameters in $\theta$. Then, for any continuous relation function $r: \calX \times \calX \to \reals^{d_r}$ there exists multi-layer perceptrons with parameters $\theta$ such that $\hat{r}$ approximates $r$ uniformly over $(x,y) \in \calX \times \calX$. Formally, for any $\epsilon > 0$, there exists neural networks with parameters $\theta$ such that,
+    \begin{equation*}
+        \sup_{x, y \in \calX} \infnorm{r(x,y) - \hat{r}(x,y)} < \epsilon.
+    \end{equation*}
+\end{theorem}
