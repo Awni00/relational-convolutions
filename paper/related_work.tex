@@ -1,0 +1,7 @@
+\subsection{Related Work}
+
+\awni{I've added a possible outline here. What else should we mention? What else should we cite?}
+
+\paragraph{Graph Neural Networks.} Overview of what a graph neural network is. Maybe give the message-passing formulation: $z_i' \gets \mathrm{Update}(z_i, \mathrm{Aggregate}(\set{z_j, j \in \calN(i)}))$. What are GNNs typically used for? CNNs are a special case where the graph is a grid. Transformers and self-attention are also a special case where the graph is a complete graph and the aggregate function is weighted based on the similarity between the nodes computed via $\mathrm{Softmax}(\bra{\iprod{W_q z_i}{W_k z_j}}_j)$. Hence, in our experiments, we compare to GNNs through Transformers as a representative.
+
+\paragraph{Emerging literature on ``explicitly relational'' architectures.} PrediNet, ESBN, CoRelNet. Mention in what sense these architectures are explicitly relational whereas Transformers (and GNNs more generally) process relations only implicitly through self-attention---they produce entangled representations of relational features as well as features of individual objects.
