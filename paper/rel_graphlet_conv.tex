@@ -68,6 +68,8 @@ Consider the group matrix $G \in \reals^{m \times n_g}$ and filters $\bm{f}$ of 
 
 where the soft-plus function is $\text{Softplus}(x) = \log(\exp(x + 1))$, applied elementwise. This has the effect of making the group matrix $G$ non-negative which is needed for the product of its elements to represent a ``group-match score''. The product inside the softmax is over elements in the discrete group $g \in \calG$. Hence, it will be large whenever the softgroup $G[:, k]$ aligns with the discrete group $g$. Thus, $\alpha_{gk}$ is a normalized ``group-match score'' indicating the degree to which the discrete group $g$ matches the given soft group $G[:,k]$. Note that the group match scores of discrete groups sum to one: $\sum_{g \in G} \alpha_{gk} = 1, \ \forall k \in [n_g]$.
 
+\texttt{TODO: add comment about using sparse-max instead of softmax. or other variants of sparse softmax.}
+
 Now, we can define the `soft' relational inner product given the `soft' group $G_k = G[:, k]$ by
 \begin{equation}
     \label{eq:soft_relational_inner_prod}
