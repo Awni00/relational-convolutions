@@ -7,7 +7,11 @@
 
 \textit{Parameter-efficiency and parameter sharing.} Analogous to CNNs for image-processing, allows for learned `filters' to applied across different groups of objects to compare against templates of learned relational patterns. This accelerates learning and enables improved generalization.
 
+The relational convolution operation we propose here is a `convolution' in the sense that we take a patch of the relation tensor, given by a group, and compare the relations within it to a template graphlet filter via an appropriately-defined inner product. This is similar to how, in a convolutional neural network, we would take a patch of an image and compare it to an image filter. Another similarity to CNNs is that the same graphlet filters are used for all groupings, thus enabling weight-sharing. This is similar to how the same convolutional filters are used for all image patches in a CNN. This makes our framework quite efficient when it comes to the number of parameters and, hopefully, makes learning easier.
+
 \textit{Grouping and learning higher-order relations}
+
+One important advantage of the relational convolution operation is its interpretability. The filters $\bm{f} = (f_1, \ldots, f_{n_f})$ are each a particular pattern of relations between $s$ objects. Furthermore, each object in the relational convolution $R \ast \bm{f}$ represents the degree to which the relations in the group $g$ match the patterns in each filter.
 
 
 \textbf{Future work.} 
