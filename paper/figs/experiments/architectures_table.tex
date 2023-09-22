@@ -1,9 +1,9 @@
 \begin{tabular}{p{0.2\textwidth}p{0.8\textwidth}}
     \toprule
-    Model              & Architecture                                                                                                                                                                                                                                                                                       \\ \midrule
+    Model / Component & Architecture                                                                                                                                                                                                                                                                                       \\ \midrule
     Common CNN        & \texttt{Conv2D} $\to$ \texttt{MaxPool2D} $\to$ \texttt{Conv2D} $\to$ \texttt{MaxPool2D} $\to$ \texttt{Flatten}. \\
     & \texttt{Conv2D}: num filters = 16, filter size = $3 \times 3$, activation = relu. \\
-    & \texttt{MaxPool2D} stride = 2. \\\hline
+    & \texttt{MaxPool2D}: stride = 2. \\\hline
     RelConvNet        & \texttt{CNN} $\to$ \texttt{MHR} $\to$ \texttt{RelConv} $\to$ \texttt{Flatten} $\to$ \texttt{MLP}. \\
     & \texttt{MHR}: relation dim = 16, projection dim = 4, symmetric. \\
     & \texttt{RelConv}: num filters = 16, filter size = 3, discrete groups = combinations. \\\hline
