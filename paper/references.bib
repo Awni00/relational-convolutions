@@ -321,3 +321,56 @@
   abstract = {This paper is concerned with learning to solve tasks that require a chain of interdependent steps of relational inference, like answering complex questions about the relationships between objects, or solving puzzles where the smaller elements of a solution mutually constrain each other. We introduce the recurrent relational network, a general purpose module that operates on a graph representation of objects. As a generalization of Santoro et al. [2017]'s relational network, it can augment any neural network model with the capacity to do many-step relational reasoning. We achieve state of the art results on the bAbI textual question-answering dataset with the recurrent relational network, consistently solving 20/20 tasks. As bAbI is not particularly challenging from a relational reasoning point of view, we introduce Pretty-CLEVR, a new diagnostic dataset for relational reasoning. In the Pretty-CLEVR set-up, we can vary the question to control for the number of relational reasoning steps that are required to obtain the answer. Using Pretty-CLEVR, we probe the limitations of multi-layer perceptrons, relational and recurrent relational networks. Finally, we show how recurrent relational networks can learn to solve Sudoku puzzles from supervised training data, a challenging task requiring upwards of 64 steps of relational reasoning. We achieve state-of-the-art results amongst comparable methods by solving 96.6\% of the hardest Sudoku puzzles.},
   archiveprefix = {arxiv}
 }
+
+@inproceedings{gilmerNeuralMessagePassing2017,
+  title = {Neural Message Passing for Quantum Chemistry},
+  booktitle = {International Conference on Machine Learning},
+  author = {Gilmer, Justin and Schoenholz, Samuel S. and Riley, Patrick F. and Vinyals, Oriol and Dahl, George E.},
+  year = {2017},
+  pages = {1263--1272},
+  publisher = {{PMLR}},
+  isbn = {2640-3498}
+}
+
+@misc{kipfSemiSupervisedClassificationGraph2017,
+  title = {Semi-{{Supervised Classification}} with {{Graph Convolutional Networks}}},
+  author = {Kipf, Thomas N. and Welling, Max},
+  year = {2017},
+  month = feb,
+  number = {arXiv:1609.02907},
+  eprint = {1609.02907},
+  primaryclass = {cs, stat},
+  publisher = {{arXiv}},
+  doi = {10.48550/arXiv.1609.02907},
+  urldate = {2023-09-23},
+  abstract = {We present a scalable approach for semi-supervised learning on graph-structured data that is based on an efficient variant of convolutional neural networks which operate directly on graphs. We motivate the choice of our convolutional architecture via a localized first-order approximation of spectral graph convolutions. Our model scales linearly in the number of graph edges and learns hidden layer representations that encode both local graph structure and features of nodes. In a number of experiments on citation networks and on a knowledge graph dataset we demonstrate that our approach outperforms related methods by a significant margin.},
+  archiveprefix = {arxiv}
+}
+
+@misc{niepertLearningConvolutionalNeural2016,
+  title = {Learning {{Convolutional Neural Networks}} for {{Graphs}}},
+  author = {Niepert, Mathias and Ahmed, Mohamed and Kutzkov, Konstantin},
+  year = {2016},
+  month = jun,
+  number = {arXiv:1605.05273},
+  eprint = {1605.05273},
+  primaryclass = {cs, stat},
+  publisher = {{arXiv}},
+  urldate = {2023-09-22},
+  abstract = {Numerous important problems can be framed as learning from graph data. We propose a framework for learning convolutional neural networks for arbitrary graphs. These graphs may be undirected, directed, and with both discrete and continuous node and edge attributes. Analogous to image-based convolutional networks that operate on locally connected regions of the input, we present a general approach to extracting locally connected regions from graphs. Using established benchmark data sets, we demonstrate that the learned feature representations are competitive with state of the art graph kernels and that their computation is highly efficient.},
+  archiveprefix = {arxiv}
+}
+
+@misc{schlichtkrullModelingRelationalData2017,
+  title = {Modeling {{Relational Data}} with {{Graph Convolutional Networks}}},
+  author = {Schlichtkrull, Michael and Kipf, Thomas N. and Bloem, Peter and van den Berg, Rianne and Titov, Ivan and Welling, Max},
+  year = {2017},
+  month = oct,
+  number = {arXiv:1703.06103},
+  eprint = {1703.06103},
+  primaryclass = {cs, stat},
+  publisher = {{arXiv}},
+  urldate = {2023-09-23},
+  abstract = {Knowledge graphs enable a wide variety of applications, including question answering and information retrieval. Despite the great effort invested in their creation and maintenance, even the largest (e.g., Yago, DBPedia or Wikidata) remain incomplete. We introduce Relational Graph Convolutional Networks (R-GCNs) and apply them to two standard knowledge base completion tasks: Link prediction (recovery of missing facts, i.e. subject-predicate-object triples) and entity classification (recovery of missing entity attributes). R-GCNs are related to a recent class of neural networks operating on graphs, and are developed specifically to deal with the highly multi-relational data characteristic of realistic knowledge bases. We demonstrate the effectiveness of R-GCNs as a stand-alone model for entity classification. We further show that factorization models for link prediction such as DistMult can be significantly improved by enriching them with an encoder model to accumulate evidence over multiple inference steps in the relational graph, demonstrating a large improvement of 29.8\% on FB15k-237 over a decoder-only baseline.},
+  archiveprefix = {arxiv}
+}
