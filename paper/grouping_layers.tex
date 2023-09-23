@@ -1,11 +1,10 @@
 \section{Grouping Layers}\label{sec:grouping_layers}
 
-A grouping layer is a layer which outputs a group matrix $G \in \reals^{m \times n_g}$ representing the degree to which each object $i \in [m]$ belongs to each group $j \in [n_g]$. The number of groups $n_g$ is a configurable hyperparameter. In this section, we briefly describe some proposals for grouping layers with different properties.
+A grouping layer is a layer which outputs a group matrix $G \in \reals^{m \times n_g}$ representing the degree to which each object $i \in [m]$ belongs to each group $j \in [n_g]$. The number of groups $n_g$ is a configurable hyperparameter. We briefly describe some proposals for grouping layers with different properties.
 
-\textbf{Temporal Grouping.} In the temporal grouping layer, the groups are a function only of the temporal order of the objects. That is, whether object $i$ belongs to group $j$ depends only on the value of $i$. This can be achieved by learning the group matrix $G$ directly as a parameter of the model. $G$ will be optimized along with the rest of the model parameters as a function of its effect on the relational convolution layer. Temporal grouping would be appropriate in situations where the order in which objects appear is predetermined. For instance, objects may appear in groups in the sequence. It would also be appropriate in situations where the relevant groups for solving the task are independent of the objects' features.
+\textbf{Temporal Grouping.} In the temporal grouping layer, the groups are a function only of the temporal order of the objects. This can be achieved by learning the group matrix $G$ directly as a parameter of the model. $G$ will be optimized along with the rest of the model parameters as a function of its effect on the relational convolution layer. Temporal grouping would be appropriate in situations where the order in which objects appear is predetermined and indicates the relevant groups.
 
-\textbf{Feature-based Grouping.} In the feature grouping layer, the groups to which each object belongs is a function of that object's features (and position). That is,
-
+\textbf{Feature-based Grouping.} In a feature-based grouping layer, the group(s) to which each object belongs is a function of that object's features (and position). That is,
 \begin{equation}
         G \gets \begin{bmatrix}
             \phi(1, x_1)^\top \\
@@ -14,10 +13,9 @@ A grouping layer is a layer which outputs a group matrix $G \in \reals^{m \times
         \end{bmatrix} \in \reals^{m \times n_g},
 \end{equation}
 
-\noindent where $\phi: [m] \times \calX \to \reals^{n_g}$ is a learnable function which maps the objects temporal order $i$ and feature representation $x_i$ to a $n_g$-dimensional group membership vector where the $j$th entry of the vector represents the degree to which the object belongs to the $j$th group. For example $\phi$ can be a multi-layer perceptron of the form $\phi(i, x) = \mathrm{MLP}(\mathrm{concat}(e_i, x))$. Feature-based grouping may be useful in situations where group membership can be determined for each object using only that object's features, irrespective of the context of the other objects in the sequence.
+\noindent where $\phi: [m] \times \calX \to \reals^{n_g}$ is a learnable function which maps an object's temporal order $i$ and feature representation $x_i$ to a $n_g$-dimensional group membership vector where the $j$th entry of the vector represents the degree to which the object belongs to the $j$th group. For example $\phi$ can be a multi-layer perceptron of the form $\phi(i, x) = \mathrm{MLP}(\mathrm{concat}(e_i, x))$. Feature-based grouping may be useful in situations where group membership can be determined for each object using only that object's features, irrespective of the context of the other objects in the sequence.
 
-\textbf{Context-aware Grouping.} In some applications, the group to which each object belongs to may depend on the full context of the other objects. One way to model this is to use a message-passing neural network to update the representations of each object, incorporating the context of the other objects in the sequence. Then, a multi-layer perceptron is applied to each encoded object to produce the group membership vector for that object.
-
+\textbf{Context-aware Grouping.} In some applications, the group(s) to which each object belongs to may depend on the full context of the other objects in the sequence. One way to model this is to use a message-passing neural network to update the representations of each object, incorporating the context of the other objects in the sequence. Then, a multi-layer perceptron is applied to each encoded object to produce the group membership vector for that object.
 \begin{equation}
     \begin{split}
         E_i &\gets \mathrm{MessagePassing}\paren{x_i, \set{x_1, \ldots, x_m}}, \ i \in [m] \\
@@ -25,4 +23,4 @@ A grouping layer is a layer which outputs a group matrix $G \in \reals^{m \times
     \end{split}
 \end{equation}
 
-This is the most general form of grouping, as it encompasses the previous two forms as special cases. The updated representation of each object $E_i$ now contains any relevant information about the other objects which should be considered in computing its group membership vector. One simple and effective option for the message-passing operation is to use self-attention. In this case, since a multi-head relational layer precedes the grouping layer, the relation tensor can be re-used in the self-attention operation to compute attention scores.
+This is the most general form of grouping, as it encompasses the previous two forms as special cases. The updated representation of each object $E_i$ now contains any relevant information about the other objects which should be considered in computing its group membership vector. One simple and effective option for the message-passing operation is to use self-attention. In this case, since a multi-head relational layer precedes the relational convolution layer, the relation tensor can be re-used in the self-attention operation to compute attention scores.
