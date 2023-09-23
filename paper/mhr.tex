@@ -12,8 +12,7 @@ More generally, we can allow for multi-dimensional relations by having multiple 
         \iprod{\phi_{d_r}(x)}{\psi_{d_r}(y)}
     \end{pmatrix} \in \reals^{d_r},
 \end{equation}
-
-\noindent where $\phi_1, \psi_1, \ldots, \phi_{d_r}, \psi_{d_r}$ are learnable functions. For each dimension $k \in [d_r]$ of the relation function, the maps $\phi_k, \psi_k$ extract a particular attribute of the objects which is then compared by the inner product.
+where $\phi_1, \psi_1, \ldots, \phi_{d_r}, \psi_{d_r}$ are learnable functions. For each dimension $k \in [d_r]$ of the relation function, the maps $\phi_k, \psi_k$ extract a particular attribute of the objects which is then compared by the inner product.
 
 To promote weight sharing, we can have one common non-linear map $\phi$ across all dimensions along with different linear maps for each object and each dimension of the relation. That is,
 \begin{equation}\label{eq:relation_function_lin_proj}
@@ -23,8 +22,7 @@ To promote weight sharing, we can have one common non-linear map $\phi$ across a
         \iprod{W_1^{(d_r)}\phi(x)}{W_2^{(d_r)}\phi(y)} \\
     \end{pmatrix},
 \end{equation}
-
-\noindent where the learnable parameters are $\phi$ and $W_1^{(k)}, W_2^{(k)}, k \in [d_r]$. $\phi: \calX \to \reals^{d_\phi}$ may be an MLP, for example, and $W_1^{(k)}, W_2^{(k)}$ are $d_{\mathrm{proj}} \times d_\phi$ matrices. The class of functions realizable by~\Cref{eq:relation_function_lin_proj} is the same as~\Cref{eq:relation_function} but enables greater weight sharing (e.g., need to only learn one good represntation of objects in $\calX$ along with several simple projections of individual attributes).
+where the learnable parameters are $\phi$ and $W_1^{(k)}, W_2^{(k)}, k \in [d_r]$. $\phi: \calX \to \reals^{d_\phi}$ may be an MLP, for example, and $W_1^{(k)}, W_2^{(k)}$ are $d_{\mathrm{proj}} \times d_\phi$ matrices. The class of functions realizable by~\Cref{eq:relation_function_lin_proj} is the same as~\Cref{eq:relation_function} but enables greater weight sharing (e.g., need to only learn one good represntation of objects in $\calX$ along with several simple projections of individual attributes).
 
 The ``Multi-Head Relation'' module receives a sequence of objects $x_1, \ldots, x_m$ as input and models the pairwise relations between them by~\Cref{eq:relation_function_lin_proj}, returning an $m \times m \times d_r$ relation tensor describing the pairwise relations between each pair of objects.
 
