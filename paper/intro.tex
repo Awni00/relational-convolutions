@@ -1,15 +1,6 @@
 \section{Introduction}\label{sec:intro}
 
-
-%\begin{itemize}
-%    \item The importance of relational learning; lots of references.
-%    \item We propose a framework analogous to CNNs, but for relational learning
-%    \item Advantages: modularity, compositionality, hierarchical.
-%    \item Experiments showing advantages over existing frameworks. 
-%    \item Main contribution: Framework for relational learning that shares the %strengths of CNNs for relational learning
-%\end{itemize}
-
-Modeling of relations between objects is important to a range of machine learning problems. For instance, an image analysis application might rely on comparing objects in terms of relations that extract color, size, or texture features; a natural language task may use relations that are based on syntactic or semantic features of pairs of words. While some machine learning tasks are ``purely relational'' and rely exclusively on identification and processing of relational information, others combine extraction of relations with function approximation.
+Modeling of relations between objects is important to a range of machine learning problems. For instance, an image analysis application might rely on comparing objects in terms of relations that extract color, size, or texture features; a natural language task may use relations that are based on syntactic or semantic features of pairs of words. %While some machine learning tasks are ``purely relational'' and rely exclusively on identification and processing of relational information, others combine extraction of relations with function approximation. \awni{unlike the Abstractor, all tasks here are purely relational, so we don't need to discuss this here. we can discuss in the discussion section when talking about incorporating RelConvNet into a broader architecture.}
 
 To enable efficient learning of relational information, it is important to explore learning architectures that support processing of relations in a natural, expressive, and efficient manner. In this paper we propose a framework we call ``relational convolution networks.'' Our framework provides for relational representation learning what standard convolutional neural networks provide for typical image processing applications---a natural, expressive architecture for extracting hierarchical features of the raw data that can be used for building flexible prediction algorithms.
 
@@ -20,9 +11,9 @@ In a series of experiments, we show how relational convolutional neural networks
 \begin{wrapfigure}{R}{0.5\textwidth}
     \centering
     \includegraphics[width=.5\textwidth]{figs/relconv_architecture.pdf}
-    \caption{Proposed architecture for relational convolutional networks. Hierarchical relations are modeled by iteratively computing pairwise relations between objects and convolving the resultant relation filter with graphlet filters representing templates of relations between subsets of objects.}
+    \caption{Proposed architecture for relational convolutional networks. Hierarchical relations are modeled by iteratively computing pairwise relations between objects and convolving the resultant relation tensor with graphlet filters representing templates of relations between subsets of objects.
     % At each layer, the multi-head relation module takes a sequence of objects as input and produces a relation tensor representing the relations between each pair of objects. The relational convolution layer then transforms the relation tensor into a sequence of objects each describing the relations within some group of objects at the previous layer. The next layer receives this sequence of objects as input and again models the relations within it. Thus, each layer computes relational features of a higher order (i.e., relations on relations). \textit{Legend}: $d_l$ represents the dimension of the objects at layer $l$; $z_i^{(l)}$ is the $i$th object at the $l$th layer; $R^{(k)}$ is the relation tensor at layer $l$; $r_l$ is the dimension of the relations at layer $l$; $n_l$ is the number of objects at layer $l$. \awni{can we cut down on the caption a bit for space?} \awni{should I make the modules different colors?}}
-    \label{fig:relconv_architecture}
+    }\label{fig:relconv_architecture}
 \end{wrapfigure}
 
 \input{related_work}
