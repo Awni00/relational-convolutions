@@ -61,7 +61,7 @@ Consider the group matrix $G \in \reals^{m \times n_g}$ and filters $\bm{f}$ of 
     \end{split}
 \end{equation}
 
-where the soft-plus function is $\text{Softplus}(x) = \log(\exp(x + 1))$, applied elementwise. This has the effect of making the group matrix $G$ non-negative which is needed for the product of its elements to represent a ``group-match score''. The product inside the softmax is over elements in the discrete group $g \in \calG$. Hence, it will be large whenever the softgroup $G_k := G[:, k]$ aligns with the discrete group $g$. Thus, $\alpha_{gk}$ is a normalized ``group-match score'' indicating the degree to which the discrete group $g$ matches the given soft group $G_k$\footnote{We also conjecture that sparse normalizers would be appropriate alternatives to softmax here. We would like for only a sparse subset of discrete groups in $\calG$ to contribute to each soft group. Some sparse alternatives to softmax are discussed in~\citep{lahaControllableSparseAlternatives2018a}. We use standard softmax in our presentation to emphasize the core ideas.}. %Note that the group match scores of discrete groups sum to one, $\sum_{g \in G} \alpha_{gk} = 1, \ \forall k \in [n_g]$.
+where the soft-plus function is $\text{Softplus}(x) = \log(\exp(x + 1))$, applied elementwise. This has the effect of making the group matrix $G$ non-negative which is needed for the product of its elements to represent a ``group-match score''. The product inside the softmax is over elements in the discrete group $g \in \calG$. Hence, it will be large whenever the softgroup $G_k := G[:, k]$ aligns with the discrete group $g$. Thus, $\alpha_{gk}$ is a normalized ``group-match score'' indicating the degree to which the discrete group $g$ matches the given soft group $G_k$\footnote{Sparse normalizers would likely be appropriate alternatives to softmax here, since it would be desirable to have only a sparse subset of discrete groups in $\calG$ contribute to each soft group. Some sparse alternatives to softmax are discussed in~\citep{lahaControllableSparseAlternatives2018a}.}. %Note that the group match scores of discrete groups sum to one, $\sum_{g \in G} \alpha_{gk} = 1, \ \forall k \in [n_g]$.
 
 Now, we can define the `soft' relational inner product \textit{given} the `soft' group $G_k$ by
 \begin{equation}
@@ -76,7 +76,7 @@ With this modification, the number of objects in the output sequence is fixed an
     (R \ast \bm{f})(G) = \left( \softreliprod{R}{\bm{f}}{G_1}, \ldots, \softreliprod{R}{\bm{f}}{G_{n_g}} \right) \in \left(\mathbb{R}^{n_f}\right)^{n_g}
 \end{equation}
 
-\awni{TODO: is this notation good?}
+\awni{is this notation good?}
 
 % \subsection{Efficiency of `convolutions'}
 % The operation we have defined here is a `convolution' in the sense that we take a patch of the relation tensor, given by a group, and compare the relations within it to a template graphlet filter via an appropriately-defined inner product. This is similar to how, in a convolutional neural network, we would take a patch of an image and compare it to an image filter. Another similarity to CNNs is that the same graphlet filters are used for all groupings, thus enabling weight-sharing. This is similar to how the same convolutional filters are used for all image patches in a CNN. This makes our framework quite efficient when it comes to the number of parameters and, hopefully, makes learning easier.
