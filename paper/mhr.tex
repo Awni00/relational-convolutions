@@ -16,7 +16,6 @@ More generally, we can allow for multi-dimensional relations by having multiple 
 \noindent where $\phi_1, \psi_1, \ldots, \phi_{d_r}, \psi_{d_r}$ are learnable functions. For each dimension $k \in [d_r]$ of the relation function, the maps $\phi_k, \psi_k$ extract a particular attribute of the objects which is then compared by the inner product.
 
 To promote weight sharing, we can have one common non-linear map $\phi$ across all dimensions along with different linear maps for each object and each dimension of the relation. That is,
-
 \begin{equation}\label{eq:relation_function_lin_proj}
     r(x, y) = \begin{pmatrix}
         \iprod{W_1^{(1)}\phi(x)}{W_2^{(1)}\phi(y)} \\
