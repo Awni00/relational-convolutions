@@ -1,30 +1,23 @@
 \section{Multi-Head Relational Layer: modeling relations via inner products}\label{sec:mhr}
 
-A relation function is a function which maps a pair of objects $o_1, o_2 \in \calX$ to a vector representing the relation between the two objects. For example, a relation may represent the information ``object 1 has the same color as object 2'', ``object 1 is larger than object 2'', and ``object 1 is to the left of object 2''. In principle, this can be modeled by an arbitrary learnable function on the concatenation of the two objects' representations. For example,~\citep{santoroSimpleNeural2017} models relations by MLPs applied to the concatenation of pairs of objects, $g_\theta(o_1, o_2)$. While this approach may work in some cases, it is missing some crucial inductive biases. In particular, there is no restriction that the learned pairwise function is in fact \textit{relational}. That is, $g_\theta(o_1, o_2)$ may just as well represent non-relational information like ``$o_1$ is bright'' and ``$o_2$ is small'', as opposed to relational information like ``$o_1$ is the same color as $o_2$'' and ``$o_1$ is larger than $o_2$''.
+A relation function is a function which maps a pair of objects $o_1, o_2 \in \calX$ to a vector representing the relation between the two objects. For example, a relation may represent the information ``$o_1$ has the same color as $o_2$'', ``$o_1$ is larger than $o_2$'', and ``$o_1$ is to the left of $o_2$''. In principle, this can be modeled by an arbitrary learnable function on the concatenation of the two objects' representations. For example,~\citep{santoroSimpleNeural2017} models relations by MLPs applied to the concatenation of pairs of objects, $g_\theta(o_1, o_2)$. While this approach may work in some cases, it is missing some crucial inductive biases. In particular, there is no restriction that the learned pairwise function is in fact \textit{relational}. That is, $g_\theta(o_1, o_2)$ may just as well represent non-relational information like ``$o_1$ is bright'' and ``$o_2$ is small'', as opposed to relational information like ``$o_1$ is the same color as $o_2$'' and ``$o_1$ is larger than $o_2$''.
 
 Recent work has explored using \textit{inner products} to model relations between objects~\citep{webbEmergentSymbols2021, kergNeuralArchitecture2022, altabaaAbstractorsTransformer2023}. The advantage of such an approach is that it provides added pressure to learn explicitly relational representations, disentangling relational information from attributes of individual objects. In particular, it induces a geometry on the object space $\calX$ which allows objects to be described in relation to each other. To see this, we can first consider the case of symmetric relations modeled as inner products between feature maps. Let $\phi: \calX \to \reals^d$ be some feature map which represents a particular attribute of the object (e.g., color). Then, the inner product $\iprod{\phi(o_1)}{\phi(o_2)}$ induces a metric on $\calX$. In fact, the relation $\iprod{\phi(o_1)}{\phi(o_2)}$ attaches well-defined notions of distance, angles, and orthogonality to the space $\calX$. Thus, we can say that the `attribute $\phi$' is similar between two objects $o_1, o_2$ when the inner product $\iprod{\phi(o_1)}{\phi(o_2)}$ is large.
 
-More generally, we can allow for multi-dimensional relations by having multiple encoding functions, each extracting a feature to compute a relation on. Furthermore, we can allow for asymmetric relations by having different encoding functions for the first and second object. Hence, we model relations by,
+More generally, we can allow for multi-dimensional relations by having multiple encoding functions, each extracting a feature to compute a relation on. Furthermore, we can allow for asymmetric relations by having different encoding functions for each object. Hence, we model relations by,
 \begin{equation}\label{eq:relation_function}
-    r(x, y) = \begin{pmatrix}
-        \iprod{\phi_1(x)}{\psi_1(y)} \\
-        \vdots \\
-        \iprod{\phi_{d_r}(x)}{\psi_{d_r}(y)}
-    \end{pmatrix} \in \reals^{d_r},
+    r(x, y) = \paren{
+        \iprod{\phi_1(x)}{\psi_1(y)},\, \ldots,\, \iprod{\phi_{d_r}(x)}{\psi_{d_r}(y)}} \in \reals^{d_r},
 \end{equation}
-where $\phi_1, \psi_1, \ldots, \phi_{d_r}, \psi_{d_r}$ are learnable functions. For each dimension $k \in [d_r]$ of the relation function, the maps $\phi_k, \psi_k$ extract a particular attribute of the objects which is then compared by the inner product.
+where $\phi_1, \psi_1, \ldots, \phi_{d_r}, \psi_{d_r}$ are learnable functions. For each dimension of the relation function, the maps $\phi_k, \psi_k$ extract a particular attribute of the objects which is then compared by the inner product.
 
 To promote weight sharing, we can have one common non-linear map $\phi$ across all dimensions along with different linear maps for each object and each dimension of the relation. That is,
 \begin{equation}\label{eq:relation_function_lin_proj}
-    r(x, y) = \begin{pmatrix}
-        \iprod{W_1^{(1)}\phi(x)}{W_2^{(1)}\phi(y)} \\
-        \vdots \\
-        \iprod{W_1^{(d_r)}\phi(x)}{W_2^{(d_r)}\phi(y)} \\
-    \end{pmatrix},
+    r(x, y) = \paren{\iprod{W_1^{(1)}\phi(x)}{W_2^{(1)}\phi(y)},\, \ldots,\, \iprod{W_1^{(d_r)}\phi(x)}{W_2^{(d_r)}\phi(y)}},
 \end{equation}
-where the learnable parameters are $\phi$ and $W_1^{(k)}, W_2^{(k)}, k \in [d_r]$. $\phi: \calX \to \reals^{d_\phi}$ may be an MLP, for example, and $W_1^{(k)}, W_2^{(k)}$ are $d_{\mathrm{proj}} \times d_\phi$ matrices. The class of functions realizable by~\Cref{eq:relation_function_lin_proj} is the same as~\Cref{eq:relation_function} but enables greater weight sharing (e.g., need to only learn one good represntation of objects in $\calX$ along with several simple projections of individual attributes).
+where the learnable parameters are $\phi$ and $W_1^{(k)}, W_2^{(k)}, k \in [d_r]$. $\phi: \calX \to \reals^{d_\phi}$ may be an MLP, for example, and $W_1^{(k)}, W_2^{(k)}$ are $d_{\mathrm{proj}} \times d_\phi$ matrices. The class of functions realizable by~\Cref{eq:relation_function_lin_proj} is the same as~\Cref{eq:relation_function} but enables greater weight sharing. %(e.g., need to only learn one good represntation of objects in $\calX$ along with several simple projections of individual attributes).
 
-The ``Multi-Head Relation'' module receives a sequence of objects $x_1, \ldots, x_m$ as input and models the pairwise relations between them by~\Cref{eq:relation_function_lin_proj}, returning an $m \times m \times d_r$ relation tensor describing the pairwise relations between each pair of objects.
+The ``Multi-Head Relation'' module receives a sequence of objects $x_1, \ldots, x_m$ as input and models the pairwise relations between them by~\Cref{eq:relation_function_lin_proj}, returning an $m \times m \times d_r$ relation tensor, $R[i,j] = r(x_i, x_j)$, describing the pairwise relations between each pair of objects.
 
 % removed for now.
 % \subsection{Universal approximation of inner product relations}
