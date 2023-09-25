@@ -74,13 +74,3 @@ With this modification, the number of objects in the output sequence is fixed an
     \label{eq:soft_relational_convolution_groups}
     (R \ast \bm{f})(G) = \left( \softreliprod{R}{\bm{f}}{G_1}, \ldots, \softreliprod{R}{\bm{f}}{G_{n_g}} \right) \in \left(\mathbb{R}^{n_f}\right)^{n_g}
 \end{equation}
-
-\awni{is this notation good?}
-
-% \subsection{Efficiency of `convolutions'}
-% The operation we have defined here is a `convolution' in the sense that we take a patch of the relation tensor, given by a group, and compare the relations within it to a template graphlet filter via an appropriately-defined inner product. This is similar to how, in a convolutional neural network, we would take a patch of an image and compare it to an image filter. Another similarity to CNNs is that the same graphlet filters are used for all groupings, thus enabling weight-sharing. This is similar to how the same convolutional filters are used for all image patches in a CNN. This makes our framework quite efficient when it comes to the number of parameters and, hopefully, makes learning easier.
-
-% This connection extends to (message-passing) graph neural networks. A key difference however is the following. In a graph neural network, we compute a convolution \textit{along} the graph (i.e.: the graph is what determines a node's neighbors for message-passing). What we are proposing here is that we `convolve' the (relational) graph itself with another graph. 
-
-% This analogy motivates one possible style of architectures in our framework~\Cref{fig:relational_framework}. Namely, to have the number of groups after each relational-grouping module decrease while increasing the number of filters. This can be done until we obtain a single group with a long feature vector. This should give a representation of the relational features across all objects, including higher-order relational features (i.e., relations on relations). This single vector can then be passed to a dense feedforward network. This is similar to the ``fully convolutional network'' architecture, where the height and width of the tensor are iteratively decreased (by pooling layers) while increasing the number filters, resulting in a long and thin vector.
-
