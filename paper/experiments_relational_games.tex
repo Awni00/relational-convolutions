@@ -30,6 +30,7 @@ and the hexominoes and stripes splits are used to test out-of-distribution gener
     \centering
     \includegraphics[width=0.9\textwidth]{figs/experiments/all_training_curves.pdf}
     \caption{Training curves, up to 2,000 batch steps, for each relational games task. Solid lines indicate the mean over 5 trials and the shaded regions indicate a bootstrap 95\% confidence interval.}\label{fig:training_curves}
+    \vskip-20pt
 \end{figure}
 
 \textbf{Sample efficiency.} We observe that the relational inductive biases of RelConvNet, and relational models more generally, grant a significant advantage in sample-efficiency.~\Cref{fig:training_curves} shows the training accuracy over the first 2,000 batches for each model. RelConvNet, CoRelNet, and PrediNet are explicitly relational architectures, whereas the Transformer is not. The Transformer is able to process relational information through its attention mechanism, but this information is entangled with the features of individual objects (which, for these relational tasks, is extraneous information). The Transformer consistently requires the largest amount of data to learn the relational games tasks. PrediNet tends to be more sample-efficient. RelConvNet and CoRelNet are the most sample-efficient, with RelConvNet only slightly more sample-efficient on most tasks.
@@ -40,15 +41,16 @@ On the `match pattern' task, however, RelConvNet is significantly more sample-ef
     \centering
     \begin{subfigure}{0.45\textwidth}
         \centering
-        \includegraphics[width=\textwidth]{figs/experiments/hexos_acc.pdf}
+        \includegraphics[width=0.9\textwidth]{figs/experiments/hexos_acc.pdf}
         \caption{OoD generalization on Hexos objects}\label{fig:ood_generalization_hexos}
     \end{subfigure}
     \begin{subfigure}{0.45\textwidth}
         \centering
-        \includegraphics[width=\textwidth]{figs/experiments/stripes_acc.pdf}
+        \includegraphics[width=0.9\textwidth]{figs/experiments/stripes_acc.pdf}
         \caption{OoD generalization on Stripes objects}\label{fig:ood_generalization_stripes}
     \end{subfigure}
     \caption{Out-of-distribution generalization on hold-out object sets. Bar heights indicate the mean over 5 trials and the errror bars indicate a bootstrap 95\% confidence interval.}\label{fig:ood_generalization}
+    \vskip-10pt
 \end{figure}
 
 \textbf{Out-of-distribution generalization.}~\Cref{fig:ood_generalization} reports model performance on the two hold-out object sets after training. On the hexominoes objects, which are similar-looking to the pentominoes objects used for training, RelConvNet and CoRelNet do nearly perfectly. PrediNet and the Transformer do well on the simpler tasks, but struggle with the more difficult `match pattern' task. The stripes objects are visually more distinct from the training split objects, making generalization more difficult. We observe an overall drop in performance for all models. The drop is particularly dramatic for CoRelNet\footnote{Unlike~\citep{kergNeuralArchitecture2022}, we do not use temporal context normalization in our experiments. We believe this is the more appropriate choice for evaluating relational architectures such as RelConvNet and CoRelNet since TCN is an added confounder. We discuss this more in~\Cref{sec:appendix_tcn_discussion}.}. We conjecture that this is due to CoRelNet's inability to model multi-dimensional relations, necessitating that all relational information is squeezed into a scalar quantity. The separation between RelConvNet and the other models is largest on the ``match pattern'' task of the stripes split (the most difficult task and the most difficult generalization split). Here, RelConvNets maintain a mean accuracy of 87\% while the other models drop below 65\%. We attribute this to RelConvNet's natural ability to model higher-order relations as well as multi-dimensional relations.
