@@ -4,8 +4,8 @@
     Common CNN        & \texttt{Conv2D} $\to$ \texttt{MaxPool2D} $\to$ \texttt{Conv2D} $\to$ \texttt{MaxPool2D} $\to$ \texttt{Flatten}. \\
     & \texttt{Conv2D}: num filters = 16, filter size = $3 \times 3$, activation = relu. \\
     & \texttt{MaxPool2D}: stride = 2. \\\hline
-    RelConvNet        & \texttt{CNN} $\to$ \texttt{MHR} $\to$ \texttt{RelConv} $\to$ \texttt{Flatten} $\to$ \texttt{MLP}. \\
-    & \texttt{MHR}: relation dim = 16, projection dim = 4, symmetric. \\
+    RelConvNet        & \texttt{CNN} $\to$ \texttt{MD-IPR} $\to$ \texttt{RelConv} $\to$ \texttt{Flatten} $\to$ \texttt{MLP}. \\
+    & \texttt{MD-IPR}: relation dim = 16, projection dim = 4, symmetric. \\
     & \texttt{RelConv}: num filters = 16, filter size = 3, discrete groups = combinations. \\\hline
     CoRelNet          & \texttt{CNN} $\to$ \texttt{CoRelNet} $\to$ \texttt{Flatten} $\to$ \texttt{MLP}. \\
     & Standard CoRelNet has no hyperparameters. \\\hline
