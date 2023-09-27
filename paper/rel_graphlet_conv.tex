@@ -36,12 +36,14 @@ $\calG$ is a pre-specified hyperparameter of the relational convolution operatio
 % In the above, we either consider all possible groups or we somehow assume that the relevant groups $\calG$ are known and given. We may also wish to \textit{learn} the relevant groups.
 
 \begin{figure}[!ht]
-    % \input{relconvdiagram.tex}
+    \vskip-10pt
     \centering
     \includegraphics[width=0.9\textwidth]{figs/relconv_diagram2.pdf}
+    \vskip-10pt
     \caption{A depiction of the relational convolution operation.
     % The input is a relation tensor $R$ of shape $m \times m \times d_r$, giving pairwise relations of dimension $d_r$ between a sequence of $m$ objects. A graphlet filter of size $s$ is parameterized by a relation tensor of shape $s \times s \times d_r$. The graphlet convolution operation computes relational inner products between the relation subtensor of each discrete group $g \in \calG$ with the graphlet filters $\bm{f}$. This gives a vector representation of the relations in each discrete group, $\tilde{z}_g \in \reals^{n_f}, g \in \calG$. Finally, this is synthesized into a vector representation for each of $n_g$ `soft groups', $G$, producing $(R \ast \bm{f})(G) = (z_1, \ldots, z_{n_g})$.
     }\label{fig:relconvdiagram}
+    \vskip -10pt
 \end{figure}
 
 \subsection{Relational convolutions with `soft' groups}
@@ -58,7 +60,7 @@ Consider the group matrix $G \in \reals^{m \times n_g}$ and filters $\bm{f}$ of 
         \alpha_{gk} &\gets \text{Softmax}\paren{\paren{\prod_{i \in g} G[i,k]}_{g \in \calG}}, \quad g \in \calG, k \in [n_g],
     \end{split}
 \end{equation}
-where the soft-plus function is $\text{Softplus}(x) = \log(\exp(x + 1))$, applied elementwise. This has the effect of making the group matrix $G$ non-negative which is needed for the product of its elements to represent a ``group-match score''. The product inside the softmax is over elements in the discrete group $g \in \calG$. Hence, it will be large whenever the softgroup $G_k := G[:, k]$ aligns with the discrete group $g$. Thus, $\alpha_{gk}$ is a normalized ``group-match score'' indicating the degree to which the discrete group $g$ matches the given soft group $G_k$\footnote{Sparse normalizers would likely be appropriate alternatives to softmax here, since it would be desirable to have only a sparse subset of discrete groups in $\calG$ contribute to each soft group. Some sparse alternatives to softmax are discussed in~\citep{lahaControllableSparseAlternatives2018a}.}. %Note that the group match scores of discrete groups sum to one, $\sum_{g \in G} \alpha_{gk} = 1, \ \forall k \in [n_g]$.
+where the soft-plus function is $\text{Softplus}(x) = \log(\exp(x + 1))$, applied elementwise. This has the effect of making the group matrix $G$ non-negative which is needed for the product of its elements to represent a ``group-match score''. The product inside the softmax is over elements in the discrete group $g \in \calG$. Hence, it will be large whenever the soft group $G_k := G[:, k]$ aligns with the discrete group $g$. Thus, $\alpha_{gk}$ is a normalized ``group-match score'' indicating the degree to which the discrete group $g$ matches the given soft group $G_k$\footnote{Sparse normalizers would likely be appropriate alternatives to softmax here, since it would be desirable to have only a sparse subset of discrete groups in $\calG$ contribute to each soft group. Some sparse alternatives to softmax are discussed in~\citep{lahaControllableSparseAlternatives2018a}.}. %Note that the group match scores of discrete groups sum to one, $\sum_{g \in G} \alpha_{gk} = 1, \ \forall k \in [n_g]$.
 
 Now, we can define the `soft' relational inner product \textit{given} the `soft' group $G_k$ by
 \begin{equation}\label{eq:soft_relational_inner_prod}
