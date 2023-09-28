@@ -2,7 +2,7 @@
 
 In~\Cref{ssec:exp_relational_games} the CoRelNet model of~\citet{kergNeuralArchitecture2022} was among the baselines we compared to. In that work, the authors also evaluate their model on the relational games benchmark. A difference between their experimental set up and ours is that they use a method called ``context normalization'' as a preprocessing step on the sequence of objects.
 
-``Context normalization'' was proposed by~\citet{webbLearningRepresentationsThat2020}. The proposal is simple. Given a sequence of objects, $(x_1, \ldots, x_m)$, and a set of context windows $\calW_1, \ldots, \calW_W \subset \set{1, \ldots, m}$ which partition the objects, each object is normalized along each dimension with respect to the other objects in its context. That is, $\paren{z_1, \ldots, z_m} = \mathrm{CN}(x_1, \ldots, x_m)$ is computed as,
+``Context normalization'' was proposed by~\citet{webbLearningRepresentationsThat2020}. The proposal is simple: Given a sequence of objects, $(x_1, \ldots, x_m)$, and a set of context windows $\calW_1, \ldots, \calW_W \subset \set{1, \ldots, m}$ which partition the objects, each object is normalized along each dimension with respect to the other objects in its context. That is, $\paren{z_1, \ldots, z_m} = \mathrm{CN}(x_1, \ldots, x_m)$ is computed as,
 \begin{eqnarray*}
     \begin{split}
         \mu_j^{(k)} &= \frac{1}{\abs{\calW_k}} \sum_{t \in \calW_k} (x_t)_j\\
@@ -30,6 +30,6 @@ Similarly, consider a context window of size 3. Then, along each dimension, we h
         \mathrm{CN}(x, x, y) &= \paren{\frac{1}{\sqrt{2}} \mathrm{sign}(x - y), \frac{1}{\sqrt{2}} \mathrm{sign}(x - y), \frac{1}{\sqrt{2}} \mathrm{sign}(y - x)}.
     % \end{split}
 \end{align*}
-Again, context normalization symbolically encodes the relational pattern, making the task trivial for the relational architecture.
+Again, context normalization symbolically encodes the relational pattern. For any triplet of objects, regardless of the values they take, context normalization produces identical output in the cases above. With context windows larger than 3, the behavior becomes more complex.
 
-These properties of context normalization make it a confounder in the evaluation of relational architectures. A relational architecture ought to be able to model relations between objects in natural learned representations directly. Hence, we do not use context normalization in our experiments.
+These properties of context normalization make it a confounder in the evaluation of relational architectures. In particular, for small context windows especially, context normalization symbolically encodes the relevant information. Experiments on relational architectures should evaluate the architectures' ability to \textit{learn} those relations from data. Hence, we do not use context normalization in our experiments.
