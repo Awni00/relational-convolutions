@@ -1,1 +1,19 @@
 \section{Discussion on use of TCN in relational experiments}\label{sec:appendix_tcn_discussion}
+
+In~\Cref{ssec:exp_relational_games} the CoRelNet model of~\citet{kergNeuralArchitecture2022} was among the baselines we compared to. In that work, the authors also evaluate their model on the relational games benchmark. A difference between their experimental set up and ours is that they use a method called ``context normalization'' as a preprocessing step on the sequence of objects.
+
+``Context normalization'' was proposed by~\citet{webbLearningRepresentationsThat2020}. The proposal is simple. Given a sequence of objects, $(x_1, \ldots, x_m)$, and a set of context windows $\calW_1, \ldots, \calW_W \subset \set{1, \ldots, m}$ which partition the objects, each object is normalized along each dimension with respect to the other objects in its context. That is, $\paren{z_1, \ldots, z_m} = \mathrm{CN}(x_1, \ldots, x_m)$ is computed as,
+\begin{eqnarray*}
+    \begin{split}
+        \mu_j^{(k)} &= \frac{1}{\abs{\calW_k}} \sum_{t \in \calW_k} (x_t)_j\\
+        \sigma_j^{(k)} &= \sqrt{ \frac{1}{\abs{\calW_k}} \sum_{t \in \calW_k} \paren{(x_t)_j - \mu_j^{(k)}}^2 + \varepsilon}\\
+        (z_t)_j &= \gamma_j \paren{\frac{(x_t)_j - \mu_j^{(k)}}{\sigma_j^{(k)}}} + \beta_j, \qquad \text{for } t \in \calW_k
+    \end{split}
+\end{eqnarray*}
+where $\gamma = (\gamma_1, \ldots, \gamma_d), \beta = (\beta_1, \ldots, \beta_d)$ are learnable gain and shift parameters for each dimension. The context windows represent logical groupings of objects that are assumed to be known. For instance,~\citep{webbEmergentSymbols2021,kergNeuralArchitecture2022} consider a ``relational match-to-sample'' task where 3 pairs of objects are presented in sequence, and the task is to identify whether the relation in the first pair is the same as the relation in the second pair or the third pair. Here, the context windows would be the pairs of objects.
+
+It is reported in~\citep{webbEmergentSymbols2021,kergNeuralArchitecture2022} that context normalization significantly accelerates learning and improves sample-efficiency. Since~\citep{webbEmergentSymbols2021,kergNeuralArchitecture2022} use context normalization in their experiments, in this section we aim to explain our choice to omit them. We argue that context normalization is a confounder and that relational architectures should be evaluated without such preprocessing.
+
+To understand how context normalization works, consider a pair of objects in $\reals^3$, $x_1 = \paren{5, 100, 0.01}^\top$ and $x_2 = \paren{4.9, 100, 5}^\top$. Then, context normalization, with $\gamma = \bm{1}, \beta = \bm{0}$, produces the object sequence $\mathrm{CN}(x_1, x_2) = (z_1, z_2)$, $z_1 = \paren{1, 0, -1}^\top, z_2 = \paren{-1, 0, 1}^\top$. In particular, what context normalization does when there are two objects is, along each dimension, output 0 if the values is the same, and $\pm 1$ if it is different (encoding whether it is larger or smaller). Hence, it makes the context-normalized output independent of the original feature representation. This is clearly a useful inductive bias in a task where the key relation to model is whether two objects are the same or different (as is the case with the relational games tasks). In particular, computing the inner product between the context normalized inputs always yields $0$ along any dimension where the two values are equal and $-1$ along any dimension where the values are different. Hence, for two objects $x_1, x_2$, context normalized to produce $z_1, z_2$, we have that $x_1 = x_2$ if and only if $\iprod{z_1}{z_2} = 0$. This makes out-of-distribution generalization trivial.
+
+These properties of context normalization make it a confounder in the evaluation of relational architectures. A relational architecture ought to be able to model relations between objects in natural learned representations directly. Hence, we do not use context normalization in our experiments.
