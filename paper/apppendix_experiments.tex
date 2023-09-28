@@ -2,6 +2,8 @@
 
 \subsection{Relational Games}
 
+\Cref{tab:relational_games_tasks} contains text descriptions of each task in the relational games dataset in the experiments of~\Cref{ssec:exp_relational_games}. \Cref{tab:architectures} contains a description of the architectures of each model or component in the experiments. \Cref{tab:ood_generalization} reports the accuracy on the hold-out object sets (i.e., the numbers depicted in~\Cref{fig:ood_generalization} of the main text).
+
 \begin{table}[ht]
     \centering
     \input{figs/experiments/tasks_table.tex}
@@ -17,10 +19,18 @@
 \end{table}
 
 
-\begin{table}
+\begin{table}[h]
     \centering
     \input{figs/experiments/generalization_table.tex}
-    \caption{Out-of-distribution Generalization results on relational games. We report means $\pm$ standard error of mean over 5 trials. These are the numbers associated with~\Cref{fig:ood_generalization}.}\label{tab:ood_generalization}
+    \caption{Out-of-distribution generalization results on relational games. We report means $\pm$ standard error of mean over 5 trials. These are the numbers associated with~\Cref{fig:ood_generalization}.}\label{tab:ood_generalization}
 \end{table}
 
 \subsection{SET}
+
+\Cref{tab:set_acc} reports the test accuracies in the ``contains set'' task of~\Cref{ssec:experiments_set} (i.e., the numbers depicted in~\Cref{fig:contains_set_acc} of the main text).
+
+\begin{table}[h]
+    \centering
+    \input{figs/experiments/set_acc_table.tex}
+    \caption{Hold-out test accuracy on ``contains set'' task. We report means $\pm$ standard error of mean over 10 trials. These are the numbers associated with~\Cref{fig:contains_set_acc}}\label{tab:set_acc}
+\end{table}
