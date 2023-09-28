@@ -10,10 +10,26 @@ In~\Cref{ssec:exp_relational_games} the CoRelNet model of~\citet{kergNeuralArchi
         (z_t)_j &= \gamma_j \paren{\frac{(x_t)_j - \mu_j^{(k)}}{\sigma_j^{(k)}}} + \beta_j, \qquad \text{for } t \in \calW_k
     \end{split}
 \end{eqnarray*}
-where $\gamma = (\gamma_1, \ldots, \gamma_d), \beta = (\beta_1, \ldots, \beta_d)$ are learnable gain and shift parameters for each dimension. The context windows represent logical groupings of objects that are assumed to be known. For instance,~\citep{webbEmergentSymbols2021,kergNeuralArchitecture2022} consider a ``relational match-to-sample'' task where 3 pairs of objects are presented in sequence, and the task is to identify whether the relation in the first pair is the same as the relation in the second pair or the third pair. Here, the context windows would be the pairs of objects.
+where $\gamma = (\gamma_1, \ldots, \gamma_d), \beta = (\beta_1, \ldots, \beta_d)$ are learnable gain and shift parameters for each dimension (initialized at 1 and 0, respectively, as with batch normalization). The context windows represent logical groupings of objects that are assumed to be known. For instance,~\citep{webbEmergentSymbols2021,kergNeuralArchitecture2022} consider a ``relational match-to-sample'' task where 3 pairs of objects are presented in sequence, and the task is to identify whether the relation in the first pair is the same as the relation in the second pair or the third pair. Here, the context windows would be the pairs of objects. In the relational games ``match rows pattern'' task, the context windows would be each row.
 
 It is reported in~\citep{webbEmergentSymbols2021,kergNeuralArchitecture2022} that context normalization significantly accelerates learning and improves out-of-distribution generalization. Since~\citep{webbEmergentSymbols2021,kergNeuralArchitecture2022} use context normalization in their experiments, in this section we aim to explain our choice to exclude it. We argue that context normalization is a confounder and that an evaluation of relational architectures without such preprocessing is more informative.
 
-To understand how context normalization works, consider a pair of objects in $\reals^3$, $x_1 = \paren{5, 100, 0.01}^\top$ and $x_2 = \paren{4.9, 100, 5}^\top$. Then, context normalization, with $\gamma = \bm{1}, \beta = \bm{0}$, produces the object sequence $\mathrm{CN}(x_1, x_2) = (z_1, z_2)$, $z_1 = \paren{1, 0, -1}^\top, z_2 = \paren{-1, 0, 1}^\top$. In particular, what context normalization does when there are two objects is, along each dimension, output 0 if the values is the same, and $\pm 1$ if it is different (encoding whether it is larger or smaller). Hence, it makes the context-normalized output independent of the original feature representation. This is clearly a useful inductive bias in a task where the key relation to model is whether two objects are the same or different (as is the case with the relational games tasks). In particular, computing the inner product between the context normalized inputs always yields $0$ along any dimension where the two values are equal and $-1$ along any dimension where the values are different. Hence, for two objects $x_1, x_2$, context normalized to produce $z_1, z_2$, we have that $x_1 = x_2$ if and only if $\iprod{z_1}{z_2} = 0$. This makes out-of-distribution generalization trivial.
+To understand how context normalization works, consider first a context window of size 2, and let $\beta = 0, \gamma = 1$. Then, along each dimension, we have
+\begin{align*}
+    % \begin{split}
+        \mathrm{CN}(x, x) &= \paren{0, 0},\\
+        \mathrm{CN}(x, y) &= \paren{\mathrm{sign}(x - y), \mathrm{sign}(y - x)}.
+    % \end{split}
+\end{align*}
+In particular, what context normalization does when there are two objects is, along each dimension, output 0 if the values is the same, and $\pm 1$ if it is different (encoding whether it is larger or smaller). Hence, it makes the context-normalized output independent of the original feature representation. For tasks like relational games, where the key relation to model is same/different, this preprocessing is directly encoding this information in a ``symbolic'' way. In particular, for two objects $x_1, x_2$, context normalized to produce $z_1, z_2$, we have that $x_1 = x_2$ if and only if $\iprod{z_1}{z_2} = 0$. This makes out-of-distribution generalization trivial, and does not properly test a relational architecture's ability to model the same/different relation.
+
+Similarly, consider a context window of size 3. Then, along each dimension, we have,
+\begin{align*}
+    % \begin{split}
+        \mathrm{CN}(x, x, x) &= \paren{0, 0, 0},\\
+        \mathrm{CN}(x, x, y) &= \paren{\frac{1}{\sqrt{2}} \mathrm{sign}(x - y), \frac{1}{\sqrt{2}} \mathrm{sign}(x - y), \frac{1}{\sqrt{2}} \mathrm{sign}(y - x)}.
+    % \end{split}
+\end{align*}
+Again, context normalization symbolically encodes the relational pattern, making the task trivial for the relational architecture.
 
 These properties of context normalization make it a confounder in the evaluation of relational architectures. A relational architecture ought to be able to model relations between objects in natural learned representations directly. Hence, we do not use context normalization in our experiments.
