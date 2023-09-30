@@ -1,0 +1,108 @@
+\documentclass[12pt,pdftex,noinfoline]{imsart}
+\RequirePackage[OT1]{fontenc}
+\usepackage{amsthm,amsbsy,amsmath,amsfonts,natbib,mathtools,amssymb,mathrsfs}
+\RequirePackage{hypernat}
+\usepackage{times}
+\usepackage{hyperref}
+\usepackage[usenames,dvipsnames,svgnames,table]{xcolor}
+\hypersetup{citecolor=MidnightBlue}
+\hypersetup{linkcolor=MidnightBlue}
+\hypersetup{urlcolor=MidnightBlue}
+\usepackage{enumerate}
+\usepackage{fullpage}
+\usepackage[margin=1in,footskip=.40in]{geometry}
+\usepackage{dsfont}
+\usepackage{wrapfig}
+% \usepackage{url}            % simple URL typesetting
+\usepackage{xurl} % this allows line-breaking in urls
+\usepackage{booktabs}       % professional-quality tables
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{graphicx}
+\usepackage{verbatim}
+
+\usepackage{parskip}
+
+\usepackage{mymathstyle}
+
+\usepackage{algorithm2e}
+\usepackage{graphicx}
+\crefname{algocf}{alg.}{algs.}
+\Crefname{algocf}{Algorithm}{Algorithms}
+\RestyleAlgo{ruled}
+
+
+%region custom commands
+\newcommand{\softreliprod}[3]{\left\langle #1, #2 \, \vert \, #3 \right\rangle_\mathrm{rel}}
+\newcommand{\reliprod}[2]{\left\langle #1, #2 \right\rangle_\mathrm{rel}}
+\let\phi\varphi
+
+% commands for comments
+\newcommand{\awni}[1]{\textcolor{blue}{\texttt{[Awni]}: #1}}
+\newcommand{\john}[1]{\textcolor{red}{\texttt{[John]}: #1}}
+%endregion
+
+% \interfootnotelinepenalty=10000 % prevent footnote from running over
+
+% \title{Relational Convolutional Networks: \\ A framework for learning representations of hierarchical relations}
+% \author{Awni Altabaa, John Lafferty}
+% \date{\today}
+
+\begin{document}
+
+%region title, authors, abstract
+\def\snote#1{${}^{#1}$}
+\setlength{\parskip}{0.5em}
+\begin{frontmatter}
+{\bf\Large Relational Convolutional Networks: \\ A framework for learning representations of hierarchical relations}
+%\affil[**]{Department of Statistics and Data Science, Yale University}
+\begin{aug}
+\vskip15pt
+\address{
+\begin{tabular}{ccccc}
+{\normalsize\rm\bfseries Awni Altabaa}\snote{1} & {\normalsize\rm\bfseries John Lafferty}\snote{2}\\[5pt]
+\end{tabular}
+\vskip5pt
+\footnotetext{
+\snote{1}Department of Statistics and Data Science, Yale University; awni.altabaa@yale.edu.
+\snote{2}Department of Statistics and Data Science, Wu Tsai Institute, Institute for Foundations of Data Science, Yale University; john.lafferty@yale.edu.
+}
+\today
+\vskip10pt
+}
+\input{abstract}
+\end{aug}
+\end{frontmatter}
+%endregion
+
+\input{intro}
+
+\input{mdipr}
+
+\input{rel_graphlet_conv}
+
+\input{grouping_layers}
+
+\input{experiments}
+
+\input{discussion}
+
+\subsection*{Code and data}
+Code and experimental logs are available at: \url{https://github.com/Awni00/relational-neural-networks/}
+
+% \medskip
+
+{%\small
+\setlength{\bibsep}{8pt plus 0.3ex}
+\bibliographystyle{apalike}
+\bibliography{references}
+}
+
+
+\clearpage
+\appendix
+
+\input{apppendix_experiments.tex}
+\input{appendix_tcn_discussion.tex}
+
+\end{document}
