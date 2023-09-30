@@ -7,4 +7,4 @@ The python environment used to run our experiments is in the `conda_environment.
 conda env create -f conda_environment.yml
 ```
 
-Instructions to reproducing the experimental results of each experiment is in their respective subdirectories.
+Instructions for reproducing the experimental results of each experiment is in their respective subdirectories.
