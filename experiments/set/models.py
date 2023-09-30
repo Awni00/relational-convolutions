@@ -2,7 +2,7 @@ import tensorflow as tf
 import tensorflow_models as tfm
 
 import sys; sys.path.append('..'); sys.path.append('../..')
-from relational_neural_networks.multi_head_relation import MultiHeadRelation
+from relational_neural_networks.mdipr import MultiDimInnerProdRelation
 from relational_neural_networks.relational_graphlet_convolution import RelationalGraphletConvolution
 from relational_neural_networks.predinet import PrediNet
 
@@ -21,7 +21,7 @@ relconv_mhr_kwargs = dict(rel_dim=16, proj_dim=16, symmetric=True)
 relconv_kwargs = dict(n_filters=16, graphlet_size=3,
         symmetric_inner_prod=True, permutation_aggregator='max')
 def create_relconvnet():
-    mhr1 = MultiHeadRelation(**relconv_mhr_kwargs, name='mhr1')
+    mhr1 = MultiDimInnerProdRelation(**relconv_mhr_kwargs, name='mhr1')
     rel_conv1 = RelationalGraphletConvolution(
         **relconv_kwargs, groups='combinations', name='rgc1')
 
@@ -38,7 +38,7 @@ def create_relconvnet_maxpooling():
     relconv_mhr_kwargs = dict(rel_dim=16, proj_dim=16, symmetric=True)
     relconv_kwargs = dict(n_filters=16, graphlet_size=3,
             symmetric_inner_prod=True, permutation_aggregator='max')
-    mhr1 = MultiHeadRelation(**relconv_mhr_kwargs, name='mhr1')
+    mhr1 = MultiDimInnerProdRelation(**relconv_mhr_kwargs, name='mhr1')
     rel_conv1 = RelationalGraphletConvolution(
         **relconv_kwargs, groups='combinations', name='rgc1')
 

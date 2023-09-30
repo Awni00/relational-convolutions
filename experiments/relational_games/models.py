@@ -5,7 +5,7 @@ import tensorflow_models as tfm
 from cnn_embedder import CNNEmbedder
 
 import sys; sys.path.append('..'); sys.path.append('../..')
-from relational_neural_networks.multi_head_relation import MultiHeadRelation
+from relational_neural_networks.mdipr import MultiDimInnerProdRelation
 from relational_neural_networks.relational_graphlet_convolution import RelationalGraphletConvolution
 from relational_neural_networks.tcn import TCN, GroupTCN
 from relational_neural_networks.predinet import PrediNet
@@ -25,7 +25,7 @@ def create_relconvnet(normalizer=None, freeze_embedder=False, object_selection=N
     cnn_embedder = CNNEmbedder(**cnn_embedder_kwargs)
     cnn_embedder.trainable = not freeze_embedder
 
-    mhr1 = MultiHeadRelation(**relconv_mhr_kwargs, name='mhr1')
+    mhr1 = MultiDimInnerProdRelation(**relconv_mhr_kwargs, name='mhr1')
     rel_conv1 = RelationalGraphletConvolution(
         **relconv_kwargs, groups='combinations', name='rgc1')
 
@@ -49,7 +49,7 @@ def create_randomgroup_relconvnet(normalizer=None, freeze_embedder=False, object
     cnn_embedder = CNNEmbedder(**cnn_embedder_kwargs)
     cnn_embedder.trainable = not freeze_embedder
 
-    mhr1 = MultiHeadRelation(**relconv_mhr_kwargs, name='mhr1')
+    mhr1 = MultiDimInnerProdRelation(**relconv_mhr_kwargs, name='mhr1')
 
     n_groups = 30
     groups = [tuple(group) for group in itertools.combinations(range(9), r=3)]

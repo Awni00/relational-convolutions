@@ -1,7 +1,7 @@
 import tensorflow as tf
 from tensorflow.keras import layers
 
-class MultiHeadRelation(tf.keras.layers.Layer):
+class MultiDimInnerProdRelation(tf.keras.layers.Layer):
     def __init__(
         self,
         rel_dim,
@@ -10,7 +10,7 @@ class MultiHeadRelation(tf.keras.layers.Layer):
         dense_kwargs=None,
         name=None):
         """
-        create a MultiHeadRelation module.
+        create a MultiDimInnerProdRelation module.
 
         Computes self-relations within a sequence of objects or cross-relations
         between two sequences of objects. Returns a relation tensor of shape
@@ -91,7 +91,7 @@ class MultiHeadRelation(tf.keras.layers.Layer):
         return relation_tensor
 
     def get_config(self):
-        config = super(MultiHeadRelation, self).get_config()
+        config = super(MultiDimInnerProdRelation, self).get_config()
         config.update(
             {
                 'rel_dim': self.rel_dim,
