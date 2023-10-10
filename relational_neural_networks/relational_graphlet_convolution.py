@@ -46,7 +46,6 @@ class RelationalGraphletConvolution(tf.keras.layers.Layer):
 
         if self.symmetric_inner_prod:
             self.group_permutations = list(itertools.permutations(range(self.graphlet_size)))
-            # print(f'group_permutations: {self.group_permutations}')
 
             # TODO: are there any other useful aggregation functions we should consider?
             if permutation_aggregator == 'mean':
@@ -60,12 +59,10 @@ class RelationalGraphletConvolution(tf.keras.layers.Layer):
 
 
     def build(self, input_shape):
-        # print(f'input_shape: {input_shape}')
         _, self.n_objects, _, self.rel_dim = input_shape
 
         self.filters = self.add_weight(shape=(self.n_filters, self.graphlet_size, self.graphlet_size, self.rel_dim),
             initializer=self.filter_initializer, trainable=True)
-        # print(f'filter.shape: {self.filters.shape}')
 
         if self.groups == 'permutations':
             self.object_groups = list(itertools.permutations(range(self.n_objects), self.graphlet_size))
@@ -76,9 +73,7 @@ class RelationalGraphletConvolution(tf.keras.layers.Layer):
         else:
             raise ValueError(f"groups_type must be 'permutations' or 'combinations' or list of groups of graphlet size. recieved: {self.groups}")
 
-        # print(f'object_groups: {self.object_groups}')
         self.n_groups = len(self.object_groups)
-        # print(f'n_groups: {self.n_groups}')
 
     @tf.function
     def rel_inner_prod(self, R_g, filters):
@@ -89,10 +84,9 @@ class RelationalGraphletConvolution(tf.keras.layers.Layer):
                 [rel_inner_prod_filters(get_sub_rel_tensor(R_g, perm), filters)
                  for perm in self.group_permutations], axis=1)
             # permutation_rel_inner_prods: (batch_size, n_permutations, n_filters)
-            # print(f'permutation_rel_inner_prods.shape: {permutation_rel_inner_prods.shape}')
             agg_perm_rel_inner_prods = self.permutation_aggregator(permutation_rel_inner_prods, axis=1)
             # agg_perm_rel_inner_prods: (batch_size, n_filters)
-            # print(f'agg_perm_rel_inner_prods.shape: {agg_perm_rel_inner_prods.shape}')
+
             return agg_perm_rel_inner_prods
 
     def call(self, inputs, groups=None):
@@ -116,13 +110,10 @@ class RelationalGraphletConvolution(tf.keras.layers.Layer):
         # get sub-relations
         sub_rel_tensors = tf.stack([get_sub_rel_tensor(inputs, group_indices) for group_indices in self.object_groups], axis=0)
         # sub_rel_tensors: (n_groups, batch_size, graphlet_size, graphlet_size, rel_dim)
-        # print(f'sub_rel_tensors.shape: {sub_rel_tensors.shape}')
 
         # compute relational inner product
         rel_convolution = tf.stack([self.rel_inner_prod(sub_rel_tensors[i], self.filters) for i in range(self.n_groups)], axis=1)
         # rel_convolution: (batch_size, n_groups, n_filters)
-        # print(f'rel_convolution.shape: {rel_convolution.shape}')
-
 
         # if group logits are given, group the relational convolution output according to it
         if groups is not None:
@@ -161,7 +152,6 @@ class RelationalGraphletConvolution(tf.keras.layers.Layer):
         })
         return config
 
-# TODO: remove all debugging print statements (currently commented out)
 
 def get_sub_rel_tensor(R, group_indices):
     """
