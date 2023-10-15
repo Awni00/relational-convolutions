@@ -1,5 +1,6 @@
 import itertools
 import tensorflow as tf
+from misc.sparsemax import sparsemax
 
 class RelationalGraphletConvolution(tf.keras.layers.Layer):
 
@@ -11,6 +12,8 @@ class RelationalGraphletConvolution(tf.keras.layers.Layer):
             groups='permutations',
             permutation_aggregator='mean',
             filter_initializer='random_normal',
+            beta=1,
+            group_normalizer='softmax',
             **kwargs
             ):
         """
@@ -32,6 +35,10 @@ class RelationalGraphletConvolution(tf.keras.layers.Layer):
             how to aggregate over permutations of the groups. used when symmetric_inner_prod is True, by default 'mean'.
         filter_initializer : str, optional
             initializer for graphlet filters, by default 'random_normal'.
+        beta : float, optional
+            temperature parameter for group logits, by default 1.
+        group_normalizer : 'softmax' or 'sparsemax', optional
+            whether to use softmax or sparsemax to normalize group logits, by default 'softmax'.
         **kwargs
             additional keyword arguments to pass to the Layer superclass (e.g.: name, trainable, etc.)
         """
@@ -43,6 +50,9 @@ class RelationalGraphletConvolution(tf.keras.layers.Layer):
         self.symmetric_inner_prod = symmetric_inner_prod
         self.groups = groups
         self.filter_initializer = filter_initializer
+        self.beta = beta
+        self.group_normalizer = group_normalizer
+        self.group_normalizer_ = tf.nn.softmax if group_normalizer == 'softmax' else sparsemax
 
         if self.symmetric_inner_prod:
             self.group_permutations = list(itertools.permutations(range(self.graphlet_size)))
@@ -120,13 +130,12 @@ class RelationalGraphletConvolution(tf.keras.layers.Layer):
             groups = tf.nn.softplus(groups) # apply softplus to ensure positive weights
 
             # gather weight attached to each object in group
-            group_object_weights = tf.gather(tf.nn.softplus(groups), self.object_groups, axis=-1)
+            group_object_weights = tf.gather(groups, self.object_groups, axis=-1)
             # group_weights: ([batch_size,] n_groups, graphlet_size)
             group_weights = tf.reduce_prod(group_object_weights, axis=-1)
             # group_weights: ([batch_size,] n_groups, n_graphlets)
 
-            beta = 1 # TODO: decide whether to make this a hyperparameter/learnable parameter
-            normalized_group_weights = tf.nn.softmax(beta*group_weights, axis=-1)
+            normalized_group_weights = self.group_normalizer_(self.beta*group_weights, axis=-1)
             # normalized_group_weights: ([batch_size,] n_groups, n_graphlets)
 
             if len(tf.shape(groups)) == 2:
