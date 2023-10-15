@@ -75,7 +75,7 @@ task_datasets = data_utils.load_task_datasets(args.task, data_path, data_format=
 train_split_ds = task_datasets[args.train_split]
 # train_split_ds = data_utils.load_ds_from_npz(filename)
 
-train_ds, val_ds, test_ds = utils.split_ds(train_split_ds, val_size=args.val_size, test_size=args.val_size)
+train_ds, val_ds, test_ds = utils.split_ds(train_split_ds, val_size=args.val_size, test_size=args.test_size)
 del train_split_ds
 
 batch_size = args.batch_size
@@ -137,13 +137,13 @@ def train_model(
             train_ds_sample, validation_data=val_ds, verbose=0,
             callbacks=create_callbacks(), **fit_kwargs)
 
-        eval_dict = eval_model(model)
+        eval_dict = eval_model(model, test_ds)
         wandb.log(eval_dict)
         wandb.finish(quiet=True)
 
         del model, train_ds_sample
 
-def eval_model(model):
+def eval_model(model, test_ds):
     eval_metrics = model.evaluate(test_ds, return_dict=True, verbose=0)
     for split, ds in eval_datasets.items():
         ds_metrics = {f'{split}_{metric_name}': metric
