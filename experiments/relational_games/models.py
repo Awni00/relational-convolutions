@@ -112,6 +112,49 @@ def create_featuregroup_relconvnet(normalizer=None, freeze_embedder=False, objec
 
     return model
 
+def create_contextgroup_relconvnet(normalizer=None, freeze_embedder=False, object_selection=None):
+    class Model(tf.keras.Model):
+        def __init__(self):
+            super().__init__()
+            # embedder
+            self.object_selector = get_obj_selector(object_selection) # NOTE: this is ignored for this model
+            self.normalizer = get_normalizer(normalizer)
+            self.cnn_embedder = CNNEmbedder(**cnn_embedder_kwargs)
+            self.cnn_embedder.trainable = not freeze_embedder
+
+            self.mhr = MultiDimInnerProdRelation(**relconv_mhr_kwargs, name='mhr1')
+            self.relconv = RelationalGraphletConvolution(**relconv_kwargs,
+                groups='combinations', beta=1/9, group_normalizer='sparsemax', name='rgc1')
+
+            # grouping layers
+            self.selfattn = tfm.nlp.layers.TransformerEncoderBlock(
+                        num_attention_heads=4, inner_dim=32, inner_activation='relu')
+            self.grouper = FeatureGrouping(num_groups=16, mlp_shape=(32,32),
+                mlp_activations='relu', use_pos=True, name='grouper')
+
+            # output MLP
+            self.flatten = tf.keras.layers.Flatten()
+            self.dense1 = tf.keras.layers.Dense(hidden_dense_size, activation='relu')
+            self.dense2 = tf.keras.layers.Dense(2, activation=None)
+
+
+        def call(self, inputs):
+            objs = self.object_selector(inputs)
+            objs = self.cnn_embedder(objs)
+            objs = self.normalizer(objs)
+            reltensor = self.mhr(objs)
+            groups = self.grouper(self.selfattn(objs))
+            conv = self.relconv(reltensor, groups=groups)
+            x = self.flatten(conv)
+            x = self.dense1(x)
+            x = self.dense2(x)
+
+            return x
+
+    model = Model()
+
+    return model
+
 def create_randomgroup_relconvnet(normalizer=None, freeze_embedder=False, object_selection=None):
     object_selector = get_obj_selector(object_selection) # NOTE: this is ignored for this model
     normalizer = get_normalizer(normalizer)
@@ -271,6 +314,7 @@ model_creators = dict(
     relconvnet=create_relconvnet,
     tempgroup_relconvnet=create_tempgroup_relconvnet,
     featuregroup_relconvnet=create_featuregroup_relconvnet,
+    contextgroup_relconvnet=create_contextgroup_relconvnet,
     randomgroup_relconvnet=create_randomgroup_relconvnet,
     transformer=create_transformer,
     corelnet=create_corelnet,
