@@ -1,17 +1,17 @@
 \begin{tabular}{p{0.25\textwidth}p{0.75\textwidth}}
     \toprule
-    Model / Component & Architecture                                                                                                                                                                                                                                                                                       \\ \midrule
-    Common CNN \newline Embedder & \texttt{Conv2D} $\to$ \texttt{MaxPool2D} $\to$ \texttt{Conv2D} $\to$ \texttt{MaxPool2D} $\to$ \texttt{Flatten}. \\
-    & \texttt{Conv2D}: num filters = 16, filter size = $3 \times 3$, activation = relu. \\
-    & \texttt{MaxPool2D}: stride = 2. \\\hline
-    RelConvNet        & \texttt{CNN} $\to$ \texttt{MD-IPR} $\to$ \texttt{RelConv} $\to$ \texttt{Flatten} $\to$ \texttt{MLP}. \\
-    & \texttt{MD-IPR}: relation dim = 16, projection dim = 4, symmetric. \\
-    & \texttt{RelConv}: num filters = 16, filter size = 3, discrete groups = combinations. \\\hline
-    CoRelNet          & \texttt{CNN} $\to$ \texttt{CoRelNet} $\to$ \texttt{Flatten} $\to$ \texttt{MLP}. \\
-    & Standard CoRelNet has no hyperparameters. \\\hline
-    PrediNet          & \texttt{CNN} $\to$ \texttt{PrediNet} $\to$ \texttt{Flatten} $\to$ \texttt{MLP}. \\
-    & \texttt{PrediNet}: key dim = 4, number of heads = 4, num relations = 16. \\\hline
-    Transformer       & \texttt{CNN} $\to$ \texttt{TransformerEncoder} $\to$ \texttt{AveragePooling} $\to$ \texttt{MLP}. \\
-    & \texttt{TransformerEncoder}: num layers = 1, num heads = 8, feedforward intermediate size = 32, activation = relu. \\\hline
+    Model / Component & Architecture \\ \midrule
+    Common CNN \newline Embedder & \texttt{Conv2D} $\to$ \texttt{MaxPool2D} $\to$ \texttt{Conv2D} $\to$ \texttt{MaxPool2D} $\to$ \texttt{Flatten}. \newline
+                        \texttt{Conv2D}: num filters = 16, filter size = $3 \times 3$, activation = relu. \newline
+                        \texttt{MaxPool2D}: stride = 2. \\\hline
+    RelConvNet        & \texttt{CNN} $\to$ \texttt{MD-IPR} $\to$ \texttt{RelConv} $\to$ \texttt{Flatten} $\to$ \texttt{MLP}. \newline
+                        \texttt{MD-IPR}: relation dim = 16, projection dim = 4, symmetric. \newline
+                        \texttt{RelConv}: num filters = 16, filter size = 3, discrete groups = combinations. \\\hline
+    CoRelNet          & \texttt{CNN} $\to$ \texttt{CoRelNet} $\to$ \texttt{Flatten} $\to$ \texttt{MLP}. \newline
+                        Standard CoRelNet has no hyperparameters. \\\hline
+    PrediNet          & \texttt{CNN} $\to$ \texttt{PrediNet} $\to$ \texttt{Flatten} $\to$ \texttt{MLP}. \newline
+                        \texttt{PrediNet}: key dim = 4, number of heads = 4, num relations = 16. \\\hline
+    Transformer       & \texttt{CNN} $\to$ \texttt{TransformerEncoder} $\to$ \texttt{AveragePooling} $\to$ \texttt{MLP}. \newline
+                    \texttt{TransformerEncoder}: num layers = 1, num heads = 8, feedforward intermediate size = 32, activation = relu. \\\hline
     Common output MLP & \texttt{Dense(64, 'relu')} $\to$ \texttt{Dense(2)}. \\ \bottomrule
 \end{tabular}
