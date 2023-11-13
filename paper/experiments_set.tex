@@ -3,7 +3,7 @@
 `SET' is a card game which forms a simple but challenging relational task. The `objects' are a set cards each representing four attributes which can take one of three values each. `Color' can be red, green, or purple; `number' can be one, two, or three; `shape' can be diamond, squiggle, or oval; and `fill' can be solid, striped, or empty. A `set' is a triplet of cards such that each attribute is either the same on all three cards or different on all three cards.~\Cref{fig:set_example} shows a sample of SET cards.
 
 \begin{wrapfigure}{R}{0.25\textwidth}
-	\vskip-5pt
+	% \vskip-5pt
 	\begin{tabular}{c}
 		\includegraphics[width=.25\textwidth]{figs/set_example}\\[-5pt]
 	\end{tabular}
@@ -16,7 +16,7 @@ In this section, we evaluate RelConvNet on a task based on `SET' and compare it 
 
 \begin{wrapfigure}{R}{0.375\textwidth}
     \centering
-    \vskip-10pt
+    % \vskip-10pt
     \includegraphics[width=0.375\textwidth]{figs/experiments/contains_set_acc.pdf}\\[-5pt]
     \caption{\footnotesize{Hold-out test accuracy. Error bars indicate 95\% bootstrap confidence intervals.}}\label{fig:contains_set_acc}
 \end{wrapfigure}
@@ -28,17 +28,17 @@ In SET, there exists $\binom{81}{3} = 85\,320$ triplets of cards, of which $1\,0
     \begin{subfigure}{0.45\textwidth}
         \centering
         \includegraphics[width=0.9\textwidth]{figs/experiments/contains_set_training_curves_trainacc.pdf}
-        \vskip-5pt
+        % \vskip-5pt
         \caption{Training accuracy over the course of training.}\label{fig:contains_set_training_curves_trainacc}
     \end{subfigure}
     \begin{subfigure}{0.45\textwidth}
         \centering
         \includegraphics[width=0.9\textwidth]{figs/experiments/contains_set_training_curves_valacc.pdf}
-        \vskip-5pt
+        % \vskip-5pt
         \caption{Validation accuracy over the course of training.}\label{fig:contains_set_training_curves_valacc}
     \end{subfigure}
     \caption{Training curves for the ``contains SET'' experiments. Solid lines indicate the mean over 10 trials. Shaded regions represent a 95\% bootstrap confidence interval.}\label{fig:contains_set_training_curves}
-    \vskip-7.5pt
+    % \vskip-7.5pt
 \end{figure}
 
 We observe that RelConvNet is able to learn the task and generalize to new `sets' with near-perfect accuracy. On the other hand, CoRelNet and the Transformer have accuracies only slightly better than random guessing on the test set, while PrediNet learns nothing that generalizes to the test set. The picture becomes more clear when looking at training curves. While the Transformer and PrediNet are eventually able to fit the training data, they are unable to ``learn the rule'' in a way that generalizes to the validation or test sets. This suggests that the Transformer architecture has the general-purpose function-approximation capabilities to fit a wide array of sequence-tasks, but it does not have the right inductive biases for specialized relational reasoning. A possible explanation is that relations are processed only implicitly through its attention mechanism, rather than explicitly via a relation tensor. Moreover, it does not naturally support reasoning about the relations between groups of objects. These are strengths of the relational convolutional networks architecture.
