@@ -2,7 +2,7 @@
 
 \subsection{Relational Games}
 
-\Cref{tab:relational_games_tasks} contains text descriptions of each task in the relational games dataset in the experiments of~\Cref{ssec:exp_relational_games}. \Cref{tab:relgames_architectures} contains a description of the architectures of each model or component in the experiments. \Cref{tab:ood_generalization} reports the accuracy on the hold-out object sets (i.e., the numbers depicted in~\Cref{fig:ood_generalization} of the main text).
+\Cref{tab:relational_games_tasks} contains text descriptions of each task in the relational games dataset in the experiments of~\Cref{ssec:exp_relational_games}.~\Cref{tab:relgames_architectures} contains a description of the architectures of each model (or shared component) in the experiments.~\Cref{tab:relgames_group_architectures} contains a description of the hyperparameters of the grouping layers corresponding to the `Temporal G', `Feature G', and `Contextual G' RelConvNet models. All grouping layers have 16 soft groups, and the normalizer in~\Cref{eq:group_match_score} is sparsemax.~\Cref{tab:ood_generalization} reports the accuracy on the hold-out object sets (i.e., the numbers depicted in~\Cref{fig:ood_generalization} of the main text).
 
 \begin{table}[h]
     \centering
@@ -16,6 +16,11 @@
     \caption{Model architectures for relational games experiments.}\label{tab:relgames_architectures}
 \end{table}
 
+\begin{table}[h]
+    \centering
+    \input{figs/experiments/relgames_group_architectures_table.tex}
+    \caption{hyperparameters of grouping layers.}\label{tab:relgames_group_architectures}
+\end{table}
 
 \begin{table}[h]
     \centering
