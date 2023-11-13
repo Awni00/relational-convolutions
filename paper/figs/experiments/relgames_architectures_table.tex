@@ -1,7 +1,7 @@
-\begin{tabular}{p{0.2\textwidth}p{0.8\textwidth}}
+\begin{tabular}{p{0.25\textwidth}p{0.75\textwidth}}
     \toprule
     Model / Component & Architecture                                                                                                                                                                                                                                                                                       \\ \midrule
-    Common CNN        & \texttt{Conv2D} $\to$ \texttt{MaxPool2D} $\to$ \texttt{Conv2D} $\to$ \texttt{MaxPool2D} $\to$ \texttt{Flatten}. \\
+    Common CNN \newline Embedder & \texttt{Conv2D} $\to$ \texttt{MaxPool2D} $\to$ \texttt{Conv2D} $\to$ \texttt{MaxPool2D} $\to$ \texttt{Flatten}. \\
     & \texttt{Conv2D}: num filters = 16, filter size = $3 \times 3$, activation = relu. \\
     & \texttt{MaxPool2D}: stride = 2. \\\hline
     RelConvNet        & \texttt{CNN} $\to$ \texttt{MD-IPR} $\to$ \texttt{RelConv} $\to$ \texttt{Flatten} $\to$ \texttt{MLP}. \\
@@ -13,5 +13,5 @@
     & \texttt{PrediNet}: key dim = 4, number of heads = 4, num relations = 16. \\\hline
     Transformer       & \texttt{CNN} $\to$ \texttt{TransformerEncoder} $\to$ \texttt{AveragePooling} $\to$ \texttt{MLP}. \\
     & \texttt{TransformerEncoder}: num layers = 1, num heads = 8, feedforward intermediate size = 32, activation = relu. \\\hline
-    Common output MLP & \texttt{Dense(64, activation='relu')} $\to$ \texttt{Dense(2)}.                                                                                                                                                                                                              \\ \bottomrule
+    Common output MLP & \texttt{Dense(64, 'relu')} $\to$ \texttt{Dense(2)}. \\ \bottomrule
 \end{tabular}
