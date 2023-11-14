@@ -5,6 +5,7 @@ import sys; sys.path.append('..'); sys.path.append('../..')
 from relational_neural_networks.mdipr import MultiDimInnerProdRelation
 from relational_neural_networks.relational_graphlet_convolution import RelationalGraphletConvolution
 from relational_neural_networks.predinet import PrediNet
+from misc.abstractor import RelationalAbstracter
 
 def create_predictormlp():
     predictor_mlp = tf.keras.Sequential([
@@ -112,6 +113,19 @@ def create_predinet():
     return model
 #endregion
 
+# region Abstractor
+abstractor_kwargs = dict(num_layers=1, num_heads=8, dff=64, use_self_attn=False, dropout_rate=0.)
+def create_abstractor():
+    abstractor = RelationalAbstracter(**abstractor_kwargs)
+
+    model = tf.keras.Sequential([
+        abstractor,
+        tf.keras.layers.GlobalAveragePooling1D(),
+        create_predictormlp()
+        ])
+    return model
+# endregion
+
 # put all model creators into a dictionary to interface with `eval_learning_curve.py`
 model_creators = dict(
     relconvnet=create_relconvnet,
@@ -120,4 +134,5 @@ model_creators = dict(
     corelnet=create_corelnet,
     nosoftmax_corelnet=create_nosoftmax_corelnet,
     predinet=create_predinet,
+    abstractor=create_abstractor
     )
