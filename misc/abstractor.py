@@ -1,7 +1,5 @@
 import tensorflow as tf
-from transformer_modules import AddPositionalEmbedding, FeedForward
 from tensorflow.keras.layers import MultiHeadAttention
-
 
 class RelationalAbstracter(tf.keras.layers.Layer):
 
@@ -19,7 +17,6 @@ class RelationalAbstracter(tf.keras.layers.Layer):
         self.num_layers = num_layers
         self.num_heads = num_heads
         self.dff = dff
-        self.use_pos_embedding = use_pos_embedding
         self.use_self_attn = use_self_attn
         self.dropout_rate = dropout_rate
 
@@ -28,11 +25,10 @@ class RelationalAbstracter(tf.keras.layers.Layer):
         _, self.sequence_length, self.d_model = input_shape
 
         # define the input-independent symbolic input vector sequence at the decoder
-        if self.use_learned_symbols:
-            normal_initializer = tf.keras.initializers.RandomNormal(mean=0., stddev=1.)
-            self.symbol_sequence = tf.Variable(
-                normal_initializer(shape=(self.sequence_length, self.d_model)),
-                name='symbols', trainable=True)
+        normal_initializer = tf.keras.initializers.RandomNormal(mean=0., stddev=1.)
+        self.symbol_sequence = tf.Variable(
+            normal_initializer(shape=(self.sequence_length, self.d_model)),
+            name='symbols', trainable=True)
 
         self.dropout = tf.keras.layers.Dropout(self.dropout_rate)
 
