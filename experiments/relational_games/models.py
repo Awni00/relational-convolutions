@@ -10,6 +10,7 @@ from relational_neural_networks.relational_graphlet_convolution import Relationa
 from relational_neural_networks.grouping_layers import TemporalGrouping, FeatureGrouping
 from relational_neural_networks.tcn import TCN, GroupTCN
 from relational_neural_networks.predinet import PrediNet
+from misc.abstractor import RelationalAbstracter
 
 # global parameters
 cnn_embedder_kwargs = dict(n_f=(16,16), s_f=(3,3), pool_size=2)
@@ -261,8 +262,6 @@ def create_transformer(normalizer=None, freeze_embedder=False, object_selection=
     encoder = tfm.nlp.models.TransformerEncoder(
         **encoder_kwargs)
 
-    cnn_embedder = CNNEmbedder(**cnn_embedder_kwargs)
-
     model = tf.keras.Sequential([
         object_selector,
         cnn_embedder,
@@ -270,6 +269,26 @@ def create_transformer(normalizer=None, freeze_embedder=False, object_selection=
         encoder,
         tf.keras.layers.GlobalAveragePooling1D(),
         tf.keras.layers.Dense(2)])
+    return model
+
+### Abstractor
+abstractor_kwargs = dict(num_layers=1, num_heads=8, dff=64, use_self_attn=False, dropout_rate=0.)
+def create_abstractor(normalizer=None, freeze_embedder=False, object_selection=None):
+    object_selector = get_obj_selector(object_selection)
+    normalizer = get_normalizer(normalizer)
+    cnn_embedder = CNNEmbedder(**cnn_embedder_kwargs)
+    cnn_embedder.trainable = not freeze_embedder
+
+    abstractor = RelationalAbstracter(**abstractor_kwargs)
+
+    model = tf.keras.Sequential([
+        object_selector,
+        cnn_embedder,
+        normalizer,
+        abstractor,
+        tf.keras.layers.GlobalAveragePooling1D(),
+        tf.keras.layers.Dense(2)
+        ])
     return model
 
 
