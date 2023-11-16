@@ -41,6 +41,8 @@ $\calG$ is a pre-specified hyperparameter of the relational convolution operatio
     \includegraphics[width=0.9\textwidth]{figs/relconv_diagram2.pdf}
     \vskip-10pt
     \caption{A depiction of the relational convolution operation.
+    % NOTE / TODO temporarily add? (reviewer asked for this but we're tight on space)
+    The input is a relation tensor $R \in \reals^{m \times m \times d_r}$. A learned set of graphlet filters $\bm{f} \in \reals^{s \times s \times d_r \times n_f}$ are compared to each relation subtensor $R[g], g \in \calG$, producing the relational convolution $R \ast \bm{f}$. With a group matrix $G \in \reals^{m \times n_g}$, $(R \ast \bm{f})(G)$ represents the relational information in a set of $n_g$ ``soft groups''.
     % The input is a relation tensor $R$ of shape $m \times m \times d_r$, giving pairwise relations of dimension $d_r$ between a sequence of $m$ objects. A graphlet filter of size $s$ is parameterized by a relation tensor of shape $s \times s \times d_r$. The graphlet convolution operation computes relational inner products between the relation subtensor of each discrete group $g \in \calG$ with the graphlet filters $\bm{f}$. This gives a vector representation of the relations in each discrete group, $\tilde{z}_g \in \reals^{n_f}, g \in \calG$. Finally, this is synthesized into a vector representation for each of $n_g$ `soft groups', $G$, producing $(R \ast \bm{f})(G) = (z_1, \ldots, z_{n_g})$.
     }\label{fig:relconvdiagram}
     \vskip -10pt
