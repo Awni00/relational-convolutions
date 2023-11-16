@@ -4,7 +4,7 @@ We appreciate your feedback. Please see the global response as well as the updat
 
 > Some techinical details need to be claimed
 
-Could you clarify what you mean by this?
+Can you clarify what you mean by this?
 
 ---
 > More explanations about Fig.2 should be included, like symbol defination, and how you process pooling on graph.
