@@ -17,7 +17,7 @@ Consider first the case relational convolution with discrete groups. The output 
 \end{equation*}
 When $\calG$ is sparse and structured, $\calR$ is sparse.
 
-In the case of learned (soft) groups, the same computational benefits can be via a sparse selection in the group match score $\alpha_{gk}$ (~\Cref{eq:group_match_score}). This is achieved with sparse normalizers like sparsemax or top-$k$ softmax, for example. Then, the relation between object $i$ and object $j$ only needs to be computed if there exists a soft group $G_k, k \in [n_g]$ which assigns non-zero weight to a discrete $g \in \calG$ which includes both $i$ and $j$. That is,
+In the case of relational convolution with (learned) soft groups, the same can be achieved via a sparse selection in the group match score $\alpha_{gk}$ (\Cref{eq:group_match_score}). The group match scores $\alpha_{gk}$ can be made sparse by using sparse normalizers like sparsemax or top-$k$ softmax, for example. Then, the relation between object $i$ and object $j$ only needs to be computed if there exists a soft group $G_k, k \in [n_g]$ which assigns non-zero weight to a discrete group $g \in \calG$ which includes both $i$ and $j$. That is,
 \begin{equation*}
     \calR := \set{R_{ij} \colon \exists\, k \in [n_g], g \in \calG \text{ such that } \alpha_{gk} > 0 \text{ and } i,j \in g}.
 \end{equation*}
