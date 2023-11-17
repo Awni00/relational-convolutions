@@ -6,7 +6,7 @@
     & \texttt{MaxPool2D}: stride = 4. \\\hline
     RelConvNet        & \texttt{CNN} $\to$ \texttt{MD-IPR} $\to$ \texttt{RelConv} $\to$ \texttt{Flatten} $\to$ \texttt{MLP}. \\
     & \texttt{MD-IPR}: relation dim = 16, projection dim = 16, symmetric. \\
-    & \texttt{RelConv}: num filters = 16, filter size = 3, discrete groups = combinations, symmetric relational inner product with 'max' aggregator. \\\hline
+    & \texttt{RelConv}: num filters = 16, filter size = 3, discrete groups = combinations, symmetric relational inner product with `max' aggregator. \\\hline
     CoRelNet          & \texttt{CNN} $\to$ \texttt{CoRelNet} $\to$ \texttt{Flatten} $\to$ \texttt{MLP}. \\
     & Standard CoRelNet has no hyperparameters. \\\hline
     PrediNet          & \texttt{CNN} $\to$ \texttt{PrediNet} $\to$ \texttt{Flatten} $\to$ \texttt{MLP}. \\
