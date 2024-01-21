@@ -206,5 +206,6 @@ model_creators = dict(
     lstm=create_lstm,
     gru=create_gru,
     gcn=create_gcn,
+    gat=create_gat,
     abstractor=create_abstractor
     )
