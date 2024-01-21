@@ -146,6 +146,30 @@ def create_gru():
     return model
 # endregion
 
+# region GCN
+gcn_kwargs = dict(channels=128, n_layers=2, dense_dim=128)
+def create_gcn():
+    class GCNModel(tf.keras.Model):
+        def __init__(self):
+            super().__init__()
+            self.convs = [GCNConv(gcn_kwargs['channels']) for _ in range(gcn_kwargs['n_layers'])]
+            self.denses = [tf.keras.layers.Dense(gcn_kwargs['dense_dim'], activation='relu') for _ in range(gcn_kwargs['n_layers'])]
+            self.pool = tf.keras.layers.GlobalAveragePooling1D()
+            self.mlp_predictor = create_predictormlp()
+
+        def call(self, inputs):
+            x, a = inputs
+            for conv, dense in zip(self.convs, self.denses):
+                x = conv([x, a])
+                x = dense(x)
+            x = self.pool(x)
+            out = self.mlp_predictor(x)
+            return out
+
+    return GCNModel()
+
+# endregion
+
 
 # put all model creators into a dictionary to interface with `eval_learning_curve.py`
 model_creators = dict(
@@ -157,5 +181,6 @@ model_creators = dict(
     predinet=create_predinet,
     lstm=create_lstm,
     gru=create_gru,
+    gcn=create_gcn,
     abstractor=create_abstractor
     )
