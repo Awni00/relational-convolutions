@@ -91,9 +91,28 @@ X_train, X_val, X_test = object_seqs_train, object_seqs_val, object_seqs_test
 y_train, y_val, y_test = labels_train, labels_val, labels_test
 
 batch_size = args.batch_size
+
 train_ds = tf.data.Dataset.from_tensor_slices((X_train, y_train))
-val_ds = tf.data.Dataset.from_tensor_slices((X_val, y_val)).batch(batch_size)
-test_ds = tf.data.Dataset.from_tensor_slices((X_test, y_test)).batch(batch_size)
+val_ds = tf.data.Dataset.from_tensor_slices((X_val, y_val))
+test_ds = tf.data.Dataset.from_tensor_slices((X_test, y_test))
+
+seq_len, dim = train_ds.element_spec[0].shape
+
+# prepare dataset if model is GNN: add fully-connected adjacency matrix
+gnn_model_names = ['gcn']
+if args.model in gnn_model_names:
+    print('args.model is GNN. mapping dataset to add adjacency matrix...')
+    def mapto_gnn_ds(x, y):
+        adj = tf.ones((seq_len, seq_len), dtype=tf.float64)
+        return ((x, adj), y)
+
+    train_ds = train_ds.map(mapto_gnn_ds)
+    val_ds = val_ds.map(mapto_gnn_ds)
+    test_ds = test_ds.map(mapto_gnn_ds)
+
+val_ds = val_ds.batch(batch_size)
+test_ds = test_ds.batch(batch_size)
+
 #endregion
 
 #region training setup
@@ -154,11 +173,17 @@ def eval_model(model):
 
 #region train & evaluate model
 
-
 def create_model():
-    model = models.model_creators[args.model]()
-    model.compile(loss=loss, optimizer=create_opt(), metrics=metrics) # compile
-    model.build(input_shape=(None, *train_ds.element_spec[0].shape)) # build
+    model = models.model_creators[args.model]() # TODO: fix models.model_creator[model]()
+
+    # build
+    if args.model in gnn_model_names: # if model is GNN, needs to be built differently
+        model([np.random.random(size=(1, seq_len, dim)), np.ones((seq_len, seq_len))])
+    else:
+        model.build(input_shape=(None, seq_len, dim))
+
+    model.compile(loss=loss, optimizer=create_opt(), metrics=metrics)
+
     return model
 
 group_name = args.model
