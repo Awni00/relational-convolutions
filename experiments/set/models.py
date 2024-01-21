@@ -143,6 +143,6 @@ model_creators = dict(
     corelnet=create_corelnet,
     nosoftmax_corelnet=create_nosoftmax_corelnet,
     predinet=create_predinet,
-    lstm=create_lst,
+    lstm=create_lstm,
     abstractor=create_abstractor
     )
