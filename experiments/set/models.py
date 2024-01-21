@@ -134,6 +134,18 @@ def create_lstm():
         create_predictormlp()
         ])
     return model
+# endregion
+
+# region LSTM
+gru_kwargs = dict(units=128, activation='tanh', recurrent_activation='sigmoid', return_sequences=False)
+def create_gru():
+    model = tf.keras.Sequential([
+        tf.keras.layers.GRU(**gru_kwargs),
+        create_predictormlp()
+        ])
+    return model
+# endregion
+
 
 # put all model creators into a dictionary to interface with `eval_learning_curve.py`
 model_creators = dict(
@@ -144,5 +156,6 @@ model_creators = dict(
     nosoftmax_corelnet=create_nosoftmax_corelnet,
     predinet=create_predinet,
     lstm=create_lstm,
+    gru=create_gru,
     abstractor=create_abstractor
     )
