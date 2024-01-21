@@ -168,8 +168,31 @@ def create_gcn():
             return out
 
     return GCNModel()
-
 # endregion
+
+# region GAT
+gat_kwargs = dict(channels=128, n_layers=2, dense_dim=128)
+def create_gat():
+    from spektral.layers import GATConv
+    class GATModel(tf.keras.Model):
+        def __init__(self):
+            super().__init__()
+            self.convs = [GATConv(gat_kwargs['channels']) for _ in range(gat_kwargs['n_layers'])]
+            self.denses = [tf.keras.layers.Dense(gat_kwargs['dense_dim'], activation='relu') for _ in range(gat_kwargs['n_layers'])]
+            self.pool = tf.keras.layers.GlobalAveragePooling1D()
+            self.mlp_predictor = create_predictormlp()
+
+        def call(self, inputs):
+            x, a = inputs
+            for conv, dense in zip(self.convs, self.denses):
+                x = conv([x, a])
+                x = dense(x)
+            x = self.pool(x)
+            out = self.mlp_predictor(x)
+            return out
+
+    return GATModel()
+# endregion GAT
 
 
 # put all model creators into a dictionary to interface with `eval_learning_curve.py`
