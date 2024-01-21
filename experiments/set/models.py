@@ -194,6 +194,29 @@ def create_gat():
     return GATModel()
 # endregion GAT
 
+# region  GIN
+gin_kwargs = dict(channels=128, n_layers=2, dense_dim=128)
+def create_gin():
+    from spektral.layers import GINConvBatch
+    class GINModel(tf.keras.Model):
+        def __init__(self):
+            super().__init__()
+            self.convs = [GINConvBatch(gin_kwargs['channels']) for _ in range(gin_kwargs['n_layers'])]
+            self.denses = [tf.keras.layers.Dense(gin_kwargs['dense_dim'], activation='relu') for _ in range(gin_kwargs['n_layers'])]
+            self.pool = tf.keras.layers.GlobalAveragePooling1D()
+            self.mlp_predictor = create_predictormlp()
+
+        def call(self, inputs):
+            x, a = inputs
+            for conv, dense in zip(self.convs, self.denses):
+                x = conv([x, a])
+                x = dense(x)
+            x = self.pool(x)
+            out = self.mlp_predictor(x)
+            return out
+
+    return GINModel()
+# endregion GIN
 
 # put all model creators into a dictionary to interface with `eval_learning_curve.py`
 model_creators = dict(
@@ -207,5 +230,6 @@ model_creators = dict(
     gru=create_gru,
     gcn=create_gcn,
     gat=create_gat,
+    gin=create_gin,
     abstractor=create_abstractor
     )

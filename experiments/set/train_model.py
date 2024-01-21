@@ -99,7 +99,7 @@ test_ds = tf.data.Dataset.from_tensor_slices((X_test, y_test))
 seq_len, dim = train_ds.element_spec[0].shape
 
 # prepare dataset if model is GNN: add fully-connected adjacency matrix
-gnn_model_names = ['gcn', 'gat']
+gnn_model_names = ['gcn', 'gat', 'gin']
 if args.model in gnn_model_names:
     print('args.model is GNN. mapping dataset to add adjacency matrix...')
     def mapto_gnn_ds(x, y):
