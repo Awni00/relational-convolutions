@@ -126,6 +126,15 @@ def create_abstractor():
     return model
 # endregion
 
+# region LSTM
+lstm_kwargs = dict(units=128, activation='tanh', recurrent_activation='sigmoid', return_sequences=False)
+def create_lstm():
+    model = tf.keras.Sequential([
+        tf.keras.layers.LSTM(**lstm_kwargs),
+        create_predictormlp()
+        ])
+    return model
+
 # put all model creators into a dictionary to interface with `eval_learning_curve.py`
 model_creators = dict(
     relconvnet=create_relconvnet,
@@ -134,5 +143,6 @@ model_creators = dict(
     corelnet=create_corelnet,
     nosoftmax_corelnet=create_nosoftmax_corelnet,
     predinet=create_predinet,
+    lstm=create_lst,
     abstractor=create_abstractor
     )
