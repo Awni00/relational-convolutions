@@ -1,6 +1,6 @@
 import itertools
 import tensorflow as tf
-from mdipr import MultiDimInnerProdRelation
+from relational_neural_networks.mdipr import MultiDimInnerProdRelation
 from misc.sparsemax import sparsemax
 
 class RelationalGraphletConvolution(tf.keras.layers.Layer):
@@ -170,7 +170,7 @@ class RelationalGraphletConvolutionGroupAttn(tf.keras.layers.Layer):
             n_filters,
             graphlet_size,
             n_groups,
-            rel_dim,
+            mdipr_kwargs,
             group_attn_key_dim,
             group_attn_key='pos+feat',
             symmetric_inner_prod=False,
@@ -200,7 +200,7 @@ class RelationalGraphletConvolutionGroupAttn(tf.keras.layers.Layer):
             dimension of query/key transformations for group attention.
         group_attn_key : 'pos', 'feat', or 'pos+feat', optional
             whether to use positional embeddings, feature embeddings, or both for group attention, by default 'pos+feat'.
-        symmetric_mdipr : bool, optional
+        symmetric_rels : bool, optional
             whether to use symmetric version of MDIPR, by default False.
         symmetric_inner_prod : bool, optional
             whether to use symmetric version of relational inner product (i.e., aggregate across permutations), by default False.
@@ -221,7 +221,8 @@ class RelationalGraphletConvolutionGroupAttn(tf.keras.layers.Layer):
         self.n_filters = n_filters
         self.graphlet_size = graphlet_size
         self.n_groups = n_groups
-        self.rel_dim = rel_dim
+        self.mdipr_kwargs = mdipr_kwargs
+        self.rel_dim = mdipr_kwargs['rel_dim']
         self.group_attn_key_dim = group_attn_key_dim
         self.group_attn_key = group_attn_key # TODO: add support for 'contextual' key (i.e., perform self-attention first)
         self.symmetric_inner_prod = symmetric_inner_prod
@@ -255,7 +256,7 @@ class RelationalGraphletConvolutionGroupAttn(tf.keras.layers.Layer):
         self.filters = self.add_weight(shape=(self.n_filters, self.graphlet_size, self.graphlet_size, self.rel_dim),
             initializer=self.filter_initializer, trainable=True)
 
-        self.mdipr = MultiDimInnerProdRelation(rel_dim=self.rel_dim, proj_dim=self.rel_dim, symmetric=True)
+        self.mdipr = MultiDimInnerProdRelation(**self.mdipr_kwargs)
 
         self.group_queries = tf.keras.layers.Embedding(input_dim=self.n_groups*self.graphlet_size, output_dim=self.group_attn_key_dim)
         self.pos_embedding = tf.keras.layers.Embedding(input_dim=self.n_objects, output_dim=self.group_attn_key_dim)
@@ -264,16 +265,18 @@ class RelationalGraphletConvolutionGroupAttn(tf.keras.layers.Layer):
         if self.beta is None:
             self.beta = self.group_attn_key_dim**(-0.5)
 
+    @tf.function
     def group_attention(self, inputs):
 
-        batch_dim, seq_len, obj_dim = tf.shape(inputs)
+        batch_dim = tf.shape(inputs)[0]
+
         q = self.group_queries(tf.range(self.n_groups*self.graphlet_size))
         if self.group_attn_key == 'pos':
-            k = tf.repeat(tf.expand_dims(self.pos_embedding(tf.range(seq_len)), axis=0), batch_dim, axis=0)
+            k = tf.repeat(tf.expand_dims(self.pos_embedding(tf.range(self.n_objects)), axis=0), batch_dim, axis=0)
         elif self.group_attn_key == 'feat':
             k = self.group_attn_key_map(inputs)
         elif self.group_attn_key == 'pos+feat':
-            k = self.group_attn_key_map(inputs) + self.pos_embedding(tf.range(seq_len))
+            k = self.group_attn_key_map(inputs) + self.pos_embedding(tf.range(self.n_objects))
         else:
             raise ValueError(f'group_attn_key must be pos, feat, or pos+feat, not {self.group_attn_key}')
         v = inputs
@@ -281,8 +284,8 @@ class RelationalGraphletConvolutionGroupAttn(tf.keras.layers.Layer):
         attn_scores = self.group_normalizer_(self.beta * tf.matmul(q, k, transpose_b=True)) # (n_groups*filter_size, seq_len)
         attn_output = tf.matmul(attn_scores, v) # (n_groups*filter_size, obj_dim)
 
-        attn_scores = tf.reshape(attn_scores, (-1, self.n_groups, self.graphlet_size, seq_len)) # (batch_dim, n_groups, filter_size, seq_len)
-        attn_output = tf.reshape(attn_output, (-1, self.n_groups, self.graphlet_size, obj_dim)) # (batch_dim, n_groups, filter_size, obj_dim)
+        attn_scores = tf.reshape(attn_scores, (-1, self.n_groups, self.graphlet_size, self.n_objects)) # (batch_dim, n_groups, filter_size, seq_len)
+        attn_output = tf.reshape(attn_output, (-1, self.n_groups, self.graphlet_size, self.obj_dim)) # (batch_dim, n_groups, filter_size, obj_dim)
 
         return attn_output, attn_scores
 
@@ -320,7 +323,7 @@ class RelationalGraphletConvolutionGroupAttn(tf.keras.layers.Layer):
         obj_groups, group_attn_scores = self.group_attention(inputs)
 
         # get sub-relations
-        sub_rel_tensors = tf.stack([self.mdipr(attn_output[:, group]) for group in range(n_groups)], axis=1)
+        sub_rel_tensors = tf.stack([self.mdipr(obj_groups[:, group]) for group in range(self.n_groups)], axis=1)
         # sub_rel_tensors: (batch_size, n_groups, graphlet_size, graphlet_size, rel_dim)
 
         # compute relational inner product
