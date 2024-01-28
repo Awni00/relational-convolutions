@@ -29,7 +29,7 @@ We can also define a symmetric variant of the relational inner product which is 
 For a given group $g \subset [n]$, the relational inner product with a graphlet filter, $\iprod{R[g]}{\bm{f}}_\mathrm{rel}$, gives us a vector summarizing the relational patterns inside that group. We aim to get a sequence of objects which each describes the relational patterns within each group of interest. Let $\calG$ be a set of size-$s$ groups of the the $n$ objects. The relational convolution between a relation tensor $R$ and a relational graphlet filter $\bm{f}$ is the sequence of relational inner products with each group in $\calG$,
 \begin{equation}
     \label{eq:relational_convolution}
-    R \ast \bm{f} \coloneq \left( \reliprod{R[g]}{\boldsymbol{f}} \right)_{g \in \calG} \equiv \left(z_1, ..., z_{\abs{\calG}}\right) \in (\mathbb{R}^{n_f})^{\abs{\calG}}
+    R \ast \bm{f} \coloneq \left( \reliprod{R[g]}{\boldsymbol{f}} \right)_{g \in \calG} \equiv \left(z_1, \ldots, z_{\abs{\calG}}\right) \in (\mathbb{R}^{n_f})^{\abs{\calG}}
 \end{equation}
 $\calG$ is a pre-specified hyperparameter of the relational convolution operation. The choice depends on the usecase. If some prior information is known about reasonable groupings, this can be encoded in $\calG$. When $n$ is small and no prior information is available, a reasonable choice might be the the set of all combinations of size $s$. When $n$ is large, considering all combinations will be intractable. One solution is to consider a random sample of combinations. In the next subsections, we consider the problem of \textit{learning} the relevant groups.
 
@@ -75,3 +75,38 @@ With this modification, the number of objects in the output sequence is fixed an
 \begin{equation}\label{eq:soft_relational_convolution_groups}
     (R \ast \bm{f})(G) = \left( \softreliprod{R}{\bm{f}}{G_1}, \ldots, \softreliprod{R}{\bm{f}}{G_{n_g}} \right) \in \left(\mathbb{R}^{n_f}\right)^{n_g}.
 \end{equation}
+
+\subsection{Relational convolutions with group attention \textcolor{red}{[ALTERNATIVE]}}
+
+In the above formulation, the groups are `discrete'. Having discrete groups can be desirable for interpretability, if the relevant groupings are known a priori or if considering every possible grouping is computationally and statistically feasible. However, if the relevant groupings are not known, then considering all possible combinations results in a rapid growth of the number of objects at each layer.
+% Besides being computationally intractable, considering every possible grouping may be unnecessary and may make learning more difficult.
+
+In order to address these issues, we propose \textit{explicitly modeling groups}. This allows us to control the number of objects in the output sequence of a relational convolution operation such that only relevant groups are considered. We propose modeling groups via an \textit{attention} operation.
+
+Consider the input $X = \paren{x_1, \ldots, x_n},\, x_i \in \reals^d$. Let $n_g$ be the number of groups to be learned and $s$ be the size of the graphlet filter, which are hyperparameters to the model. We learn $n_g \times s$ group query vectors $Q = \{q_{i}^{g}\}_{g \in [n_g], i \in [s]}$. That is, for each group $g \in [n_g]$, we learn $s$ queries which will be used to retrieve a group of size $s$ via attention. The $i$-th object in the $k$-th group is retrieved via an attention operation as follows,
+\begin{equation}\label{eq:group_attn}
+    \begin{aligned}
+        \bar{x}_{i}^{g} &= \sum_{j = 1}^{n} \alpha_{ij}^{g} x_j, \ &&g \in [n_g],  i \in [s]\\
+        \alpha_{ij}^{g} &= \frac{\exp\paren{\beta \iprod{q_i^g}{\mathtt{key}(x_j)}}}{\sum_{k = 1}^{n}{\exp\paren{\beta \iprod{q_i^g}{\mathtt{key}(x_k)}}}}, \ &&k \in [n_g], i \in [s], j \in [n]
+    \end{aligned}
+\end{equation}
+where $\bar{x}_{i}^{g}$ is the $i$-th object in the $g$-th group, $q_{i}^{g}$ is the query for retrieving the $i$-th object in the $g$-th group, $\mathtt{key}(x_j)$ is the key associated with the object $x_j$, and $\beta$ is a learnable scaling parameter.
+
+The $\mathtt{key}$ for each object is computed as a function of its position, features, and/or context. For example, to group objects based on their position, the key can be a positional embedding. To group based on features, the $\mathtt{key}$ can be a linear projection of the object's feature vector. To group based on both position and features, the $\mathtt{key}$ can be a sum or concatenation of the above. Finally, groups can also be modeled based on contextual information by computing keys through a self-attention operation.
+
+\Cref{eq:group_attn} can be computed in parallel with an `einsum' operation in $\calO(n \cdot n_g \cdot s \cdot d)$ operations. When the hyperparameters of the model are fixed, this is linear in the sequence length $n$.
+
+The relation subtensor $\bar{R}[g] \in \reals^{s \times s \times d_r}$ for each group $g \in [n_g]$ is then computed using a shared MD-IPR layer $r(x, y)$,
+\begin{equation}
+    \bar{R}[g]_{ij} = r(\bar{x}_{i}^{g}, \bar{x}_{j}^{g}).
+\end{equation}
+This computation can be carried out in parallel via efficient matrix multiplication with $\calO(n_g \cdot s^2 \cdot d_r \cdot d_{\mathrm{proj}})$ operations. Note that This does not scale with the number of objects in the input, and is only a function of the hyperparameters of the model. Moreover, the filter size $s$ is typically of very modest size (e.g., $3$ or $5$).
+
+The relational convolution is computed as before via,
+\begin{equation}
+    \bar{R} \ast \bm{f} \equiv \paren{\reliprod{\bar{R}[g]}{\bm{f}}}_{g \in [n_g]}.
+\end{equation}
+
+Overall, relational convolution with group attention can be summarized as follows: 1) learn $n_g$ groupings of objects, retrieving $s$ objects per group; 2) compute the relation tensor of each group using a MD-IPR module; 3) compute a relational convolution with a learned set of graphlet filters $\bm{f}$, producing a sequence of $n_g$ vectors each describing the relational pattern within a (learned) group of objects.
+
+The group attention scores in~\Cref{eq:group_attn} are ideally close to discrete assignments. That is, the vector $\alpha_{i,\cdot}^{g} \in \Delta^{n}$ is ideally a one-hot vector for each $g \in [n_g],\, i \in [s]$. To encourage the model to learn more structured group assignments, we add an entropy regularization to the loss function, $\calL_{\mathtt{entr}} = \frac{1}{n_g \cdot s} \sum_{g, i} H(\alpha_{i,\cdot}^{g})$, where $H(\alpha_{i,\cdot}^{g}) = - \sum_{j} \alpha_{ij}^{g} \log(\alpha_{ij}^g)$ is the Shannon entropy. As a heuristic, this regularization can be scaled by $\sim \log(\mathtt{n\_classes}) / \log(n)$ so that it doesn't dominate the underlying task's loss.
