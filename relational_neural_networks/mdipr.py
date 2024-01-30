@@ -8,7 +8,8 @@ class MultiDimInnerProdRelation(tf.keras.layers.Layer):
         proj_dim=None,
         symmetric=False,
         dense_kwargs=None,
-        name=None):
+        **kwargs
+        ):
         """
         create a MultiDimInnerProdRelation module.
 
@@ -37,7 +38,7 @@ class MultiDimInnerProdRelation(tf.keras.layers.Layer):
             name of layer, by default None
         """
 
-        super().__init__(name=name)
+        super().__init__(**kwargs)
 
         self.rel_dim = rel_dim
         self.proj_dim = proj_dim
@@ -63,6 +64,7 @@ class MultiDimInnerProdRelation(tf.keras.layers.Layer):
         else:
             self.left_encoders =  [layers.Dense(self.proj_dim, **self.dense_kwargs) for _ in range(self.rel_dim)]
             self.right_encoders =  [layers.Dense(self.proj_dim, **self.dense_kwargs) for _ in range(self.rel_dim)]
+        # NOTE: this can be optimized: one Dense followed by reshape to split projections across multiple dims
 
     def call(self, left_objects, right_objects=None):
 
