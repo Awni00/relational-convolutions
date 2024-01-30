@@ -1,6 +1,7 @@
 import itertools
 import tensorflow as tf
 from relational_neural_networks.mdipr import MultiDimInnerProdRelation
+from relational_neural_networks.grouping_layers import AddPositionalEmbedding
 from misc.sparsemax import sparsemax
 
 class RelationalGraphletConvolution(tf.keras.layers.Layer):
@@ -49,6 +50,7 @@ class RelationalGraphletConvolution(tf.keras.layers.Layer):
         self.n_filters = n_filters
         self.graphlet_size = graphlet_size
         self.symmetric_inner_prod = symmetric_inner_prod
+        self.permutation_aggregator = permutation_aggregator
         self.groups = groups
         self.filter_initializer = filter_initializer
         self.beta = beta
@@ -58,22 +60,21 @@ class RelationalGraphletConvolution(tf.keras.layers.Layer):
         if self.symmetric_inner_prod:
             self.group_permutations = list(itertools.permutations(range(self.graphlet_size)))
 
-            # TODO: are there any other useful aggregation functions we should consider?
-            if permutation_aggregator == 'mean':
-                self.permutation_aggregator = tf.math.reduce_mean
-            elif permutation_aggregator == 'max':
-                self.permutation_aggregator = tf.math.reduce_max
-            elif permutation_aggregator == 'maxabs':
-                self.permutation_aggregator = lambda x, axis: tf.math.reduce_max(tf.math.abs(x), axis=axis)
-            else:
-                raise ValueError(f'permutation_aggregator must be mean or max, not {permutation_aggregator}')
+        if permutation_aggregator == 'mean':
+            self.permutation_aggregator_ = tf.math.reduce_mean
+        elif permutation_aggregator == 'max':
+            self.permutation_aggregator_ = tf.math.reduce_max
+        elif permutation_aggregator == 'maxabs':
+            self.permutation_aggregator_ = lambda x, axis: tf.math.reduce_max(tf.math.abs(x), axis=axis)
+        else:
+            raise ValueError(f'permutation_aggregator must be mean or max, not {permutation_aggregator}')
 
 
     def build(self, input_shape):
         _, self.n_objects, _, self.rel_dim = input_shape
 
         self.filters = self.add_weight(shape=(self.n_filters, self.graphlet_size, self.graphlet_size, self.rel_dim),
-            initializer=self.filter_initializer, trainable=True)
+            initializer=self.filter_initializer, trainable=True, name='filters')
 
         if self.groups == 'permutations':
             self.object_groups = list(itertools.permutations(range(self.n_objects), self.graphlet_size))
@@ -95,7 +96,7 @@ class RelationalGraphletConvolution(tf.keras.layers.Layer):
                 [rel_inner_prod_filters(get_sub_rel_tensor(R_g, perm), filters)
                  for perm in self.group_permutations], axis=1)
             # permutation_rel_inner_prods: (batch_size, n_permutations, n_filters)
-            agg_perm_rel_inner_prods = self.permutation_aggregator(permutation_rel_inner_prods, axis=1)
+            agg_perm_rel_inner_prods = self.permutation_aggregator_(permutation_rel_inner_prods, axis=1)
             # agg_perm_rel_inner_prods: (batch_size, n_filters)
 
             return agg_perm_rel_inner_prods
@@ -157,7 +158,9 @@ class RelationalGraphletConvolution(tf.keras.layers.Layer):
             'n_filters': self.n_filters,
             'graphlet_size': self.graphlet_size,
             'symmetric_inner_prod': self.symmetric_inner_prod,
-            'groups_type': self.groups,
+            'permutation_aggregator': self.permutation_aggregator,
+            'groups': self.groups,
+            'group_normalizer': self.group_normalizer,
             'filter_initializer': self.filter_initializer,
         })
         return config
@@ -224,6 +227,7 @@ class RelationalGraphletConvolutionGroupAttn(tf.keras.layers.Layer):
         self.group_attn_key_dim = group_attn_key_dim
         self.group_attn_key = group_attn_key # TODO: add support for 'contextual' key (i.e., perform self-attention first)
         self.symmetric_inner_prod = symmetric_inner_prod
+        self.permutation_aggregator = permutation_aggregator
         self.filter_initializer = filter_initializer
         self.entropy_reg = entropy_reg
         self.entropy_reg_scale = entropy_reg_scale
@@ -231,30 +235,31 @@ class RelationalGraphletConvolutionGroupAttn(tf.keras.layers.Layer):
         if self.symmetric_inner_prod:
             self.group_permutations = list(itertools.permutations(range(self.graphlet_size)))
 
-            # TODO: are there any other useful aggregation functions we should consider?
-            if permutation_aggregator == 'mean':
-                self.permutation_aggregator = tf.math.reduce_mean
-            elif permutation_aggregator == 'max':
-                self.permutation_aggregator = tf.math.reduce_max
-            elif permutation_aggregator == 'maxabs':
-                self.permutation_aggregator = lambda x, axis: tf.math.reduce_max(tf.math.abs(x), axis=axis)
-            else:
-                raise ValueError(f'permutation_aggregator must be mean or max, not {permutation_aggregator}')
+        if permutation_aggregator == 'mean':
+            self.permutation_aggregator_ = tf.math.reduce_mean
+        elif permutation_aggregator == 'max':
+            self.permutation_aggregator_ = tf.math.reduce_max
+        elif permutation_aggregator == 'maxabs':
+            self.permutation_aggregator_ = lambda x, axis: tf.math.reduce_max(tf.math.abs(x), axis=axis)
+        else:
+            raise ValueError(f'permutation_aggregator must be mean or max, not {permutation_aggregator}')
 
 
     def build(self, input_shape):
         _, self.n_objects, self.obj_dim = input_shape
 
         self.filters = self.add_weight(shape=(self.n_filters, self.graphlet_size, self.graphlet_size, self.rel_dim),
-            initializer=self.filter_initializer, trainable=True)
+            initializer=self.filter_initializer, trainable=True, name='filters')
 
         self.mdipr = MultiDimInnerProdRelation(**self.mdipr_kwargs)
 
         self.group_queries = tf.keras.layers.Embedding(input_dim=self.n_groups*self.graphlet_size, output_dim=self.group_attn_key_dim)
-        self.pos_embedding = tf.keras.layers.Embedding(input_dim=self.n_objects, output_dim=self.group_attn_key_dim)
+        # self.pos_embedding = tf.keras.layers.Embedding(input_dim=self.n_objects, output_dim=self.group_attn_key_dim)
+        self.add_pos_embedding = AddPositionalEmbedding()
         self.group_attn_key_map = tf.keras.layers.Dense(self.group_attn_key_dim, use_bias=False)
 
-        self.group_attn = tf.keras.layers.Attention(use_scale=True, score_mode='dot')
+        # self.group_attn = tf.keras.layers.Attention(use_scale=False, score_mode='dot')
+        self.beta = self.group_attn_key_dim**(-0.5)
 
     def call(self, inputs):
         """
@@ -296,19 +301,27 @@ class RelationalGraphletConvolutionGroupAttn(tf.keras.layers.Layer):
         q = self.group_queries(tf.range(self.n_groups*self.graphlet_size))
         # q: (batch_dim, n_groups*filter_size, group_attn_key_dim)
         if self.group_attn_key == 'pos':
-            k = tf.repeat(tf.expand_dims(self.pos_embedding(tf.range(self.n_objects)), axis=0), batch_dim, axis=0)
+            k = tf.zeros(shape=(batch_dim, self.n_objects, self.group_attn_key_dim))
+            k = self.add_pos_embedding(k)
+            # k = tf.repeat(tf.expand_dims(self.pos_embedding(tf.range(self.n_objects)), axis=0), batch_dim, axis=0)
         elif self.group_attn_key == 'feat':
             k = self.group_attn_key_map(inputs)
         elif self.group_attn_key == 'pos+feat':
-            k = self.group_attn_key_map(inputs) + self.pos_embedding(tf.range(self.n_objects))
+            k = self.group_attn_key_map(inputs) # self.pos_embedding(tf.range(self.n_objects))
+            k = self.add_pos_embedding(k)
         else:
             raise ValueError(f'group_attn_key must be pos, feat, or pos+feat, not {self.group_attn_key}')
         # k: (batch_dim, n_objects, group_attn_key_dim)
         v = inputs
         # v: (batch_dim, n_objects, obj_dim)
 
-        group_objs, group_attn_scores = self.group_attn([q, v, k], return_attention_scores=True)
+        # FIXME: finalize choice of way to compute attn
+        # group_objs, group_attn_scores = self.group_attn([q, v, k], return_attention_scores=True)
         # group_objs: (batch_dim, n_groups*filter_size, obj_dim); group_attn_scores: (batch_dim, n_groups*filter_size, n_objects)
+
+        group_attn_scores = tf.nn.softmax(self.beta * tf.matmul(q, k, transpose_b=True)) # (n_groups*filter_size, seq_len)
+        group_objs = tf.matmul(group_attn_scores, v) # (n_groups*filter_size, obj_dim)
+
 
         group_attn_scores = tf.reshape(group_attn_scores, (-1, self.n_groups, self.graphlet_size, self.n_objects))
         # (batch_dim, n_groups, filter_size, seq_len)
@@ -327,7 +340,7 @@ class RelationalGraphletConvolutionGroupAttn(tf.keras.layers.Layer):
                 [rel_inner_prod_filters(get_sub_rel_tensor(R_g, perm), filters)
                  for perm in self.group_permutations], axis=1)
             # permutation_rel_inner_prods: (batch_size, n_permutations, n_filters)
-            agg_perm_rel_inner_prods = self.permutation_aggregator(permutation_rel_inner_prods, axis=1)
+            agg_perm_rel_inner_prods = self.permutation_aggregator_(permutation_rel_inner_prods, axis=1)
             # agg_perm_rel_inner_prods: (batch_size, n_filters)
 
             return agg_perm_rel_inner_prods
@@ -338,18 +351,20 @@ class RelationalGraphletConvolutionGroupAttn(tf.keras.layers.Layer):
         group_attn_entropy = self.entropy_reg_scale * tf.reduce_mean(group_attn_entropy)
         return group_attn_entropy
 
-    def get_config(self): # FIXME: update config
+    def get_config(self):
         config = super(RelationalGraphletConvolutionGroupAttn, self).get_config()
         config.update({
             'n_filters': self.n_filters,
             'graphlet_size': self.graphlet_size,
             'n_groups': self.n_groups,
+            'mdipr_kwargs': self.mdipr_kwargs,
             'group_attn_key_dim': self.group_attn_key_dim,
             'group_attn_key': self.group_attn_key,
             'symmetric_inner_prod': self.symmetric_inner_prod,
+            'permutation_aggregator': self.permutation_aggregator,
             'filter_initializer': self.filter_initializer,
-            'beta': self.beta,
-            'group_normalizer': self.group_normalizer
+            'entropy_reg': self.entropy_reg,
+            'entropy_reg_scale': self.entropy_reg_scale,
         })
         return config
 
