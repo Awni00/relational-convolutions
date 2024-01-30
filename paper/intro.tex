@@ -12,10 +12,8 @@ So far, work on relational representation learning has been limited to ``flat'' 
 A schematic of the proposed architecture is shown in~\Cref{fig:relconv_architecture}. The key idea involves formalizing a notion of ``convolving'' a relation tensor, describing the pairwise relations in a set of objects, with a ``graphlet filter'' which represents a template of a relational pattern within a smaller groups of objects. This produces a sequence of vectors which represent the relational pattern within each group of objects. Crucially, each composition of those operations computes relational features of a higher order---i.e., relations between relations.
 
 \begin{wrapfigure}{R}{0.5\textwidth}
-    \vskip -20pt
     \centering
     \includegraphics[width=.5\textwidth]{figs/relconv_architecture.pdf}
-    \vskip-5pt
     \caption{Proposed architecture for relational convolutional networks. Hierarchical relations are modeled by iteratively computing pairwise relations between objects and convolving the resultant relation tensor with graphlet filters representing templates of relations between groups of objects.
     }\label{fig:relconv_architecture}
 \end{wrapfigure}
