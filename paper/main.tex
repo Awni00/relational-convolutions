@@ -36,7 +36,7 @@
 %region custom commands
 \newcommand{\softreliprod}[3]{\left\langle #1, #2 \, \vert \, #3 \right\rangle_\mathrm{rel}}
 \newcommand{\reliprod}[2]{\left\langle #1, #2 \right\rangle_\mathrm{rel}}
-\let\phi\varphi
+% \let\phi\varphi
 
 % commands for comments
 \newcommand{\awni}[1]{\textcolor{blue}{\texttt{[Awni]}: #1}}
@@ -46,7 +46,7 @@
 \interfootnotelinepenalty=10000 % prevent footnote from running over
 
 
-\title{Relational Convolutional Networks: \\ A framework for learning representations of hierarchical relations}
+\title{Relational Convolutional Networks: \\ A compositional architecture for learning representations of hierarchical relations}
 % The \author macro works with any number of authors. There are two commands
 % used to separate the names and addresses of multiple authors: \And and \AND.
 %
@@ -110,7 +110,7 @@ Code and experimental logs are available at: \texttt{https://[Anonymized]}
 \appendix
 
 \input{apppendix_experiments.tex}
-\input{appendix_efficiency.tex}
+% \input{appendix_efficiency.tex} % FIXME: remove
 \input{appendix_representation_analysis.tex}
 \input{appendix_ideas_on_higherorder_tasks.tex}
 \input{appendix_tcn_discussion.tex}
