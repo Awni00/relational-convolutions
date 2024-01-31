@@ -34,8 +34,7 @@ def create_relconvnet(normalizer=None, freeze_embedder=False, object_selection=N
     model = tf.keras.Sequential([
         object_selector,
         cnn_embedder,
-        normalizer,
-        mhr1,
+object_selector,        mhr1,
         rel_conv1,
         tf.keras.layers.Flatten(name='flatten'),
         tf.keras.layers.Dense(hidden_dense_size, activation='relu', name='hidden_dense1'),
@@ -45,7 +44,7 @@ def create_relconvnet(normalizer=None, freeze_embedder=False, object_selection=N
 
     return model
 
-def create_relconvnet_groupattn():
+def create_relconvnet_groupattn(normalizer=None, freeze_embedder=False, object_selection=None):
     relconv_kwargs = dict(
         n_filters=16, graphlet_size=3, n_groups=8,
         mdipr_kwargs=dict(rel_dim=1, proj_dim=16, symmetric=True), # NOTE: changed proj_dim from 4
@@ -53,7 +52,10 @@ def create_relconvnet_groupattn():
         filter_initializer='random_normal', entropy_reg=True, entropy_reg_scale=0.05)
     mdipr2_kwargs = dict(rel_dim=8, proj_dim=16, symmetric=True)
 
+    object_selector = get_obj_selector(object_selection)
+    normalizer = get_normalizer(normalizer)
     cnn_embedder = CNNEmbedder(**cnn_embedder_kwargs)
+    cnn_embedder.trainable = not freeze_embedder
 
     rel_conv1 = RelationalGraphletConvolutionGroupAttn(
         **relconv_kwargs, name='rgc')
@@ -63,7 +65,9 @@ def create_relconvnet_groupattn():
     #     **relconv_kwargs, name='rgc')
 
     model = tf.keras.Sequential([
+        object_selector,
         cnn_embedder,
+        object_selector,
         rel_conv1,
         mdipr2,
         tf.keras.layers.Flatten(name='flatten'),
