@@ -16,6 +16,7 @@
 
 \usepackage{mymathstyle} % math style with a bunch of commands defined
 
+\usepackage{float}
 \usepackage{cleveref}
 \usepackage{algorithm2e}
 \usepackage{graphicx}
@@ -110,10 +111,12 @@ Code and experimental logs are available at: \texttt{https://[Anonymized]}
 \appendix
 
 \input{apppendix_experiments.tex}
-% \input{appendix_efficiency.tex} % FIXME: remove
-\input{appendix_representation_analysis.tex}
-\input{appendix_ideas_on_higherorder_tasks.tex}
+\clearpage\newpage
 \input{appendix_tcn_discussion.tex}
+\clearpage\newpage
+\input{appendix_ideas_on_higherorder_tasks.tex}
+\clearpage\newpage
+\input{appendix_representation_analysis.tex}
 
 
 \end{document}
