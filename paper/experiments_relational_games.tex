@@ -72,4 +72,25 @@ On the `match pattern' task, however, RelConvNet is significantly more sample-ef
 \textbf{Out-of-distribution generalization.}~\Cref{fig:ood_generalization} reports model performance on the two hold-out object sets after training. On the hexominoes objects, which are similar-looking to the pentominoes objects used for training, RelConvNet and CoRelNet do nearly perfectly. PrediNet and the Transformer do well on the simpler tasks, but struggle with the more difficult `match pattern' task. The `stripes' objects are visually more distinct from the objects in the training split, making generalization more difficult. We observe an overall drop in performance for all models. The drop is particularly dramatic for CoRelNet\footnote{The experiments in \citep{kergNeuralArchitecture2022} on the relational games benchmark use a technique called ``context normalization''~\citep{webbLearningRepresentationsThat2020} as a preprocessing step. We choose not to use this technique since it is an added confounder. We discuss this more in~\Cref{sec:appendix_tcn_discussion}.}. We conjecture that this is due to CoRelNet's inability to model multi-dimensional relations, necessitating that all relational information is squeezed into a scalar quantity. The separation between RelConvNet and the other models is largest on the ``match pattern'' task of the stripes split (the most difficult task and the most difficult generalization split). Here, RelConvNet maintains a mean accuracy of 87\% while the other models drop below 65\%. We attribute this to RelConvNet's ability to naturally represent higher-order relations and model groupings of objects. 
 % This split is also where the addition of learned grouping layers yield improvements over the variant of RelConvNet with only discrete groups. The grouping layers allow the model to represent the latent groups which exist in the task, enabling improved out-of-distribution generalization. % TODO: explain this more? why does modeling those latent groups enable OoD generalization
 
-\textbf{Learning groups via group attention.} [TODO...]
+\begin{wrapfigure}{r}{0.3\textwidth}
+    \begin{tabular}{lc}
+        \toprule
+        Task & Accuracy \\
+        \midrule
+        same & ...\\
+        occurs & ... \\
+        xoccurs & ...\\
+        between & ... \\
+        match pattern & ...\\
+        \bottomrule
+    \end{tabular}
+    \caption{Performance of RelConvNet with group attention.}\label{tab:relgames_groupattn_resuls}
+\end{wrapfigure}
+
+\textbf{Learning groups via group attention.} Next we analyze RelConvNet's ability to learn relevant groupings through group attention in an end-to-end manner. We train a $2$-layer relational convolutional network with $8$ learned groups and graphlet size of $3$. We group based on position by using positional embeddings for $\mathtt{key}(x_i)$. This model is able to learn all tasks.~\Cref{tab:relgames_groupattn_resuls} shows the (in-distribution) accuracy achieved by this model on each task\footnote{This is the accuracy on a hold-out test set of `pentominoes' objects. That is, in-distribution generalization accuracy.}. In~\Cref{fig:matchpatt_groupattn}, we visualize the group attention scores $\alpha_{ij}^g$~(\cref{eq:group_attn}). For each group $g \in [n_g]$, the figure depicts a $3 \times 3$ grid representing the objects attended to in that group. Since each group contains $3$ objects, we represent the value $(\alpha_{ij}^g)_{i \in [3]}$ in the $3$-channel HSV color representation. We observe that 1) group attention learns to ignore the middle row, which contains no relevant information; and 2) the selection of objects in the top row and the bottom row is structured. In particular, group $2$ considers the relational pattern within the bottom row and group $8$ considers the relational pattern in the top row, which is exactly how a human would tackle this problem.
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.7\textwidth]{figs/group_attn_figs/match_patt_group_attn_map.pdf}
+    \caption{Learned groups in the `match pattern' tasks by a 2-layer RelConvNet with group attention.}\label{fig:matchpatt_groupattn}
+\end{figure}
