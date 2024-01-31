@@ -4,25 +4,16 @@ wandb/
 # vscode
 .vscode/
 
-# ignore certain files in paper directory
-paper/*.pdf
-paper/*.aux
-paper/*.blg
-paper/*.log
-paper/*.out
-paper/*.bbl
-paper/*.synctex.gz
-paper/*.bcf
-paper/*.xml
-arxiv/*.pdf
-arxiv/*.aux
-arxiv/*.blg
-arxiv/*.log
-arxiv/*.out
-arxiv/*.bbl
-arxiv/*.synctex.gz
-arxiv/*.bcf
-arxiv/*.xml
+# ignore certain latex-produced files
+*/*.pdf
+*/*.aux
+*/*.blg
+*/*.log
+*/*.out
+*/*.bbl
+*/*.synctex.gz
+*/*.bcf
+*/*.xml
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
