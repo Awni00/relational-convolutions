@@ -1,0 +1,158 @@
+
+\documentclass{article}
+
+% Recommended, but optional, packages for figures and better typesetting:
+\usepackage{microtype}
+\usepackage{graphicx}
+% \usepackage{subfigure}
+\usepackage{booktabs} % for professional tables
+\usepackage{wrapfig}
+\usepackage{caption}
+\usepackage{subcaption}
+
+% hyperref makes hyperlinks in the resulting PDF.
+% If your build breaks (sometimes temporarily if a hyperlink spans a page)
+% please comment out the following usepackage line and replace
+% \usepackage{icml2024} with \usepackage[nohyperref]{icml2024} above.
+\usepackage{hyperref}
+
+
+% Attempt to make hyperref and algorithmic work together better:
+% \newcommand{\theHalgorithm}{\arabic{algorithm}}
+
+% Use the following line for the initial blind version submitted for review:
+\usepackage{icml2024}
+
+% If accepted, instead use the following line for the camera-ready submission:
+% \usepackage[accepted]{icml2024}
+
+% For theorems and such
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{mathtools}
+\usepackage{amsthm}
+
+% if you use cleveref..
+\usepackage[capitalize,noabbrev]{cleveref}
+
+\usepackage{mymathstyle} % math style with a bunch of commands defined
+
+\usepackage{mathrsfs}
+\RequirePackage{hypernat}
+\usepackage{graphicx}
+\usepackage{verbatim}
+
+%region custom commands
+\newcommand{\softreliprod}[3]{\left\langle #1, #2 \, \vert \, #3 \right\rangle_\mathrm{rel}}
+\newcommand{\reliprod}[2]{\left\langle #1, #2 \right\rangle_\mathrm{rel}}
+% \let\phi\varphi
+
+% commands for comments
+\newcommand{\awni}[1]{\textcolor{blue}{\texttt{[Awni]}: #1}}
+\newcommand{\john}[1]{\textcolor{red}{\texttt{[John]}: #1}}
+%endregion
+
+
+% Todonotes is useful during development; simply uncomment the next line
+%    and comment out the line below the next line to turn off comments
+%\usepackage[disable,textsize=tiny]{todonotes}
+\usepackage[textsize=tiny]{todonotes}
+
+
+% The \icmltitle you define below is probably too long as a header.
+% Therefore, a short form for the running title is supplied here:
+\icmltitlerunning{Relational Convolutional Networks}
+
+\begin{document}
+
+\twocolumn[
+\icmltitle{Relational Convolutional Networks: \\ A compositional architecture for learning representations of hierarchical relations}
+
+% It is OKAY to include author information, even for blind
+% submissions: the style file will automatically remove it for you
+% unless you've provided the [accepted] option to the icml2024
+% package.
+
+% List of affiliations: The first argument should be a (short)
+% identifier you will use later to specify author affiliations
+% Academic affiliations should list Department, University, City, Region, Country
+% Industry affiliations should list Company, City, Region, Country
+
+% You can specify symbols, otherwise they are numbered in order.
+% Ideally, you should not use this facility. Affiliations will be numbered
+% in order of appearance and this is the preferred way.
+% \icmlsetsymbol{equal}{*}
+\begin{icmlauthorlist}
+\icmlauthor{Awni Altabaa}{awni}
+\icmlauthor{John Lafferty}{john}
+%\icmlauthor{}{sch}
+%\icmlauthor{}{sch}
+\end{icmlauthorlist}
+
+\icmlaffiliation{awni}{Department of Statistics \& Data Science, Yale University}
+\icmlaffiliation{john}{Department of Statistics \& Data Science, Wu Tsai Institute, Institute for Foundations of Data Science, Yale University}
+
+\icmlcorrespondingauthor{Awni Altabaa}{awni.altabaa@yale.edu}
+\icmlcorrespondingauthor{John Lafferty}{john.lafferty@yale.edu}
+
+% You may provide any keywords that you
+% find helpful for describing your paper; these are used to populate
+% the "keywords" metadata in the PDF but will not be shown in the document
+\icmlkeywords{relational representation learning, deep representation learning, hierarchical relations, compositional, convolution, relational convolution, graphlet, inductive bias}
+
+
+\vskip 0.3in
+]
+
+% this must go after the closing bracket ] following \twocolumn[ ...
+
+% This command actually creates the footnote in the first column
+% listing the affiliations and the copyright notice.
+% The command takes one argument, which is text to display at the start of the footnote.
+% The \icmlEqualContribution command is standard text for equal contribution.
+% Remove it (just {}) if you do not need this facility.
+
+\printAffiliationsAndNotice{}  % leave blank if no need to mention equal contribution
+% \printAffiliationsAndNotice{\icmlEqualContribution} % otherwise use the standard text.
+
+
+\input{abstract}
+
+\input{intro}
+
+\input{mdipr}
+
+\input{rel_graphlet_conv}
+
+% \input{grouping_layers}
+
+\input{experiments}
+
+\input{discussion}
+
+\subsection*{Code and data}
+Code and experimental logs are available at: \texttt{https://[Anonymized]}
+
+% \medskip
+
+% \clearpage
+{%\small
+\bibliography{references}
+\bibliographystyle{icml2024}
+}
+
+\clearpage
+\newpage
+\appendix
+\onecolumn
+
+\input{apppendix_experiments.tex}
+\clearpage\newpage
+\input{appendix_tcn_discussion.tex}
+\clearpage\newpage
+\input{appendix_ideas_on_higherorder_tasks.tex}
+\clearpage\newpage
+\input{appendix_representation_analysis.tex}
+
+
+\end{document}
