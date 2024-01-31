@@ -1,6 +1,6 @@
 \section{Relational convolutions with graphlet filters}\label{sec:relconv}
 
-\subsection{Relational convolutions with discrete groups}
+\subsection{Relational convolutions with discrete groups}\label{ssec:relconv_discrete_groups}
 Suppose that we have a sequence of objects $(x_1, \ldots, x_n)$ and a relation tensor $R$ describing the pairwise relations between them, obtained by a MD-IPR layer $r(\cdot, \cdot)$ via $R[i,j] = r(x_i, x_j)$. The relational convolution operation we will define does two things: 1) extracts representations of the relational patterns within \textit{groups} of objects using pairwise relations, and 2) transforms the relation tensor back into a sequence of objects, allowing it be composed with another relational layer to compute higher-order relations. We begin by addressing the case when the groups are discrete and given.
 
 Fix some filter size $s < n$, where $s$ is a hyperparameter of the relational convolution layer. One `filter' of size $s$ is given by the \textit{graphlet} $f_1 \in \mathbb{R}^{s \times s \times d_r}$. This is a `template' for the pairwise relations between $s$ objects. Note that the dimension of the relations in this filter matches that of the input relation tensor. Let $g \subset [n]$ be a group of $s$ objects among ($x_1, \ldots, x_n$) of the objects of size $s$. Suppose for now that $g$ is ordered (i.e., the group $(1, 2, 3)$ is different from the group $(2, 3, 1)$). Then, denote the relation sub-tensor associated to this group by $R[g] := [R[i,j]]_{i,j \in g}$. We define the `relational inner product' between this relation subtensor and the filter $f_1$ by
@@ -44,9 +44,8 @@ In the next subsections, we consider the problem of \textit{differentiably learn
     \caption{A depiction of the relational convolution operation. A graphlet filter $\bm{f}$ is compared to the relation subtensor in each group of objects, producing a sequence of vectors summarizing the relational pattern within each group. The groups can be differentiably learned.
     }\label{fig:relconvdiagram}
 \end{figure}
-% AWNI: [TODO] UPDATE THIS FIGURE. REMOVE OLD DEPICTION OF "SOFT GROUPS"
 
-\subsection{Relational convolutions with group attention}
+\subsection{Relational convolutions with group attention}\label{ssec:relconv_groupattn}
 
 In the above formulation, the groups are `discrete'. Having discrete groups can be desirable for interpretability, if the relevant groupings are known a priori or if considering every possible grouping is computationally and statistically feasible. However, if the relevant groupings are not known, then considering all possible combinations results in a rapid growth of the number of objects at each layer.
 % Besides being computationally intractable, considering every possible grouping may be unnecessary and may make learning more difficult.
