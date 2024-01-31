@@ -2,9 +2,11 @@
 
 \begin{figure}[t]
     \centering
-    \includegraphics[width=.5\textwidth]{figs/relconv_architecture.pdf}
+    \includegraphics[width=.45\textwidth]{figs/relconv_architecture.pdf}
+    \vskip-12pt
     \caption{Proposed architecture for relational convolutional networks. Hierarchical relations are modeled by iteratively computing pairwise relations between objects and convolving the resultant relation tensor with graphlet filters representing templates of relations between groups of objects.
     }\label{fig:relconv_architecture}
+    \vskip-12pt
 \end{figure}
 
 A relation function is a function that maps a pair of objects $x, y \in \calX$ to a vector representing the relation between the two objects. For example, a relation may represent the information ``$x$ has the same color as $y$, $x$ is larger than $y$, and $x$ is to the left of $y$''. In principle, this can be modeled by an arbitrary learnable function on the concatenation of the two objects' feature representations. For example,~\citep{santoroSimpleNeural2017} models relations by MLPs applied to the concatenation of pairs of objects. While this approach may work in some cases, it is missing some crucial inductive biases. In particular, there is no constraint that the learned pairwise function is in fact \textit{relational}---it may just as well represent non-relational object-level information (e.g., ``$x$ is bright and $y$ is small'').%, as opposed to relational information like ``$x$ is larger than $y$''.

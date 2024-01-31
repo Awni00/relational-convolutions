@@ -4,7 +4,7 @@
     \centering
     \begin{subfigure}[t]{0.37\textwidth}
         \centering
-        \includegraphics[width=0.9\textwidth]{figs/relational_games_objects.pdf}
+        \includegraphics[width=0.99\textwidth]{figs/relational_games_objects.pdf}
         % \caption{Examples of objects from each split.}
         \label{fig:relational_games_objects}
     \end{subfigure}
@@ -14,13 +14,17 @@
         % \caption{Examples of problem instances for each task. The top row is an example where the relation holds and the bottom row is an example where the relation does not hold.}
         \label{fig:relational_games_tasks}
     \end{subfigure}
+    \vskip-10pt
     \caption{Relational games dataset.~\textbf{Left} Examples of objects from each split.~\textbf{Right} Examples of problem instances for each task. The first row is an example where the relation holds and the second row is an example where the relation does not hold.}\label{fig:relational_games_dataset}
+    \vskip-12pt
 \end{figure*}
 
 \begin{figure*}
     \centering
-    \includegraphics[width=0.9\textwidth]{figs/experiments/all_training_curves.pdf}
+    \includegraphics[width=0.85\textwidth]{figs/experiments/all_training_curves.pdf}
+    \vskip-12pt
     \caption{Training curves, up to 2,000 batch steps, for each relational games task. Solid lines indicate the mean over 5 trials and the shaded regions indicate a bootstrap 95\% confidence interval.}\label{fig:training_curves}
+    \vskip-12pt
 \end{figure*}
 
 The \textit{relational games} dataset was contributed as a benchmark for relational reasoning by~\citep{shanahanExplicitlyRelationalNeural}. It consists of a family of binary classification tasks for identifying abstract relational rules between a set of objects represented as images. The objects consist of three sets of simple geometric shapes, referred to as ``pentominoes'', ``hexominoes'', and ``stripes''. The objects are arranged in a $3 \times 3$ grid. Each task corresponds to some relationship between the objects, and the target is to classify whether the relationship holds among a given set of objects or not (see~\Cref{fig:relational_games_dataset}).
@@ -33,8 +37,10 @@ and the hexominoes and stripes splits are used to test out-of-distribution gener
 
 \begin{figure*}
     \centering
-    \includegraphics[width=\textwidth]{figs/experiments/relgames_ood_acc.pdf}
+    \includegraphics[width=0.9\textwidth]{figs/experiments/relgames_ood_acc.pdf}
+    \vskip-12pt
     \caption{Out-of-distribution generalization on hold-out object sets. Bar heights indicate the mean over 5 trials and the error bars indicate a bootstrap 95\% confidence interval.}\label{fig:ood_generalization}
+    \vskip-15pt
 \end{figure*}
 
 \textbf{Sample efficiency.} We observe that the relational inductive biases of RelConvNet, and relational models more generally, grant a significant advantage in sample-efficiency.~\Cref{fig:training_curves} shows the training accuracy over the first 2,000 batches for each model. RelConvNet, CoRelNet, and PrediNet are explicitly relational architectures, whereas the Transformer is not. The Transformer is able to process relational information through its attention mechanism, but this information is entangled with the features of individual objects (which, for these relational tasks, is extraneous information). The Transformer consistently requires the largest amount of data to learn the relational games tasks. PrediNet tends to be more sample-efficient. RelConvNet and CoRelNet are the most sample-efficient, with RelConvNet only slightly more sample-efficient on most tasks.
@@ -45,7 +51,7 @@ On the `match pattern' task, however, RelConvNet is significantly more sample-ef
 % We conjecture that this is due to CoRelNet's inability to model multi-dimensional relations, necessitating that all relational information is squeezed into a scalar quantity. % Or perhaps it's because of the softmax normalization?
 The separation between RelConvNet and the other models is largest on the ``match pattern'' task of the stripes split (the most difficult task and the most difficult generalization split). Here, RelConvNet maintains a mean accuracy of 87\% while the other models drop below 65\%. We attribute this to RelConvNet's ability to naturally represent higher-order relations and model groupings of objects.
 
-\begin{table}%{r}{0.3\textwidth}
+\begin{table}
     \centering
     \caption{Performance of RelConvNet with group attention on each task.}\label{tab:relgames_groupattn_resuls}
     \begin{tabular}{lc}
@@ -59,6 +65,7 @@ The separation between RelConvNet and the other models is largest on the ``match
         match pattern & ...\\
         \bottomrule
     \end{tabular}
+    \vskip-10pt
 \end{table}
 
 \textbf{Learning groups via group attention.} Next we analyze RelConvNet's ability to learn useful groupings through group attention in an end-to-end manner. We train a $2$-layer relational convolutional network with $8$ learned groups and graphlet size of $3$. We group based on position by using positional embeddings for $\mathtt{key}(x_i)$.~\Cref{tab:relgames_groupattn_resuls} shows the in-distribution generalization accuracy achieved by this model on each task. The model is able to learn all tasks. In~\Cref{fig:matchpatt_groupattn}, we visualize the group attention scores $\alpha_{ij}^g$ (see~\cref{eq:group_attn}) learned from one of the training runs. For each group $g \in [n_g]$, the figure depicts a $3 \times 3$ grid representing the objects attended to in that group. Since each group contains $3$ objects, we represent the value $(\alpha_{ij}^g)_{i \in [3]}$ in the $3$-channel HSV color representation. We observe that 1) group attention learns to ignore the middle row, which contains no relevant information; and 2) the selection of objects in the top row and the bottom row is structured. In particular, group $2$ considers the relational pattern within the bottom row and group $8$ considers the relational pattern in the top row, which is exactly how a human would tackle this problem.
@@ -66,5 +73,7 @@ The separation between RelConvNet and the other models is largest on the ``match
 \begin{figure}
     \centering
     \includegraphics[width=0.5\textwidth]{figs/group_attn_figs/match_patt_group_attn_map.pdf}
+    \vskip-10pt
     \caption{Learned groups in the `match pattern' tasks by a 2-layer RelConvNet with group attention.}\label{fig:matchpatt_groupattn}
+    \vskip-15pt
 \end{figure}
