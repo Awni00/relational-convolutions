@@ -34,7 +34,7 @@ def create_relconvnet(normalizer=None, freeze_embedder=False, object_selection=N
     model = tf.keras.Sequential([
         object_selector,
         cnn_embedder,
-object_selector,        mhr1,
+        mhr1,
         rel_conv1,
         tf.keras.layers.Flatten(name='flatten'),
         tf.keras.layers.Dense(hidden_dense_size, activation='relu', name='hidden_dense1'),
