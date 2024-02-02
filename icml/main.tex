@@ -34,7 +34,8 @@
 \usepackage{amsthm}
 
 % if you use cleveref..
-\usepackage[capitalize,noabbrev]{cleveref}
+% \usepackage[capitalize,noabbrev]{cleveref}
+\usepackage[capitalize]{cleveref}
 
 \usepackage{mymathstyle} % math style with a bunch of commands defined
 
@@ -56,7 +57,7 @@
 
 % Todonotes is useful during development; simply uncomment the next line
 %    and comment out the line below the next line to turn off comments
-%\usepackage[disable,textsize=tiny]{todonotes}
+% \usepackage[disable,textsize=tiny]{todonotes}
 \usepackage[textsize=tiny]{todonotes}
 
 
@@ -135,13 +136,9 @@
 \subsection*{Code and data}
 Code and experimental logs are available at: \texttt{https://[Anonymized]}
 
-% \medskip
-
-% \clearpage
-{%\small
+% bibliography
 \bibliography{references}
 \bibliographystyle{icml2024}
-}
 
 \clearpage
 \newpage
