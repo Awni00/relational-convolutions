@@ -1,15 +1,15 @@
 
-\documentclass[pdftex]{article}
+\documentclass{article}
 
 % Recommended, but optional, packages for figures and better typesetting:
 \usepackage{microtype}
 \usepackage{graphicx}
 % \usepackage{subfigure}
-\usepackage{booktabs} % for professional tables
-\usepackage{wrapfig}
 \usepackage{caption}
+\usepackage{float}
 \usepackage{subcaption}
-\usepackage{enumitem}
+\usepackage{booktabs} % for professional tables
+\usepackage[shortlabels]{enumitem}
 
 % hyperref makes hyperlinks in the resulting PDF.
 % If your build breaks (sometimes temporarily if a hyperlink spans a page)
@@ -27,6 +27,8 @@
 % If accepted, instead use the following line for the camera-ready submission:
 % \usepackage[accepted]{icml2024}
 
+\usepackage{mymathstyle}
+
 % For theorems and such
 \usepackage{amsmath}
 \usepackage{amssymb}
@@ -34,15 +36,7 @@
 \usepackage{amsthm}
 
 % if you use cleveref..
-% \usepackage[capitalize,noabbrev]{cleveref}
-\usepackage[capitalize]{cleveref}
-
-\usepackage{mymathstyle} % math style with a bunch of commands defined
-
-\usepackage{mathrsfs}
-\RequirePackage{hypernat}
-\usepackage{graphicx}
-\usepackage{verbatim}
+\usepackage[capitalize,noabbrev]{cleveref}
 
 %region custom commands
 \newcommand{\softreliprod}[3]{\left\langle #1, #2 \, \vert \, #3 \right\rangle_\mathrm{rel}}
@@ -50,15 +44,15 @@
 % \let\phi\varphi
 
 % commands for comments
-\newcommand{\awni}[1]{\textcolor{blue}{\texttt{[Awni]}: #1}}
-\newcommand{\john}[1]{\textcolor{red}{\texttt{[John]}: #1}}
+% \newcommand{\awni}[1]{\textcolor{blue}{\texttt{[Awni]}: #1}}
+% \newcommand{\john}[1]{\textcolor{red}{\texttt{[John]}: #1}}
 %endregion
 
 
 % Todonotes is useful during development; simply uncomment the next line
 %    and comment out the line below the next line to turn off comments
-% \usepackage[disable,textsize=tiny]{todonotes}
-\usepackage[textsize=tiny]{todonotes}
+\usepackage[disable,textsize=tiny]{todonotes}
+% \usepackage[textsize=tiny]{todonotes}
 
 
 % The \icmltitle you define below is probably too long as a header.
@@ -141,8 +135,10 @@ This work proposes an architectural framework for learning representations of hi
 
 
 % bibliography
+\todo{clean up references and make sure they're consistent. i.e., arxiv papers cited the same way, etc.}
 \bibliography{references}
 \bibliographystyle{icml2024}
+% \bibliographystyle{unsrtnat}
 
 \clearpage
 \newpage
