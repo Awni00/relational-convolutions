@@ -11,7 +11,7 @@ For example, CNNs extract higher-level features (e.g., textures and object-speci
 The key to the framework proposed in this paper involves formalizing the concept of convolving learnable templates of a relational pattern against a larger relation tensor. This operation produces a sequence of vectors representing the relational pattern within each group of objects. Importantly, each composition of these operations computes relational features of a higher order---i.e., relations between relations. Specifically, our proposed architecture introduces the following novel concepts and computational mechanisms.
 \begin{itemize}[itemsep=1pt]
     \item \textit{\bfseries Graphlet filters.} A ``graphlet filter'' is a template for the pattern of relations between a (small) collection of objects. 
-    Since pairwise relations can be viewed as edges on a graph, the term ``graphlet'' is used to a subgraph, and the term `filter'' is used to refer to a learnable template or pattern.
+    Since pairwise relations can be viewed as edges on a graph, the term ``graphlet'' is used to refer to a subgraph, and the term `filter'' is used to refer to a learnable template or pattern.
     % Graphlet filters are analogous to filters (also called kernels) in traditional CNNs for images, which represent templates for local regions of an image.
     \item \textit{\bfseries Relational convolutions.} In CNNs for image processing, each filter is
     %  ``swept,'' or 
