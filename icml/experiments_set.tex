@@ -21,7 +21,7 @@ The construct of relational convolutions proposed in this paper is a step toward
     \includegraphics[width=0.4\textwidth]{figs/experiments/contains_set_acc.pdf}
     \vskip-12pt
     \caption{Hold-out test accuracy. Bar height indicates mean over 10 trials and error bars indicate 95\% confidence intervals.}\label{fig:contains_set_acc}
-    \vskip-5pt
+    \vskip-10pt
 \end{figure}
 
 In this section, we evaluate RelConvNet on a task based on \textit{SET} and compare it to several baselines. The task is: given a collection of $n=5$ images of SET cards, determine whether or not they contain a `set'. All models share the common architecture $(x_1, \ldots, x_n) \to \texttt{CNN} \to \{ \cdot \} \to \texttt{MLP} \to \hat{y}$, where $\{\cdot\}$ indicates the central module being tested. In addition to CoRelNet, PrediNet, and Transformers, we also compare RelConvNet to several GNN baselines. The CNN embedder is pre-trained on the task of classifying the four attributes of the cards and an intermediate layer is used to generate embeddings. The outupt MLP architecture is shared across all models.
