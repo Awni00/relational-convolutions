@@ -3,13 +3,13 @@
 In~\Cref{ssec:exp_relational_games} the CoRelNet model of~\citet{kergNeuralArchitecture2022} was among the baselines we compared to. In that work, the authors also evaluate their model on the relational games benchmark. A difference between their experimental set up and ours is that they use a method called ``context normalization'' as a preprocessing step on the sequence of objects.
 
 ``Context normalization'' was proposed by~\citet{webbLearningRepresentationsThat2020}. The proposal is simple: Given a sequence of objects, $(x_1, \ldots, x_m)$, and a set of context windows $\calW_1, \ldots, \calW_W \subset \set{1, \ldots, m}$ which partition the objects, each object is normalized along each dimension with respect to the other objects in its context. That is, $\paren{z_1, \ldots, z_m} = \mathrm{CN}(x_1, \ldots, x_m)$ is computed as,
-\begin{eqnarray*}
+\begin{equation*}
     \begin{split}
         \mu_j^{(k)} &= \frac{1}{\abs{\calW_k}} \sum_{t \in \calW_k} (x_t)_j\\
         \sigma_j^{(k)} &= \sqrt{ \frac{1}{\abs{\calW_k}} \sum_{t \in \calW_k} \paren{(x_t)_j - \mu_j^{(k)}}^2 + \varepsilon}\\
         (z_t)_j &= \gamma_j \paren{\frac{(x_t)_j - \mu_j^{(k)}}{\sigma_j^{(k)}}} + \beta_j, \qquad \text{for } t \in \calW_k
     \end{split}
-\end{eqnarray*}
+\end{equation*}
 where $\gamma = (\gamma_1, \ldots, \gamma_d), \beta = (\beta_1, \ldots, \beta_d)$ are learnable gain and shift parameters for each dimension (initialized at 1 and 0, respectively, as with batch normalization). The context windows represent logical groupings of objects that are assumed to be known. For instance,~\citep{webbEmergentSymbols2021,kergNeuralArchitecture2022} consider a ``relational match-to-sample'' task where 3 pairs of objects are presented in sequence, and the task is to identify whether the relation in the first pair is the same as the relation in the second pair or the third pair. Here, the context windows would be the pairs of objects. In the relational games ``match rows pattern'' task, the context windows would be each row.
 
 It is reported in~\citep{webbEmergentSymbols2021,kergNeuralArchitecture2022} that context normalization significantly accelerates learning and improves out-of-distribution generalization. Since~\citep{webbEmergentSymbols2021,kergNeuralArchitecture2022} use context normalization in their experiments, in this section we aim to explain our choice to exclude it. We argue that context normalization is a confounder and that an evaluation of relational architectures without such preprocessing is more informative.
