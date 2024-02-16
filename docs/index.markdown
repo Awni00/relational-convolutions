@@ -93,7 +93,8 @@ Awni Altabaa<sup>1</sup>, John Lafferty<sup>2</sup>
 
 ## Abstract
 
-A maturing area of research in deep learning is the development of architectures that can learn explicit representations of relational features. In this paper, we focus on the problem of learning representations of *hierarchical* relations, proposing an architectural framework we call "relational convolutional networks". Given a sequence of objects, a "multi-dimensional inner product relation" module produces a relation tensor describing all pairwise relations. A "relational convolution" layer then transforms the relation tensor into a sequence of new objects, each describing the relations within some group of objects at the previous layer. Graphlet filters, analogous to filters in convolutional neural networks, represent a template of relations against which the relation tensor is compared at each grouping. Repeating this yields representations of higher-order, hierarchical relations. We present the motivation and details of the architecture, together with a set of experiments to demonstrate how relational convolutional networks can provide an effective framework for modeling relational tasks that have hierarchical structure.
+A maturing area of research in deep learning is the study of architectures and inductive biases for learning representations of relational features. In this paper, we focus on the problem of learning representations of *hierarchical* relations, proposing an architectural framework we call ``relational convolutional networks''.
+Given a collection of objects, pairwise relations are modeled via inner products of feature maps. We formalize a relational convolution operation in which graphlet filters are matched against patches of the input (i.e, groupings of objects), capturing the relational pattern in each group of objects. We also propose mechanisms for explicitly learning groupings of objects which are relevant to the downstream task. Composing these operations yields representations of higher-order, hierarchical relations. We present the motivation and details of the architecture, together with a set of experiments to demonstrate how relational convolutional networks can provide an effective framework for modeling relational tasks that have hierarchical structure.
 
 ## Method Overview
 
@@ -111,7 +112,7 @@ A schematic of the proposed architecture is shown in the figure to the right. Th
 
 **Relational Convolutions.** The relational convolution operation does two things: 1) extracts features of the relations between groups of objects using pairwise relations 2) transforms the relation tensor back into a sequence of objects, allowing it be composed with another relational layer to compute higher-order relations. In a relational convolution module, we learn a set of "graphlet filters," which form a template of relations among a subset of the objects (a graphlet). The output of a relational convolution operation is a sequence of objects $$R \ast \boldsymbol{f} = \left(\langle R[g], \boldsymbol{f} \rangle_{\mathrm{rel}} \right)_{g \in \mathcal{G}} = (z_1, \ldots, z_{n_g})$$ where each output object represents the relational pattern within some group of input objects, obtained through an appropriately-defined inner-product comparison with the graphlet filters.
 
-**Grouping layers.** Rather than considering the relational patterns within all groups of objects, we explicitly model and determine relevant groupings based on temporal information, object-level features, and/or contextual information.
+**Grouping layers.** Rather than considering the relational patterns within all groups of objects, we explicitly model and determine relevant groupings through an attention operation.
 
 Please see the paper for more details on the proposed architecture.
 
@@ -135,7 +136,7 @@ fetch('figs/relational_games_ood_gen.json')
     });
 </script>
 
-**SET.** "SET" is a card game which forms a simple but challenging relational task. To solve the task, one must process the sensory information of individual cards to identify the values of each attribute, then somehow search over combinations of cards and reason about the relations between them. This is a task which tests a model's ability to represent and reason over relations among *subgroups* of objects. This is a capability built explicitly into relational convolutional networks, but is missing from other relational models.
+***SET*.** *SET* is a card game which forms a simple but challenging relational task. To solve the task, one must process the sensory information of individual cards to identify the values of each attribute, then somehow search over combinations of cards and reason about the relations between them. This is a task which tests a model's ability to represent and reason over relations among *subgroups* of objects. This is a capability built explicitly into relational convolutional networks, but is missing from other relational models.
 
 <!-- <figure style="text-align: center;">
     <img src="figs/set_example.png" alt="sample of SET cards" style="display: block; margin-left: auto; margin-right: auto; width: 50%;">
