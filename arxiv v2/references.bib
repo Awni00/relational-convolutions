@@ -70,19 +70,19 @@
   langid = {english}
 }
 
-@misc{kergNeuralArchitecture2022,
-  title = {On {{Neural Architecture Inductive Biases}} for {{Relational Tasks}}},
+@article{kergNeuralArchitecture2022,
+  title = {On Neural Architecture Inductive Biases for Relational Tasks},
   author = {Kerg, Giancarlo and Mittal, Sarthak and Rolnick, David and Bengio, Yoshua and Richards, Blake and Lajoie, Guillaume},
   date = {2022-06-09},
   year = {2022},
+  journal = {arXiv preprint arXiv:2206.05056},
   eprint = {2206.05056},
   eprinttype = {arxiv},
   eprintclass = {cs},
+}
+  pubstate = {preprint}
   doi = {10.48550/arXiv.2206.05056},
   url = {http://arxiv.org/abs/2206.05056},
-  urldate = {2022-09-13},
-  pubstate = {preprint}
-}
 
 @article{mercerFunctionsPositive1909,
   title = {Functions of {{Positive}} and {{Negative Type}}, and Their {{Connection}} with the {{Theory}} of {{Integral Equations}}},
@@ -123,17 +123,12 @@
   urldate = {2022-11-11}
 }
 
-@misc{santoroSimpleNeural2017,
-  title = {A Simple Neural Network Module for Relational Reasoning},
-  author = {Santoro, Adam and Raposo, David and Barrett, David G. T. and Malinowski, Mateusz and Pascanu, Razvan and Battaglia, Peter and Lillicrap, Timothy},
-  date = {2017-06-05},
-  year = {2017},
-  eprint = {1706.01427},
-  eprinttype = {arxiv},
-  eprintclass = {cs},
-  url = {http://arxiv.org/abs/1706.01427},
-  urldate = {2022-11-11},
-  pubstate = {preprint}
+@article{santoroSimpleNeural2017,
+  title={A simple neural network module for relational reasoning},
+  author={Santoro, Adam and Raposo, David and Barrett, David G and Malinowski, Mateusz and Pascanu, Razvan and Battaglia, Peter and Lillicrap, Timothy},
+  journal={Advances in neural information processing systems},
+  volume={30},
+  year={2017}
 }
 
 @article{seelyNonSymmetricKernels1919,
@@ -171,19 +166,13 @@
   langid = {english}
 }
 
-@misc{webbEmergentSymbols2021,
-  title = {Emergent {{Symbols}} through {{Binding}} in {{External Memory}}},
-  author = {Webb, Taylor W. and Sinha, Ishan and Cohen, Jonathan D.},
-  date = {2021-03-09},
-  year = {2021},
-  eprint = {2012.14601},
-  eprinttype = {arxiv},
-  eprintclass = {cs},
-  doi = {10.48550/arXiv.2012.14601},
-  url = {http://arxiv.org/abs/2012.14601},
-  urldate = {2022-09-13},
-  pubstate = {preprint}
+@inproceedings{webbEmergentSymbols2021,
+  title={Emergent Symbols through Binding in External Memory},
+  author={Taylor Whittington Webb and Ishan Sinha and Jonathan Cohen},
+  booktitle={International Conference on Learning Representations},
+  year={2021},
 }
+url={https://openreview.net/forum?id=LSFCEb3GYU7}
 
 @inproceedings{zhangReproducingKernel2009,
   title = {Reproducing Kernel {{Banach}} Spaces for Machine Learning},
@@ -214,10 +203,8 @@
   series = 	 {Proceedings of Machine Learning Research},
   month = 	 {13--18 Jul},
   publisher =    {PMLR},
-  pdf = 	 {http://proceedings.mlr.press/v119/shanahan20a/shanahan20a.pdf},
-  url = 	 {https://proceedings.mlr.press/v119/shanahan20a.html},
-  abstract = 	 {With a view to bridging the gap between deep learning and symbolic AI, we present a novel end-to-end neural network architecture that learns to form propositional representations with an explicitly relational structure from raw pixel data. In order to evaluate and analyse the architecture, we introduce a family of simple visual relational reasoning tasks of varying complexity. We show that the proposed architecture, when pre-trained on a curriculum of such tasks, learns to generate reusable representations that better facilitate subsequent learning on previously unseen tasks when compared to a number of baseline architectures. The workings of a successfully trained model are visualised to shed some light on how the architecture functions.}
 }
+  url = 	 {https://proceedings.mlr.press/v119/shanahan20a.html},
 
 @article{vaswani2017attention,
   title={Attention is all you need},
@@ -245,77 +232,51 @@
   year={2018}
 }
 
-@misc{battagliaRelationalInductiveBiases2018,
+@article{battagliaRelationalInductiveBiases2018,
   title = {Relational Inductive Biases, Deep Learning, and Graph Networks},
   author = {Battaglia, Peter W. and Hamrick, Jessica B. and Bapst, Victor and {Sanchez-Gonzalez}, Alvaro and Zambaldi, Vinicius and Malinowski, Mateusz and Tacchetti, Andrea and Raposo, David and Santoro, Adam and Faulkner, Ryan and Gulcehre, Caglar and Song, Francis and Ballard, Andrew and Gilmer, Justin and Dahl, George and Vaswani, Ashish and Allen, Kelsey and Nash, Charles and Langston, Victoria and Dyer, Chris and Heess, Nicolas and Wierstra, Daan and Kohli, Pushmeet and Botvinick, Matt and Vinyals, Oriol and Li, Yujia and Pascanu, Razvan},
+  journal={arXiv preprint arXiv:1806.01261},
   year = {2018},
   month = oct,
   number = {arXiv:1806.01261},
   eprint = {1806.01261},
   primaryclass = {cs, stat},
   publisher = {{arXiv}},
-  doi = {10.48550/arXiv.1806.01261},
-  urldate = {2023-09-22},
-  abstract = {Artificial intelligence (AI) has undergone a renaissance recently, making major progress in key domains such as vision, language, control, and decision-making. This has been due, in part, to cheap data and cheap compute resources, which have fit the natural strengths of deep learning. However, many defining characteristics of human intelligence, which developed under much different pressures, remain out of reach for current approaches. In particular, generalizing beyond one's experiences--a hallmark of human intelligence from infancy--remains a formidable challenge for modern AI. The following is part position paper, part review, and part unification. We argue that combinatorial generalization must be a top priority for AI to achieve human-like abilities, and that structured representations and computations are key to realizing this objective. Just as biology uses nature and nurture cooperatively, we reject the false choice between "hand-engineering" and "end-to-end" learning, and instead advocate for an approach which benefits from their complementary strengths. We explore how using relational inductive biases within deep learning architectures can facilitate learning about entities, relations, and rules for composing them. We present a new building block for the AI toolkit with a strong relational inductive bias--the graph network--which generalizes and extends various approaches for neural networks that operate on graphs, and provides a straightforward interface for manipulating structured knowledge and producing structured behaviors. We discuss how graph networks can support relational reasoning and combinatorial generalization, laying the foundation for more sophisticated, interpretable, and flexible patterns of reasoning. As a companion to this paper, we have released an open-source software library for building graph networks, with demonstrations of how to use them in practice.},
   archiveprefix = {arxiv}
 }
 
-@misc{kipfNeuralRelationalInference2018,
-  title = {Neural {{Relational Inference}} for {{Interacting Systems}}},
-  author = {Kipf, Thomas and Fetaya, Ethan and Wang, Kuan-Chieh and Welling, Max and Zemel, Richard},
-  year = {2018},
-  month = jun,
-  number = {arXiv:1802.04687},
-  eprint = {1802.04687},
-  primaryclass = {cs, stat},
-  publisher = {{arXiv}},
-  urldate = {2023-09-22},
-  abstract = {Interacting systems are prevalent in nature, from dynamical systems in physics to complex societal dynamics. The interplay of components can give rise to complex behavior, which can often be explained using a simple model of the system's constituent parts. In this work, we introduce the neural relational inference (NRI) model: an unsupervised model that learns to infer interactions while simultaneously learning the dynamics purely from observational data. Our model takes the form of a variational auto-encoder, in which the latent code represents the underlying interaction graph and the reconstruction is based on graph neural networks. In experiments on simulated physical systems, we show that our NRI model can accurately recover ground-truth interactions in an unsupervised manner. We further demonstrate that we can find an interpretable structure and predict complex dynamics in real motion capture and sports tracking data.},
-  archiveprefix = {arxiv}
+@inproceedings{kipfNeuralRelationalInference2018,
+  title={Neural relational inference for interacting systems},
+  author={Kipf, Thomas and Fetaya, Ethan and Wang, Kuan-Chieh and Welling, Max and Zemel, Richard},
+  booktitle={International conference on machine learning},
+  year={2018},
+}
+  organization={PMLR}
+  pages={2688--2697},
+
+@article{locatelloObjectCentricLearningSlot2020,
+  title={Object-centric learning with slot attention},
+  author={Locatello, Francesco and Weissenborn, Dirk and Unterthiner, Thomas and Mahendran, Aravindh and Heigold, Georg and Uszkoreit, Jakob and Dosovitskiy, Alexey and Kipf, Thomas},
+  journal={Advances in Neural Information Processing Systems},
+  volume={33},
+  pages={11525--11538},
+  year={2020}
 }
 
-@misc{locatelloObjectCentricLearningSlot2020,
-  title = {Object-{{Centric Learning}} with {{Slot Attention}}},
-  author = {Locatello, Francesco and Weissenborn, Dirk and Unterthiner, Thomas and Mahendran, Aravindh and Heigold, Georg and Uszkoreit, Jakob and Dosovitskiy, Alexey and Kipf, Thomas},
-  year = {2020},
-  month = oct,
-  number = {arXiv:2006.15055},
-  eprint = {2006.15055},
-  primaryclass = {cs, stat},
-  publisher = {{arXiv}},
-  doi = {10.48550/arXiv.2006.15055},
-  urldate = {2023-09-22},
-  abstract = {Learning object-centric representations of complex scenes is a promising step towards enabling efficient abstract reasoning from low-level perceptual features. Yet, most deep learning approaches learn distributed representations that do not capture the compositional properties of natural scenes. In this paper, we present the Slot Attention module, an architectural component that interfaces with perceptual representations such as the output of a convolutional neural network and produces a set of task-dependent abstract representations which we call slots. These slots are exchangeable and can bind to any object in the input by specializing through a competitive procedure over multiple rounds of attention. We empirically demonstrate that Slot Attention can extract object-centric representations that enable generalization to unseen compositions when trained on unsupervised object discovery and supervised property prediction tasks.},
-  archiveprefix = {arxiv}
+@article{zhangRAVENDatasetRelational2019,
+  title={RAVEN: A dataset for relational and analogical visual reasoning},
+  author={Zhang, Chi and Gao, Feng and Jia, Baoxiong and Zhu, Yixin and Zhu, Song-Chun},
+  booktitle={Proceedings of the IEEE/CVF conference on computer vision and pattern recognition},
+  pages={5317--5327},
+  year={2019}
 }
 
-@misc{zhangRAVENDatasetRelational2019,
-  title = {{{RAVEN}}: {{A Dataset}} for {{Relational}} and {{Analogical Visual rEasoNing}}},
-  shorttitle = {{{RAVEN}}},
-  author = {Zhang, Chi and Gao, Feng and Jia, Baoxiong and Zhu, Yixin and Zhu, Song-Chun},
-  year = {2019},
-  month = mar,
-  number = {arXiv:1903.02741},
-  eprint = {1903.02741},
-  primaryclass = {cs},
-  publisher = {{arXiv}},
-  urldate = {2023-09-22},
-  abstract = {Dramatic progress has been witnessed in basic vision tasks involving low-level perception, such as object recognition, detection, and tracking. Unfortunately, there is still an enormous performance gap between artificial vision systems and human intelligence in terms of higher-level vision problems, especially ones involving reasoning. Earlier attempts in equipping machines with high-level reasoning have hovered around Visual Question Answering (VQA), one typical task associating vision and language understanding. In this work, we propose a new dataset, built in the context of Raven's Progressive Matrices (RPM) and aimed at lifting machine intelligence by associating vision with structural, relational, and analogical reasoning in a hierarchical representation. Unlike previous works in measuring abstract reasoning using RPM, we establish a semantic link between vision and reasoning by providing structure representation. This addition enables a new type of abstract reasoning by jointly operating on the structure representation. Machine reasoning ability using modern computer vision is evaluated in this newly proposed dataset. Additionally, we also provide human performance as a reference. Finally, we show consistent improvement across all models by incorporating a simple neural module that combines visual understanding and structure reasoning.},
-  archiveprefix = {arxiv}
-}
-
-@misc{palmRecurrentRelationalNetworks2018,
-  title = {Recurrent {{Relational Networks}}},
-  author = {Palm, Rasmus Berg and Paquet, Ulrich and Winther, Ole},
-  year = {2018},
-  month = nov,
-  number = {arXiv:1711.08028},
-  eprint = {1711.08028},
-  primaryclass = {cs},
-  publisher = {{arXiv}},
-  urldate = {2023-09-22},
-  abstract = {This paper is concerned with learning to solve tasks that require a chain of interdependent steps of relational inference, like answering complex questions about the relationships between objects, or solving puzzles where the smaller elements of a solution mutually constrain each other. We introduce the recurrent relational network, a general purpose module that operates on a graph representation of objects. As a generalization of Santoro et al. [2017]'s relational network, it can augment any neural network model with the capacity to do many-step relational reasoning. We achieve state of the art results on the bAbI textual question-answering dataset with the recurrent relational network, consistently solving 20/20 tasks. As bAbI is not particularly challenging from a relational reasoning point of view, we introduce Pretty-CLEVR, a new diagnostic dataset for relational reasoning. In the Pretty-CLEVR set-up, we can vary the question to control for the number of relational reasoning steps that are required to obtain the answer. Using Pretty-CLEVR, we probe the limitations of multi-layer perceptrons, relational and recurrent relational networks. Finally, we show how recurrent relational networks can learn to solve Sudoku puzzles from supervised training data, a challenging task requiring upwards of 64 steps of relational reasoning. We achieve state-of-the-art results amongst comparable methods by solving 96.6\% of the hardest Sudoku puzzles.},
-  archiveprefix = {arxiv}
+@article{palmRecurrentRelationalNetworks2018,
+  title={Recurrent relational networks},
+  author={Palm, Rasmus and Paquet, Ulrich and Winther, Ole},
+  journal={Advances in neural information processing systems},
+  volume={31},
+  year={2018}
 }
 
 @inproceedings{gilmerNeuralMessagePassing2017,
@@ -329,8 +290,9 @@
 }
 
 @misc{kipfSemiSupervisedClassificationGraph2017,
-  title = {Semi-{{Supervised Classification}} with {{Graph Convolutional Networks}}},
+  title = {Semi-Supervised Classification with Graph Convolutional Networks},
   author = {Kipf, Thomas N. and Welling, Max},
+  journal={arXiv preprint arXiv:1609.02907},
   year = {2017},
   month = feb,
   number = {arXiv:1609.02907},
@@ -338,37 +300,25 @@
   primaryclass = {cs, stat},
   publisher = {{arXiv}},
   doi = {10.48550/arXiv.1609.02907},
-  urldate = {2023-09-23},
-  abstract = {We present a scalable approach for semi-supervised learning on graph-structured data that is based on an efficient variant of convolutional neural networks which operate directly on graphs. We motivate the choice of our convolutional architecture via a localized first-order approximation of spectral graph convolutions. Our model scales linearly in the number of graph edges and learns hidden layer representations that encode both local graph structure and features of nodes. In a number of experiments on citation networks and on a knowledge graph dataset we demonstrate that our approach outperforms related methods by a significant margin.},
   archiveprefix = {arxiv}
 }
 
-@misc{niepertLearningConvolutionalNeural2016,
-  title = {Learning {{Convolutional Neural Networks}} for {{Graphs}}},
-  author = {Niepert, Mathias and Ahmed, Mohamed and Kutzkov, Konstantin},
-  year = {2016},
-  month = jun,
-  number = {arXiv:1605.05273},
-  eprint = {1605.05273},
-  primaryclass = {cs, stat},
-  publisher = {{arXiv}},
-  urldate = {2023-09-22},
-  abstract = {Numerous important problems can be framed as learning from graph data. We propose a framework for learning convolutional neural networks for arbitrary graphs. These graphs may be undirected, directed, and with both discrete and continuous node and edge attributes. Analogous to image-based convolutional networks that operate on locally connected regions of the input, we present a general approach to extracting locally connected regions from graphs. Using established benchmark data sets, we demonstrate that the learned feature representations are competitive with state of the art graph kernels and that their computation is highly efficient.},
-  archiveprefix = {arxiv}
+@inproceedings{niepertLearningConvolutionalNeural2016,
+  title={Learning convolutional neural networks for graphs},
+  author={Niepert, Mathias and Ahmed, Mohamed and Kutzkov, Konstantin},
+  booktitle={International conference on machine learning},
+  year={2016},
+  organization={PMLR}
 }
+  pages={2014--2023},
 
-@misc{schlichtkrullModelingRelationalData2017,
-  title = {Modeling {{Relational Data}} with {{Graph Convolutional Networks}}},
-  author = {Schlichtkrull, Michael and Kipf, Thomas N. and Bloem, Peter and van den Berg, Rianne and Titov, Ivan and Welling, Max},
-  year = {2017},
-  month = oct,
-  number = {arXiv:1703.06103},
-  eprint = {1703.06103},
-  primaryclass = {cs, stat},
-  publisher = {{arXiv}},
-  urldate = {2023-09-23},
-  abstract = {Knowledge graphs enable a wide variety of applications, including question answering and information retrieval. Despite the great effort invested in their creation and maintenance, even the largest (e.g., Yago, DBPedia or Wikidata) remain incomplete. We introduce Relational Graph Convolutional Networks (R-GCNs) and apply them to two standard knowledge base completion tasks: Link prediction (recovery of missing facts, i.e. subject-predicate-object triples) and entity classification (recovery of missing entity attributes). R-GCNs are related to a recent class of neural networks operating on graphs, and are developed specifically to deal with the highly multi-relational data characteristic of realistic knowledge bases. We demonstrate the effectiveness of R-GCNs as a stand-alone model for entity classification. We further show that factorization models for link prediction such as DistMult can be significantly improved by enriching them with an encoder model to accumulate evidence over multiple inference steps in the relational graph, demonstrating a large improvement of 29.8\% on FB15k-237 over a decoder-only baseline.},
-  archiveprefix = {arxiv}
+@inproceedings{schlichtkrullModelingRelationalData2017,
+  title={Modeling relational data with graph convolutional networks},
+  author={Schlichtkrull, Michael and Kipf, Thomas N and Bloem, Peter and Van Den Berg, Rianne and Titov, Ivan and Welling, Max},
+  booktitle={The Semantic Web: 15th International Conference, ESWC 2018, Heraklion, Crete, Greece, June 3--7, 2018, Proceedings 15},
+  pages={593--607},
+  year={2018},
+  organization={Springer}
 }
 
 @book{hamiltonGraphRepresentationLearning2020,
@@ -418,9 +368,6 @@
   series = 	 {Proceedings of Machine Learning Research},
   month = 	 {13--18 Jul},
   publisher =    {PMLR},
-  pdf = 	 {http://proceedings.mlr.press/v119/webb20a/webb20a.pdf},
-  url = 	 {https://proceedings.mlr.press/v119/webb20a.html},
-  abstract = 	 {Extrapolation – the ability to make inferences that go beyond the scope of one’s experiences – is a hallmark of human intelligence. By contrast, the generalization exhibited by contemporary neural network algorithms is largely limited to interpolation between data points in their training corpora. In this paper, we consider the challenge of learning representations that support extrapolation. We introduce a novel visual analogy benchmark that allows the graded evaluation of extrapolation as a function of distance from the convex domain defined by the training data. We also introduce a simple technique, temporal context normalization, that encourages representations that emphasize the relations between objects. We find that this technique enables a significant improvement in the ability to extrapolate, considerably outperforming a number of competitive techniques.}
 }
 
 @inproceedings{martinsSoftmaxSparsemaxSparse2016,
@@ -476,17 +423,16 @@
   organization={Springer}
 }
 
-@misc{webbRelationalBottleneckInductive2023,
+@article{webbRelationalBottleneckInductive2023,
   title = {The Relational Bottleneck as an Inductive Bias for Efficient Abstraction},
   author = {Webb, Taylor W. and Frankland, Steven M. and Altabaa, Awni and Krishnamurthy, Kamesh and Campbell, Declan and Russin, Jacob and O'Reilly, Randall and Lafferty, John and Cohen, Jonathan D.},
+  journal = {arXiv preprint arXiv:2309.06629},
   year = {2024},
   month = sep,
-  number = {arXiv:2309.06629},
   eprint = {2309.06629},
   primaryclass = {cs},
   publisher = {{arXiv}},
   urldate = {2023-10-30},
-  abstract = {A central challenge for cognitive science is to explain how abstract concepts are acquired from limited experience. This effort has often been framed in terms of a dichotomy between empiricist and nativist approaches, most recently embodied by debates concerning deep neural networks and symbolic cognitive models. Here, we highlight a recently emerging line of work that suggests a novel reconciliation of these approaches, by exploiting an inductive bias that we term the relational bottleneck. We review a family of models that employ this approach to induce abstractions in a data-efficient manner, emphasizing their potential as candidate models for the acquisition of abstract concepts in the human mind and brain.},
   archiveprefix = {arxiv}
 }
 
@@ -514,20 +460,18 @@
   isbn = {0899-7667}
 }
 
-@article{xuHowPowerfulAre2018,
-  title = {How Powerful Are Graph Neural Networks?},
-  author = {Xu, Keyulu and Hu, Weihua and Leskovec, Jure and Jegelka, Stefanie},
-  year = {2018},
-  journal = {arXiv preprint arXiv:1810.00826},
-  eprint = {1810.00826},
-  archiveprefix = {arxiv}
+@inproceedings{xuHowPowerfulAre2018,
+  title={How Powerful are Graph Neural Networks?},
+  author={Keyulu Xu and Weihua Hu and Jure Leskovec and Stefanie Jegelka},
+  booktitle={International Conference on Learning Representations},
+  year={2019},
 }
+  url={https://openreview.net/forum?id=ryGs6iA5Km},
 
 @misc{altabaaApproximationRelationFunctions2024,
   author          = {Altabaa, Awni and Lafferty, John},
   title           = {Approximation of relation functions and attention mechanisms},
   year            = {2024},
-  publisher       = {{arXiv}},
   eprint          = {2402.08856},
   archivePrefix   = {arXiv},
   primaryClass    = {cs.LG}
