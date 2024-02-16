@@ -30,10 +30,6 @@ and the hexominoes and stripes splits are used to test out-of-distribution gener
 
 On the `match pattern' task, however, RelConvNet is significantly more sample-efficient. We attribute this to the fact that RelConvNet is able to model higher-order relations through its relational convolution module. The `match pattern' task can be thought of as a second-order relational task---it involves computing the relational pattern in each of two groups, and comparing the two relational patterns. The relational convolution module naturally models this kind of situation since it learns representations of the relational patterns within groups of objects. %The performance we observe here indicates that the relational games dataset is in some sense saturated by models like RelConvNet and CoRelNet and that more complex relational benchmarks are needed to evaluate the limits of these models.
 
-\textbf{Out-of-distribution generalization.}~\Cref{fig:ood_generalization} reports model performance on the two hold-out object sets after training. On the hexominoes objects, which are similar-looking to the pentominoes objects used for training, RelConvNet and CoRelNet do nearly perfectly. PrediNet and the Transformer do well on the simpler tasks, but struggle with the more difficult `match pattern' task. The `stripes' objects are visually more distinct from the objects in the training split, making generalization more difficult. We observe an overall drop in performance for all models. The drop is particularly dramatic for CoRelNet\footnote{The experiments in \citep{kergNeuralArchitecture2022} on the relational games benchmark use a technique called ``context normalization''~\citep{webbLearningRepresentationsThat2020} as a preprocessing step. We choose not to use this technique since it is an added confounder. We discuss this choice in~\Cref{sec:appendix_tcn_discussion}.}.
-% We conjecture that this is due to CoRelNet's inability to model multi-dimensional relations, necessitating that all relational information is squeezed into a scalar quantity. % Or perhaps it's because of the softmax normalization?
-The separation between RelConvNet and the other models is largest on the ``match pattern'' task of the stripes split (the most difficult task and the most difficult generalization split). Here, RelConvNet maintains a mean accuracy of 87\% while the other models drop below 65\%. We attribute this to RelConvNet's ability to naturally represent higher-order relations and model groupings of objects.
-
 \begin{figure}[t]
     \centering
     \includegraphics[width=0.95\textwidth]{figs/experiments/all_training_curves.pdf}
@@ -42,7 +38,6 @@ The separation between RelConvNet and the other models is largest on the ``match
     % \vskip-12pt
 \end{figure}
 
-
 \begin{figure}[t]
     \centering
     \includegraphics[width=0.95\textwidth]{figs/experiments/relgames_ood_acc.pdf}
@@ -50,6 +45,11 @@ The separation between RelConvNet and the other models is largest on the ``match
     \caption{Out-of-distribution generalization on hold-out object sets. Bar heights indicate the mean over 5 trials and the error bars indicate a bootstrap 95\% confidence interval.}\label{fig:ood_generalization}
     % \vskip-15pt
 \end{figure}
+
+\textbf{Out-of-distribution generalization.}~\Cref{fig:ood_generalization} reports model performance on the two hold-out object sets after training. On the hexominoes objects, which are similar-looking to the pentominoes objects used for training, RelConvNet and CoRelNet do nearly perfectly. PrediNet and the Transformer do well on the simpler tasks, but struggle with the more difficult `match pattern' task. The `stripes' objects are visually more distinct from the objects in the training split, making generalization more difficult. We observe an overall drop in performance for all models. The drop is particularly dramatic for CoRelNet\footnote{The experiments in \citep{kergNeuralArchitecture2022} on the relational games benchmark use a technique called ``context normalization''~\citep{webbLearningRepresentationsThat2020} as a preprocessing step. We choose not to use this technique since it is an added confounder. We discuss this choice in~\Cref{sec:appendix_tcn_discussion}.}.
+% We conjecture that this is due to CoRelNet's inability to model multi-dimensional relations, necessitating that all relational information is squeezed into a scalar quantity. % Or perhaps it's because of the softmax normalization?
+The separation between RelConvNet and the other models is largest on the ``match pattern'' task of the stripes split (the most difficult task and the most difficult generalization split). Here, RelConvNet maintains a mean accuracy of 87\% while the other models drop below 65\%. We attribute this to RelConvNet's ability to naturally represent higher-order relations and model groupings of objects.
+
 
 
 % \begin{table}
@@ -77,7 +77,8 @@ The separation between RelConvNet and the other models is largest on the ``match
 %     % \vskip-15pt
 % \end{figure}
 
-\todo{removed in-dist accuracy for relconvnet with group attn. the focus of this section is qualitative.}
+
+% \todo{removed in-dist accuracy for relconvnet with group attn. the focus of this section is qualitative.}
 \textbf{Learning groups via group attention.} Next we analyze RelConvNet's ability to learn useful groupings through group attention in an end-to-end manner. We train a $2$-layer relational convolutional network with $8$ learned groups and a graphlet size of $3$. We group based on position by using positional embeddings for $\mathtt{key}(x_i)$.
 % ~\Cref{tab:relgames_groupattn_resuls} shows the in-distribution generalization accuracy achieved by this model on each task. The model is able to learn all tasks.
 In~\Cref{fig:matchpatt_groupattn}, we visualize the group attention scores $\alpha_{ij}^g$ (see~\cref{eq:group_attn}) learned from one of the training runs. For each group $g \in [n_g]$, the figure depicts a $3 \times 3$ grid representing the objects attended to in that group. Since each group contains $3$ objects, we represent the value $(\alpha_{ij}^g)_{i \in [3]}$ in the $3$-channel HSV color representation. We observe that 1) group attention learns to ignore the middle row, which contains no relevant information; and 2) the selection of objects in the top row and the bottom row is structured. In particular, group $2$ considers the relational pattern within the bottom row and group $8$ considers the relational pattern in the top row, which is exactly how a human would tackle this problem.

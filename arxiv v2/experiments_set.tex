@@ -1,6 +1,6 @@
 \subsection{\textit{SET}: grouping and compositionality in relational reasoning}\label{ssec:experiments_set}
 
-\textit{SET} is a card game which forms a simple but challenging relational task. The `objects' are a set of cards with four attributes, each of which can take one of three possible values. `Color' can be red, green, or purple; `number' can be one, two, or three; `shape' can be diamond, squiggle, or oval; and `fill' can be solid, striped, or empty. A `set' is a triplet of cards such that each attribute is either a) the same on all three cards, or b) different on all three cards (see~\Cref{fig:contains_set_example}).
+\textit{SET} is a card game which forms a simple but challenging relational task. The `objects' are a set of cards with four attributes, each of which can take one of three possible values. `Color' can be red, green, or purple; `number' can be one, two, or three; `shape' can be diamond, squiggle, or oval; and `fill' can be solid, striped, or empty. A `set' is a triplet of cards such that each attribute is either a) the same on all three cards, or b) different on all three cards.
 
 \begin{figure}[ht]
     \vskip-10pt
@@ -58,7 +58,7 @@
 %     \vskip-7pt
 % \end{figure}
 
-In \textit{SET}, the task is: given a hand of $n > 3$ cards, find a `set' among them. 
+In \textit{SET}, the task is: given a hand of $n > 3$ cards, find a `set' among them.~\Cref{fig:contains_set_example} depicts a positive and negative example for $n=5$, with $*$ indicating the `set' in the positive example.
 % (typically, SET is played with $k=12$, with two players competing to find a `set' first). 
 This task is deceptively challenging, and is representative of the type of relational reasoning that humans excel at but machine learning systems still struggle with. To solve the task, one must process the sensory information of individual cards to identify the values of each attribute, then reason about the relational pattern in each triplet of cards.
 % Importantly, this type of relational reasoning requires attending over several attributes and relations simultaneously while representing some notion of `groups'.  
