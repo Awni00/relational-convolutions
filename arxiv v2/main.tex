@@ -15,7 +15,10 @@
 
 \usepackage{hyperref}
 \usepackage{natbib}
-
+% \usepackage[
+    % backend=bibtex,style=authoryear-comp, %maxbibnames=10, maxcitenames=2,
+    % url=false, uniquelist=false, isbn=false, sortcites=false, natbib]{biblatex}
+% \addbibresource{references.bib}
 
 \usepackage{mymathstyle}
 
@@ -41,7 +44,19 @@
 \usepackage[textsize=tiny]{todonotes}
 
 \title{Learning Hierarchical Relational Representations through \\ Relational Convolutions}
-\author{Awni Altabaa \and John Lafferty}
+\author{
+    Awni Altabaa\\
+    Statistics \& Data Science\\
+    Yale University\\
+    \texttt{awni.altabaa@yale.edu}
+    \and
+    John Lafferty\\
+    Statistics \& Data Science\\
+    Yale University\\
+    \texttt{john.lafferty@yale.edu}
+    }
+\date{}
+
 \begin{document}
 \maketitle
 
@@ -62,12 +77,12 @@
 % \section*{Broader Impact Statement}
 % This work proposes an architectural framework for learning representations of hierarchical relations. In our assessment, the potential societal consequences are not distinctive and do not require detailed discussion here.
 
-% \section*{Code and data}
-% Code and experimental logs are available at: \texttt{https://[Anonymized]}
-
+\subsection*{Code and Reproducibility}
+Code, detailed experimental logs, and instructions for reproducing our experimental results are available at: \url{https://github.com/Awni00/Relational-Convolutions}.
 
 % bibliography
 \todo{clean up references and make sure they're consistent. i.e., arxiv papers cited the same way, etc.}
+% \printbibliography
 \bibliography{references}
 \bibliographystyle{plainnat}
 % \bibliographystyle{icml2024}
@@ -76,7 +91,6 @@
 \clearpage
 \newpage
 \appendix
-\onecolumn
 
 \input{apppendix_experiments.tex}
 \clearpage\newpage
