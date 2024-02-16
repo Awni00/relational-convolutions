@@ -1,0 +1,33 @@
+% THIS IS THE OLD PROPOSAL OF RELATIONAL CONVOLUTIONS WITH LEARNED SOFT GROUPS
+% THE EXPERIMENTS WITH THIS WERE PROMISING, BUT IT IS COMPUTATIONALLY TOO EXPENSIVE
+% DUE TO THE NEED TO COMPUTE RELCONV WITH ALL DISCRETE GROUPS AS AN INTERMEDIATE STEP.
+% THE NEW PROPOSAL OF "GROUP ATTENTION" IS MORE ELEGANT AND COMPUTATIONALLY EFFICIENT.
+% THIS IS THE OLD PROPOSAL, FOR REFERENCE.
+
+\subsection{Relational convolutions with `soft' groups}
+
+In the above formulation, the groups are `discrete'. Having discrete groups can be desirable for interpretability, if the relevant groupings are known a priori or if considering every possible grouping is computationally and statistically feasible. However, if the relevant groupings are not known, then considering all possible combinations results in a rapid growth of the number of objects at each layer.
+% Besides being computationally intractable, considering every possible grouping may be unnecessary and may make learning more difficult.
+
+In order to address these issues, we propose \textit{explicitly modeling groups}. This allows us to control the number of objects in the output sequence of a relational convolution operation such that only relevant groups are considered. In the next section, we outline some ways to model `soft groups' using \textit{grouping layers}. These layers take a sequence of objects and/or the relation tensor as input and produce a `group matrix' $G \in \reals^{n \times n_g}$ representing $n_g$ `soft groups'. The $(i,j)$-th entry of the group matrix represents the degree to which the $i$-th object belongs to the $j$-th group. The number of groups $n_g$ is a configurable hyperparameter of the grouping layers. For the remainder of this subsection, we assume that the group matrix $G$ is given as input to the relational convolution layer.
+
+Consider the group matrix $G \in \reals^{n \times n_g}$ and filters $\bm{f}$ of size $s$. First, we use $G$ to compute a ``group-match score'' for each discrete group $g$ of size $s$ (e.g., $g \in \calG = \binom{[n]}{s}$). This is done via
+\begin{equation}\label{eq:group_match_score}
+    \begin{split}
+        G &\gets \text{SoftPlus}(G)\\
+        \alpha_{gk} &\gets \text{Normalize}\paren{\bra{\prod_{i \in g} G[i,k]}_{g \in \calG}}, \quad g \in \calG, k \in [n_g],
+    \end{split}
+\end{equation}
+where the soft-plus function is $\text{Softplus}(x) = \log(\exp(x + 1))$, applied elementwise. This has the effect of making the group matrix $G$ non-negative which is needed for the product of its elements to represent a ``group-match score''. The product inside the softmax is over elements in the discrete group $g \in \calG$. Hence, it will be large whenever the soft group $G_k := G[:, k]$ aligns with the discrete group $g$. $\mathrm{Normalize}(\cdot)$ normalizes the group match scores so that $\sum_{g} \alpha_{gk} = 1$. We propose the use of sparse normalizers~\citep{lahaControllableSparseAlternatives2018a} so that only a sparse subset of discrete groups in $\calG$ contribute to each soft group (see also~\Cref{ssec:computational_considerations}). In our experiments, we use `sparsemax'~\citep{martinsSoftmaxSparsemaxSparse2016}. Thus, $\alpha_{gk}$ is a normalized ``group-match score'' indicating the degree to which the discrete group $g$ matches the given soft group $G_k$.
+% \footnote{Sparse normalizers would likely be appropriate alternatives to softmax here, since it would be desirable to have only a sparse subset of discrete groups in $\calG$ contribute to each soft group. Some sparse alternatives to softmax are discussed in~\citep{lahaControllableSparseAlternatives2018a}.}. %Note that the group match scores of discrete groups sum to one, $\sum_{g \in G} \alpha_{gk} = 1, \ \forall k \in [n_g]$.
+
+Now, we can define the `soft' relational inner product \textit{given} the soft group $G_k$ by
+\begin{equation}\label{eq:soft_relational_inner_prod}
+    \langle R, \boldsymbol{f} \, \vert \, G_k \rangle_R \coloneqq \sum_{g \in \calG} \alpha_{gk} \iprod{R[g]}{\boldsymbol{f}}_\mathrm{rel}.
+\end{equation}
+This notation should be read as ``the relational inner product of the relation tensor $R$ with the graphlet filters $\boldsymbol{f}$ given the group $G_k$''. This expression is essentially a convex combination of the relational inner product with all possible discrete groups weighted by how much they match the soft group $G_k$.
+
+With this modification, the number of objects in the output sequence is fixed and controlled by the number of groups, $n_g$ (which is a hyperparameter). The output sequence of the relational convolution given groups $G$ is now given by
+\begin{equation}\label{eq:soft_relational_convolution_groups}
+    (R \ast \bm{f})(G) = \left( \softreliprod{R}{\bm{f}}{G_1}, \ldots, \softreliprod{R}{\bm{f}}{G_{n_g}} \right) \in \left(\mathbb{R}^{n_f}\right)^{n_g}.
+\end{equation}

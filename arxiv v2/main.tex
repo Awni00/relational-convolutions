@@ -1,0 +1,90 @@
+\documentclass{article}
+\usepackage[margin=1.25in]{geometry}
+
+% Recommended, but optional, packages for figures and better typesetting:
+\usepackage{microtype}
+\usepackage{graphicx}
+% \usepackage{subfigure}
+\usepackage{wrapfig}
+\usepackage{caption}
+\usepackage{float}
+\usepackage{subcaption}
+\usepackage{booktabs} % for professional tables
+\usepackage[shortlabels]{enumitem}
+\usepackage{parskip}
+
+\usepackage{hyperref}
+\usepackage{natbib}
+
+
+\usepackage{mymathstyle}
+
+% For theorems and such
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{mathtools}
+\usepackage{amsthm}
+
+% if you use cleveref..
+\usepackage[capitalize,noabbrev]{cleveref}
+
+%region custom commands
+\newcommand{\softreliprod}[3]{\left\langle #1, #2 \, \vert \, #3 \right\rangle_\mathrm{rel}}
+\newcommand{\reliprod}[2]{\left\langle #1, #2 \right\rangle_\mathrm{rel}}
+% \let\phi\varphi
+%endregion
+
+
+% Todonotes is useful during development; simply uncomment the next line
+%    and comment out the line below the next line to turn off comments
+% \usepackage[disable,textsize=tiny]{todonotes}
+\usepackage[textsize=tiny]{todonotes}
+
+\title{Learning Hierarchical Relational Representations through \\ Relational Convolutions}
+\author{Awni Altabaa \and John Lafferty}
+\begin{document}
+\maketitle
+
+\input{abstract}
+
+\input{intro}
+
+\input{mdipr}
+
+\input{rel_graphlet_conv}
+
+% \input{grouping_layers}
+
+\input{experiments}
+
+\input{discussion}
+
+% \section*{Broader Impact Statement}
+% This work proposes an architectural framework for learning representations of hierarchical relations. In our assessment, the potential societal consequences are not distinctive and do not require detailed discussion here.
+
+% \section*{Code and data}
+% Code and experimental logs are available at: \texttt{https://[Anonymized]}
+
+
+% bibliography
+\todo{clean up references and make sure they're consistent. i.e., arxiv papers cited the same way, etc.}
+\bibliography{references}
+\bibliographystyle{plainnat}
+% \bibliographystyle{icml2024}
+% \bibliographystyle{unsrtnat}
+
+\clearpage
+\newpage
+\appendix
+\onecolumn
+
+\input{apppendix_experiments.tex}
+\clearpage\newpage
+\input{appendix_tcn_discussion.tex}
+\clearpage\newpage
+\input{appendix_ideas_on_higherorder_tasks.tex}
+\clearpage\newpage
+\input{appendix_representation_analysis.tex}
+
+
+\end{document}

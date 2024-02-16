@@ -1,0 +1,8 @@
+\begin{tabular}{p{0.25\textwidth}p{0.75\textwidth}}
+    \toprule
+    Grouping layer & Description \\\hline
+    Temporal Grouping & $G$ learned directly as parameter.\\\hline
+    Feature-based Grouping & $G$ produced by MLP with two hidden layers of size 32 and relu activation. \\\hline
+    Contextual Grouping & $G$ produced by message-passing (via Transformer Encoder Block) followed by an MLP (\cref{eq:context_grouping}). Encoder Block has 4 heads, inner dim = 32, and relu activation. MLP same as feature-based grouping.\\
+    \bottomrule
+\end{tabular}
