@@ -13,12 +13,29 @@
 \usepackage[shortlabels]{enumitem}
 \usepackage{parskip}
 
+% region hyperref and link color options
+\usepackage[dvipsnames]{xcolor}
 \usepackage{hyperref}
-\usepackage[round]{natbib}
-% \usepackage[
-    % backend=bibtex,style=authoryear-comp, %maxbibnames=10, maxcitenames=2,
-    % url=false, uniquelist=false, isbn=false, sortcites=false, natbib]{biblatex}
-% \addbibresource{references.bib}
+\newcommand\myshade{100}
+\colorlet{mylinkcolor}{RubineRed}
+\colorlet{mycitecolor}{RoyalBlue}
+\colorlet{myurlcolor}{RoyalBlue}
+
+\hypersetup{
+  linkcolor  = mylinkcolor!\myshade!black,
+  citecolor  = mycitecolor!\myshade!black,
+  urlcolor   = myurlcolor!\myshade!black,
+  colorlinks = true,
+}
+% endregion
+
+
+
+% \usepackage[round]{natbib}
+\usepackage[
+    backend=bibtex,style=authoryear-comp, maxbibnames=10, maxcitenames=2,
+    url=false, uniquelist=false, isbn=false, doi=false, sortcites=false, natbib]{biblatex}
+\addbibresource{references.bib}
 
 \usepackage{mymathstyle}
 
@@ -83,9 +100,9 @@ Code, detailed experimental logs, and instructions for reproducing our experimen
 This work is supported by the funds provided by the National Science Foundation and by DoD OUSD (R\&E) under Cooperative Agreement PHY-2229929 (The NSF AI Institute for Artificial and Natural Intelligence).
 
 % bibliography
-% \printbibliography
-\bibliography{references}
-\bibliographystyle{plainnat}
+\printbibliography
+% \bibliography{references}
+% \bibliographystyle{plainnat}
 % \bibliographystyle{icml2024}
 % \bibliographystyle{unsrtnat}
 
@@ -102,3 +119,4 @@ This work is supported by the funds provided by the National Science Foundation 
 \input{appendix_representation_analysis.tex}
 
 \end{document}
+
