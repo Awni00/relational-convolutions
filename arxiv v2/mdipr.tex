@@ -40,7 +40,3 @@ To promote weight sharing, we can have one common non-linear map $\phi$ shared a
 where the learnable parameters are $\phi$ and $W_1^{k}, W_2^{k}, k \in [d_r]$. The non-linear map $\phi: \calX \to \reals^{d_\phi}$ may be an MLP, for example, and $W_1^{k}, W_2^{k}$ are $d_{\mathrm{proj}} \times d_\phi$ matrices. The class of functions realizable by~\cref{eq:relation_function_lin_proj} is the same as~\cref{eq:relation_function} but enables greater weight sharing.
 
 The ``Multi-dimensional Inner Product Relation'' (MD-IPR) module receives a sequence of objects $(x_1, \ldots, x_n)$ as input and models the pairwise relations between them by~\cref{eq:relation_function_lin_proj}, returning an $n \times n \times d_r$ relation tensor, $R[i,j] = r(x_i, x_j)$, describing the relations between each pair of objects.
-
-% removed for now.
-% \subsection{Universal approximation of inner product relations}
-% \input{mhr_univ_approx}
