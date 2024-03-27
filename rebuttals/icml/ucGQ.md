@@ -2,9 +2,11 @@
 
 Thank you for your thoughtful review. We hope to address your concerns below and look forward to further discussions with you.
 
-## Expanding on discussion about connection to GNNs
+## Expanded discussion on inductive bias and advantage over GNNs and Transformers
 
-Indeed, the connection and contrast to GNNs is an interesting facet of this work. The current 8-page version of the manuscript contains some discussion of this---with the additional page allowance, **we will expand upon this discussion in the final version**. Below is a draft of the discussion which we will add to the paper.
+> The authors discussed GNNs in related work, but did not illustrate the advantages of the proposed method compared with GNNs. Although GNNs rely on explicitly given ‘relations’ but they can be applied into this setting by view data as a complete graph (which is also acknowledged by the authors). The advantages of RelConvNet vs GNNs should be explained more explicitly.
+
+Thank you for the question and suggestion. We agree that an expanded discussion about the advantages of the proposed method over GNNs would be an important addition to strengthen the paper. The current 8-page version of the manuscript contains a short discussion of this (related work section (L078-097) and the experiments section (L404-433)). With the additional page allowance, **we will expand upon this discussion in the final version**. Below is a draft of the discussion which we will add to the paper.
 
 ---
 Graph neural networks can be understood through the lens of neural message-passing as follows: $h_i^{(l+1)} \gets \mathrm{Update}(h_i^{(l)}, \mathrm{Aggregate}(\{h_j^{(l)}, \ j \in \mathcal{N}(i)\}))$. That is, in a GNN, the hidden representation of node $i$ is updated as a function of the hidden representations of its neighbors on a graph. Here, the graph is part of the input to the model. This framework has proven powerful in tasks including node classification, graph classification, and link prediction. This type of model is often referred to as "relational" since the edges in the input graph can be thought of as relations.
@@ -33,10 +35,38 @@ We hope that you find this discussion interesting. We thank you again for the su
 
 ## Complexity of computing pairwise inner products of feature maps
 
-Thank you for the question. We discuss computational complexity of each operation of our proposed architecture at the end of Section 3.2. The complexity of computing the relation subtensors via the pairwise inner products (the step in Eq 8) is $O(n_g \cdot s^2 \cdot d_r \cdot d_{\mathrm{proj}})$. Note that these are all hyperparameters of the model and do not scale with the input size. In particular, the hyperparameter $s$ is likely to be chosen as some fixed small number such as $3$ or $5$. $n_g$ is the number of learned groups and its value should be set depending on the task. $d_r$ and $d_{\mathrm{proj}}$ are again hyperparameters (relation dimension and projection dimension). Overall, the computational complexity depends only on the scale of the model and not the scale of the input (though of course, larger models may be needed for larger more complex input).
+Thank you for the question. We discuss the computational complexity of each step of our proposed architecture at the end of Section 3.2 (L215-242). The complexity of computing the relation subtensors via the pairwise inner products (the step in Eq 8) is $O(n_g \cdot s^2 \cdot d_r \cdot d_{\mathrm{proj}})$. Note that these are all hyperparameters of the model and do not scale with the input size. In particular, the hyperparameter $s$ is likely to be chosen as some fixed small number such as $3$ or $5$. $n_g$ is the number of learned groups and its value should be specified depending on the task. $d_r$ and $d_{\mathrm{proj}}$ are again hyperparameters (relation dimension and projection dimension). Overall, the computational complexity depends only on the scale of the model and not the scale of the input (though of course, larger models may be needed for larger more complex input).
 
 The overall computational complexity of one layer in a relational convolutional network is also discussed in Section 3.2 and only scales linearly with the number of objects in the input. In particular, the group attention operation (Eq 7) has complexity $O(n \cdot n_g \cdot s \cdot d)$, where $n$ is the number of objects in the input, and the complexity of computing the relational convolution (Eq 9) is $O(n_g \cdot s^2 \cdot d_r \cdot n_f)$, where $n_f$ is the number of graphlet filters (also a hyperparameter). Note that *all of these operations can be computed in parallel independently* using well-optimized GPU operations.
 
+## Experiments on real-world data
+
+> As acknowledged by the authros, only synthetic experiments are conducted. Since the paper is not a theoretical paper, it would be better to have some experiments on real-world data (e.g., data in computer vision and RL) in order to sufficiently showcase the effectiveness the approach.
+
+We agree that this is a limitation of our work that should be addressed in future work. As you mentioned, we discuss this under "limitations and future work" in the conclusions section.
+
+In case you missed it, we would like to draw your attention to Appendix C in the paper which discusses some ideas on real-world higher-order relational tasks which can be pursued by future work.
+
+We would like to take this opportunity to provide a brief discussion on these ideas. While this does not resolve this limitation of our work, we hope that it makes for some interesting discussion. We would be happy to incorporate a version of this discussion into the main text of the paper with additional space allowed in the final version.
+
+---
+While the experiments in this paper are primarily synthetic, allowing for a more controlled evaluation of the proposed architecture, there exist several important real-world tasks where relational convolutional networks could be applied.
+
+One example is *computer vision and visual scene understanding*. In any naturalistic visual scene, there are typically several objects and the spatial, visual, and semantic relations between them are crucial for parsing the scene. The CLEVR benchmark on visual scene understanding [1] was used in early work on relational representation [2]. In more complex situations, the objects in the scene may fall into natural groupings, and the spatial, visual, and semantic relations between those groups may be important for parsing a scene (e.g., objects forming larger components with functional dependence determined by the relations between them). Integrating relational convolutions into a visual scene understanding system may enable reasoning about such higher-order relations. An important task that is related but orthogonal to relational processing is "object discovery". A promising direction of future work would be to explore how object-discovery methods such as Slot Attention [3] can be incorporated with relational processing modules such as relational convolutional networks.
+
+Another example is *sequence modeling* (e.g., *language modeling*). Modeling the relations between objects is usually essential for many sequence modeling tasks. For example, syntactic and semantic relations between words are crucial to parsing language. Higher-order relations are also important, capturing syntactic and semantic relational features across different locations in the text and multiple length-scales and layers of hierarchy. See for example some relevant work in linguistics [4,5]. The attention matrix in Transformers can be thought of as implicitly representing relations between tokens. It is possible that composing Transformer layers also learns hierarchical relations. However, as shown in this work and previous work on relational representation, Transformers have limited efficiency in representing relations. Thus, incorporating relational convolutions into Transformer-based sequence models may yield meaningful improvements in the relational aspects of sequence modeling. One way to do this is by cross-attending to the sequence of relational objects produced by relational convolutions, each of which summarizes the relations within a group of objects at some level of hierarchy.
+
+---
+[1] Johnson, et al. "CLEVR: A diagnostic dataset for compositional language and elementary visual reasoning", CCVPR 2017
+
+[2] Santoro, et al. "A simple neural network module for relational reasoning." NeurIPS 2017
+
+[3] Locatello, et al. "Object-centric learning with slot attention." NeurIPS 2020
+
+[4] Rosario, et al. "The descent of hierarchy, and selection in relational semantics." Assoc for Comp Linguistics 2002
+
+[5] Frank, et al. "How hierarchical is language use?" Proc of Royal Society 2012
+
 -----
 
-Thanks again for the well-considered review. Please let us know if we have addressed your initial concerns and if you have any further comments or questions. If we have addressed your concerns, we would be very appreciative if you could update your score accordingly.
+Thank you once again for the well-considered review. Please let us know if we have addressed your initial concerns and if you have any further comments or questions. If we have addressed your concerns, we would be very appreciative if you could update your score accordingly.
