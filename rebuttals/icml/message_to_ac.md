@@ -1,0 +1,58 @@
+<!-- Maybe send tonight, before submitting rebuttals tomorrow night? -->
+Dear AC,
+
+We would like to express our concern about the review by reviewer xLCW which we believe is uninformative, possibly due to the reviewer's limited familiarity with this area of research. The majority of the review focuses heavily on the reviewer's confusion about the basic terminology around "objects" and "relations" used in our paper and the line of work it is a part of. We emphasize that this terminology is standard in this line of work (e.g., see [1,2,3,4,5]). The text of the review never mentions our proposed method or experimental results, focusing solely on the misunderstanding of basic terminology.
+
+This confusion on terminology is apparent throughout the review. For example, the first paragraph reads
+>  I think of a list of all of the people on Earth, cups or conferences, maybe all of the marriages. (Are people, cups, conferences or marriages objects? If not, then what are objects?) You seem to only input a list the objects; so I presume we just give a unique number to each person. That can't be correct, as you need properties of the objects, but there are no relations input (e.g, which company made the cup). For some people there is lots known about them, and for some there is little. Some cups have a long history and some are brand new (but maybe that isn't part of the object). How can you determine relations between people (friendship, mentor, etc)? Your examples use what seems like bizarre notions of objects -- if your theory model only refers to these sorts of "objects" you should say so up-front.
+
+The review demonstrates a lack of understanding of our paper's setting and the relevant literature. While we understand that not all reviewers will be deeply familiar with our specific area of research, we believe that a reviewer with a general knowledge of machine learning should be able to grasp the fundamental concepts by carefully reading the paper. It is worth noting that all other reviewers demonstrate an understanding of the basic setting and terminology, even if some misunderstood certain technical aspects of our proposed methods.
+
+The reviewer's confusion about this standard terminology causes the review to contain some very fundamental inaccuracies. For example, the reviewer says:
+> So it look just like a regular tabular dataset that we learned about in our first ML course.
+
+Our work has nothing to do with tabular data, and this assertion indicates a lack of understanding of the basic elements of our work and the relevant literature. Indeed, the text of the review does not mention the methodology we proposed or our experiments in any way, but rather only expresses confusion on this basic terminology. As an aside, we find the phrase "we learned about in our first ML course" bizarre and raises concerns about the reviewer's qualifications to assess papers at a conference of this caliber.
+
+<!-- should we add emphasis through bold/italics formatting -->
+
+We believe that this review does not provide an informative evaluation of our work. Moreover, it makes it difficult for us to respond to any apparent concerns because we are unsure what the reviewer means by many of their comments.
+
+We are happy to engage with this reviewer, nonetheless. In our rebuttal, we will aim to 1) clarify confusion about terminology, explaining that this terminology is standard in the relevant literature; 2) provide a brief overview of some of the relevant literature to give the reviewer the needed context; and 3) summarize our proposed method and contributions.
+
+However, we wanted to raise this issue to your attention early so that you can make an informed decision. Given these issues, we respectfully request that this review be discounted from the evaluation of our paper. Please let us know if you have any questions and we would be very happy to elaborate on our position further. We sincerely thank you for your consideration.
+
+
+---
+References:
+
+[1] Santoro, et al. "A simple neural network module for relational reasoning." NeurIPS 2017
+
+[2] Shanahan, et al. "An explicitly relational neural network architecture." ICML 2020
+
+[3] Webb, et al. "Emergent Symbols through Binding in External Memory." ICLR 2020
+
+[4] Kerg, et al. "On Neural Architecture Inductive Biases for Relational Tasks." ICLR 2022 Workshop OSC
+
+[5] Altabaa, et al. "Abstractors and relational cross-attention: An inductive bias for explicit relational reasoning in Transformers." ICLR 2024
+
+---
+
+<!-- ICML email -->
+ICML email says the following:
+
+> Area Chairs and Senior Area Chairs have been asked to read through reviews and work with Reviewers to ensure that they are high quality. However, with a conference the scale of ICML, it is unavoidable that some low quality preliminary reviews will slip through. If you receive a review that is inaccurate, disrespectful, or does not provide a meaningful assessment of your work, please send a confidential comment to the Area Chair handling your paper. You can use the “Official Comment” button to submit it. Note you cannot edit it after submitting, so proofread it carefully. Also, please ensure that the Readers field contains the Area Chair but not the Reviewers. (The readers field must also include the Senior Area Chair and Program Chairs.)
+
+
+> Use “Official comment” to talk directly with ACs or SACs, to request a new review or discuss an existing review. To do this, select the “Reader groups” to include just the ACs, SACs, or PCs, but not reviewers.
+
+<!-- what else should we mention in the message? -->
+<!-- should we mention issues with tone of review? aggressively confused. -->
+<!-- - explain our efforts to engage with the reviewer in our rebuttal: i.e., we explain terminology (and that it is standard), we give a review of the field, we explain our proposed method again in simple terms, and explain its significance.
+ -->
+<!-- We made an effort to engage with this reviewer through our rebuttal, including attempting to provide an overview of the literature to help them provide a competent evaluation. -->
+
+
+
+---
+<!-- possible message about wwyA if they don't respond to us -->
+<!-- - Reviewer `wwyA` has misunderstood our proposed method. They claim that it is a "convolution network [meaning 2D convolution in standard CNNs] applied to the attention scores". This justifies weakness 1: "novelty is limited". This is an incorrect characterization our proposed method. Our proposal involves defining a novel kind of convolution operation which is entirely distinct from  2D spatial convolutions, despite the resemblance in the name. Moreover, likely due to this misunderstanding, the reviewer claims our algorithm is computationally inefficient with a complexity of $O(n^3)$. This is in fact incorrect. The computational complexity of each step is described in the paper and the overall complexity is linear in $n$. We explain both these points in our rebuttal. -->
