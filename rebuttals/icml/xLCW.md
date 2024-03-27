@@ -5,7 +5,6 @@
 <!-- TODO: should we mention (more politely) that: the vast majority of the review is rambling about what they think "object" and "relations" should mean, without ever mentioning the technical contents of the paper -->
 <!-- TODO: mention even more papers that use the same terminology of "objects" and "relations" -->
 <!-- Should we write our rebuttal with the AC in mind, to try to demonstrate that this reviewer is unqualified? or should we try to reason with the reviewer? not sure if the latter is possible, but also don't know if the AC will take this into account -->
-<!-- annoyingly this review is modestly long, giving the impression that there has been some thought put into this even though most of it is them rambling about their "first ML course" -->
 
 ## Clarifying confusion on terminology, the setting, and existing literature
 
