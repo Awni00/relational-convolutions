@@ -2,9 +2,9 @@
 
 <!-- [1 / n]: CONFUSION ON TERMINOLOGY, SETTING, & EXISTING LITERATURE -->
 
-Thank you for your review. This review centers around confusion on two basic terms used in our paper and the associated literature: "object" and "relation". *We kindly emphasize that this terminology is standard in this line of work* (e.g., see the following key works [1,2,3,4,5]). We believe this review lacks the basic understanding of the setting of this line of work which would be necessary to provide an informative evaluation. Unfortunately, this confusion has resulted in several fundamental inaccuracies and mischaracterizations, such as the assertion that our work is related to tabular data, which is incorrect. Furthermore, the review lacks a discussion of the technical content of our paper, such as the proposed methodology and experimental results.
+Thank you for your review. This review centers around confusion on two basic terms used in our paper and the associated literature: "object" and "relation". *We kindly emphasize that this terminology is standard in this line of work* (e.g., see the following key works [1,2,3,4,5]). We believe this review lacks the basic understanding of the setting of this line of work which would be necessary to provide an informative evaluation. Unfortunately, this confusion has resulted in several fundamental inaccuracies and mischaracterizations, such as the assertion that our work is related to "tabular data", which is incorrect. Furthermore, the review lacks a discussion of the technical content of our paper, such as the proposed methodology and experimental results.
 
-We understand that reviewers have varying backgrounds and levels of expertise in different areas of research. We also understand that if the reviewer did not have an understanding of the basic setting they would be unable to evaluate the technical content. We will aim to constructively engage with the reviewer to help them understand this line of work better. To address these issues, our rebuttal will be structured as follows:
+We understand that reviewers have varying backgrounds and levels of expertise in different areas of research. We also understand that if the reviewer did not grasp the basic setting they would be unable to evaluate the technical content. We will aim to constructively engage with the reviewer to help them understand this line of work better. To address these issues, our rebuttal will be structured as follows:
 1. Clarification on the terminology used in this line of work
 2. An introductory overview of existing methods in this literature
 3. A summary and reminder of the proposed methodology and contributions of this paper
@@ -26,14 +26,15 @@ References:
 
 ---
 
-## Clarifying confusion around the basic terminology
+## 1: Clarifying confusion around the basic terminology
 
 As explained above, the majority of the text of the review centers around confusion on the terms "object" and "relation". For example, the opening reads,
 > I think of a list of all of the people on Earth, cups or conferences, maybe all of the marriages. (Are people, cups, conferences or marriages objects? If not, then what are objects?) You seem to only input a list the objects; so I presume we just give a unique number to each person. That can't be correct, as you need properties of the objects, but there are no relations input (e.g, which company made the cup)
 
 Since we do not understand the text of your review (it does not seem to be related to the setting we tackle), we will aim to provide a general introductory overview of this line of work.
+<!-- We note that it is possible you are thinking of situations where the relations are received as input to the model in the form of a graph (e.g., "social networks") -->
 
-As explained above, these terms are standard in the literature [1-5]. Moreover, the experiments in our paper give concrete examples of the types of problems being tackled by this area of research. We note that this literature is cited and discussed in the paper. The setting of our work matches this literature. That is, the data format and the nature of the tasks we tackle are the same. This line of work tackles problems in which a machine learning model must reason about a collection of objects, inferring relations between them in order to perform the task.
+As explained above, these terms are standard in this body of work [1-5]. Moreover, the experiments in our paper give concrete examples of the types of problems being tackled by this area of research. We note that this literature is cited and discussed in the paper. The setting of our work matches this literature. That is, the data format and the nature of the tasks we tackle are the same. This line of work tackles problems in which a machine learning model must reason about a collection of objects, inferring relations between them in order to perform the task.
 
 We invite the reviewer to look at the related literature to gain an improved understanding of this setting. For example, [1] applies their proposed method to reasoning about visual features of objects in a scene. [2] proposes the "relational games" suite of benchmark tasks, which we also use to evaluate our methods in this paper. [3] focuses on visual relational reasoning tasks based on cognitive tests. [4] tests their proposal on the benchmarks used in [2] and [3]. [5] tests their proposal on sequence modeling tasks such as "object-sorting" and mathematical problem-solving.
 
@@ -42,7 +43,7 @@ We invite the reviewer to look at the related literature to gain an improved und
 In the next section, we will explain the terminology of "object" and "relation" from the perspective of its representation in a neural architecture.
 
 <!-- [2 /n] DEFINING TERMINOLOGY AND EXAMPLES -->
-## Explaining terminology ("objects" & "relations") & some examples
+## 1 [cont'd]: Explaining terminology ("objects" & "relations") & some examples
 
 **Defining terminology in this literature**. An "object" is a vector representation of the features of an entity that the model must reason about in relation to other entities. A (pairwise) "relation" is a mapping from a pair of objects to a representation of the relations between their features. A relational model receives as input a collection of objects, and must reason about the relations between them in order to perform a task.
 
@@ -57,7 +58,7 @@ Note that each object varies across several feature attributes. In particular, t
 *Does this clarify your confusion about terminology and the setting? Please let us know if you have any further questions and we would be happy to clarify further.*
 
 <!--  [3/n] BRIEF OVERVIEW OF METHODS IN EXISTING LITERATURE -->
-## Brief overview of existing methods in the literature
+## 2: Brief overview of existing methods in the literature
 
 In hopes of further explaining the setting addressed by our work and the context of our work within the literature, we will briefly describe the methods proposed in two related works. We hope that providing examples of methodologies proposed for this setting in addition to our own will help explain the setting.
 
@@ -71,12 +72,12 @@ $$\mathrm{CoRelNet}(X) = \mathrm{MLP}(\mathrm{Flatten}(A)), \ A = \mathrm{Softma
 ---
 [1] Santoro, et al. "A simple neural network module for relational reasoning." NeurIPS 2017
 
-[2] Kerg, et al. "On Neural Architecture Inductive Biases for Relational Tasks." arxiv:2206.05056, ICLR 2022 Workshop OSC
+[2] Kerg, et al. "On Neural Architecture Inductive Biases for Relational Tasks." arxiv:2206.05056 & ICLR 2022 Workshop OSC
 
 <!-- [4/n] Summary of our proposed method and contributions -->
-## Summary of our proposed method and contributions
+## 3: Summary of our proposed method and contributions
 
-With the above clarification, we hope that you will be able to better-understand our proposed method and contributions. First, we summarize our method, then explain its significance. We defer technical details to the main text of the paper. We invite you to ask any questions if further clarification is needed.
+With the above clarification, we hope that you will be able to better-understand our proposed method and contributions. We will now summarize our proposed method, then explain its significance. We defer technical details to the main text of the paper. We invite you to ask any questions if further clarification is needed.
 
 1. The input to the model is a collection or sequence of "objects". Each object's features are represented by a vector.
 2. Pairwise relations between object features are computed using the multi-dimensional inner product relations (MD-IPR) module. This is achieved by learning feature maps that extract or 'filter' attributes for comparison through an inner product. Multiple feature maps enable the consideration of multi-dimensional relations. This produces a **relation tensor**.
@@ -85,7 +86,8 @@ With the above clarification, we hope that you will be able to better-understand
 5. The **relational convolution** operation returns a sequence of new "objects" (i.e., a sequence of vectors), with each object now representing the relational pattern within a group of input objects. This enables the overall operation to be repeated in order to *learn representations of higher-order relations*.
 
 
-The main emphasis of our work is to design a **a natural, flexible, and compositional architecture for learning hierarchical relations**. This has **so far been unexplored in the literature**. In particular, relational architectures have so far been "flat", limiting their ability to learn iteratively more complex relational representations. Thus, our work forms an important contribution to the literature, addressing a central problem (learning hierarchical relations through a compositional architecture) which has so far been unaddressed.
+The main emphasis of our work is to design a **a natural, flexible, and compositional architecture for learning hierarchical relations**. This has **so far been unexplored in the literature**. In particular, relational architectures explored in previous work have been "flat", limiting their ability to learn iteratively more complex relational representations. Representing complex higher-order relations is necessary for many real-world tasks; it is an ability which humans possess but existing machine learning architectures lack. Thus, our work forms an important contribution to the literature, addressing a central problem (learning hierarchical relations through a compositional architecture) which has so far been unaddressed.
+
 
 <!-- [5/n] -->
 ## Clarification about question on notation in Eq (2)
@@ -100,7 +102,7 @@ $r(x, y)$ is a $d_r$-dimensional vector describing the relation between object $
 ## On representing multi-way relations
 > pairwise relations are not very rich. Don't think that your relational sub-tensors can represent 3-way relations
 
-Indeed, pairwise relations are limited. **Our proposed method can in fact naturally represent multi-way relations between several objects.** This is achieved by our proposal of relational convolutions (and group attention). This ability to represent multi-way (and higher-order) relations is a key contribution of our work over the existing literature.
+Indeed, pairwise relations are limited. Our proposed method **can** in fact naturally represent multi-way relations between several objects. This is achieved by our proposal of relational convolutions (and group attention). **This ability to represent multi-way (and higher-order) relations is a key contribution of our work over the existing literature.**
 
 To see how relational convolutions can represent multi-way relations, consider the following example based the *SET!* experiments which rely on this type of higher-order relations. Recall that we observe in our experiments that our model is the only one which was able to learn the task, where other relational architectures previously proposed in the literature where completely unable to learn in a way that generalizes. This validates the need for architectures which explicitly learn representations of higher-order relations, such as relational convolutional networks.
 
