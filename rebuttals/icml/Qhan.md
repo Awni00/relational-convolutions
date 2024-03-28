@@ -1,16 +1,18 @@
 # Reviewer 2 (Qhan)
 
-Thank you for your review and for engaging with our work. We are glad you found our proposal innovative and hope you got something out of it. We hope to address your concerns below and look forward to further discussion!
+Thank you for your review and for engaging with our work. We are glad you found our proposal "innovative" and found the formalism of graphlet filters and relational convolutions to be "a clear and structured approach to modeling relational patterns and capturing higher-order relations". We really appreciate your positive feedback.
+
+We also appreciate your questions and constructive criticism. Below, we aim to address your concerns and look forward to further discussion.
 
 ## Expanded discussion on inductive bias and advantage over GNNs and Transformers
 
 > Could the authors provide a more concise formal discussion regarding the enhanced capacity or improved generalizability over transformer or GNN architectures? Specifically, how do relational convolutional networks represent hierarchical relations more efficiently compared to transformers?
 
-Thank you for the question and the suggestion. We agree that this would significantly strengthen the paper. Accordingly, with the additional page allowed for the final submission, **we will add a discussion section that specifically addresses how our model relates to GNNs/Transformers and what advantages it has over these models**.
+We agree that an expanded discussion about the advantages of the proposed method over GNNs would be an important addition to strengthen the paper. The current 8-page version of the manuscript contains a short discussion of this (related work section (L078-097) and the experiments section (L404-433)). **We will expand upon this discussion in the final version of the paper**, taking advantage of the additional page allowance.
 
-Indeed, the connection to and advantages over GNNs and Transformers is interesting because GNNs are usually described as "relational" models. However, as we explain below, they operate in a different domain where the "relations" are assumed to be received as input to the model in the form of a graph. By contrast, our model (and the line of work we build on) must *infer* the task-relevant relations and learn relational representations in an end-to-end fashion.
+Exploring the connection to and advantages over GNNs and Transformers is important because GNNs are usually described as "relational" models. However, as we will explain below, GNNs operate in a different domain where the "relations" are assumed to be received as input to the model in the form of a graph. Unlike GNNs and Transformers, which operate on pre-defined graph structures, our model infers task-relevant relations and learns relational representations in an end-to-end fashion.
 
-Below, we provide a draft of the discussion which will be added to the paper.
+Below, we provide a draft of the discussion which will be incorporated into the final version of the paper.
 
 ---
 
@@ -28,16 +30,19 @@ We hope that you find this discussion interesting. We thank you again for the qu
 
 ## Discussion on *real-world* applications
 
+> Weakness Lack of Real-World Applications: While the paper demonstrates the effectiveness of relational convolutional networks in capturing hierarchical relations on relational games, it lacks exploration or discussion of potential real-world applications beyond synthetic games.
+
 > Can you elaborate on potential real-world applications or scenarios where relational convolutional networks could be applied beyond the experimental tasks considered in the paper?
 
-We agree about the importance of this question. In the current version of the paper, **we discussed real-world applications in Appendix C**. This discussion needed to be relegated to the appendix in the initial version of the paper due to space constraints. The final submission allows an additional page, which will allow us to **add a discussion of real-world applications in the main text**. Please find a draft of the discussion to be added below.
+We agree that the lack of discussion or exploration of potential real-world applications is a limitation of our work. We would like to highlight Appendix C in the paper which discusses potential real-world applications involving higher-order relational tasks which can be pursued by future work.
+
+We would like to take this opportunity to provide a brief discussion on these ideas. We would be happy to incorporate a version of this discussion into the main text of the paper using the additional space allowed in the final version.
 
 ---
 
 While the experiments in this paper are primarily synthetic, allowing for a more controlled evaluation of the proposed architecture, there exist several important real-world tasks where relational convolutional networks could be applied.
 
-One example is *computer vision and visual scene understanding*. In any naturalistic visual scene, there are typically several objects and the spatial, visual, and semantic relations between them are crucial for parsing the scene. The CLEVR benchmark on visual scene understanding [1] was used in early work on relational representation [2]. In more complex situations, the objects in the scene may fall into natural groupings, and the spatial, visual, and semantic relations between those groups may
-be important for parsing a scene (e.g., objects forming larger components with functional dependence determined by the relations between them). Integrating relational convolutions into a visual scene understanding system may enable reasoning about such higher-order relations. An important task that is related but orthogonal to relational processing is "object discovery". A promising direction of future work would be to explore how object-discovery methods such as Slot Attention [3] can be incorporated with relational processing modules such as relational convolutional networks.
+One example is *computer vision and visual scene understanding*. In any naturalistic visual scene, there are typically several objects and the spatial, visual, and semantic relations between them are crucial for parsing the scene. The CLEVR benchmark on visual scene understanding [1] was used in early work on relational representation [2]. In more complex situations, the objects in the scene may fall into natural groupings, and the spatial, visual, and semantic relations between those groups may be important for parsing a scene (e.g., objects forming larger components with functional dependence determined by the relations between them). Integrating relational convolutions into a visual scene understanding system may enable reasoning about such higher-order relations. An important task that is related but orthogonal to relational processing is "object discovery". A promising direction of future work would be to explore how object-discovery methods such as Slot Attention [3] can be incorporated with relational processing modules such as relational convolutional networks.
 
 Another example is *sequence modeling* (e.g., *language modeling*). Modeling the relations between objects is usually essential for many sequence modeling tasks. For example, syntactic and semantic relations between words are crucial to parsing language. Higher-order relations are also important, capturing syntactic and semantic relational features across different locations in the text and multiple length-scales and layers of hierarchy. See for example some relevant work in linguistics [4,5]. The attention matrix in Transformers can be thought of as implicitly representing relations between tokens. It is possible that composing Transformer layers also learns hierarchical relations. However, as shown in this work and previous work on relational representation, Transformers have limited efficiency in representing relations. Thus, incorporating relational convolutions into Transformer-based sequence models may yield meaningful improvements in the relational aspects of sequence modeling. One way to do this is by cross-attending to the sequence of relational objects produced by relational convolutions, each of which summarizes the relations within a group of objects at some level of hierarchy.
 
