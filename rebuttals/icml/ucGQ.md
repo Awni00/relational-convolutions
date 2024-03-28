@@ -47,7 +47,7 @@ We agree that this is a limitation of our work that should be addressed in futur
 
 In case you missed it, we would like to draw your attention to Appendix C in the paper which discusses some ideas on real-world higher-order relational tasks which can be pursued by future work.
 
-We would like to take this opportunity to provide a brief discussion on these ideas. While this does not resolve this limitation of our work, we hope that it makes for some interesting discussion. We would be happy to incorporate a version of this discussion into the main text of the paper with additional space allowed in the final version.
+We would like to take this opportunity to provide a brief discussion on these ideas. While this does not resolve this limitation of our work, we hope that it makes for some interesting discussion. We would be happy to incorporate a version of this discussion into the main text of the paper with the additional space allowed in the final version.
 
 ---
 While the experiments in this paper are primarily synthetic, allowing for a more controlled evaluation of the proposed architecture, there exist several important real-world tasks where relational convolutional networks could be applied.
