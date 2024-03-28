@@ -1,24 +1,24 @@
 # Reviewer 4 (wwyA)
 
-Thank you for your review. We appreciate your positive feedback on the clarity of our writing and the strength of our experimental results. However, there seems to be a misunderstanding regarding our proposed architecture that we would like to clarify.
+Thank you for your review. We appreciate your positive feedback on the clarity of our writing and the strength of our experimental results. However, there seems to be a crucial misunderstanding regarding our proposed architecture that we would like to clarify.
 
 We would like to address an important misunderstanding regarding our proposed architecture. In your review, you describe our proposal as:
 >pairwise relation for the input is the "attention matrix", the paper then uses convolution network on top of the attention matrix.
 
-You cite this as a limitation to the novelty of our work (weakness 1). *This is **not** our proposed architecture*. Our proposed method does not use spatial 2D convolutions. Rather, we propose a *novel* convolution-like operation which we call "relational convolutions". This is distinct from the spatial convolutions of CNNs, despite the resemblance in name.
+You cite this as a limitation to the novelty of our work (weakness 1). *This is **not** the architecture we propose*. Our proposed method does not use spatial 2D convolutions. Rather, we propose a *novel* convolution-like operation which we call "relational convolutions". This is distinct from the spatial convolutions of CNNs, despite the similarity in name.
 
 In addition, the statement about the computational complexity of our method (weakness 2) is also incorrect (perhaps as a result of this misunderstanding):
 >I assume the total complexity is at least O(n^3) (n is input number), cannot scale.
 
 We would like to clarify that the computational complexity scales linearly with the number of inputs, as explained in Section 3.2 of the paper.
 
-We will explain both of these points in detail below. We aim to clarify any confusion and provide an overview of our proposed method, highlighting its novelty and distinguishing features from traditional spatial convolutions.
+We will explain both of these points in detail below. We aim to clarify any confusion and provide an overview of our proposed method, highlighting its novelty and distinguishing features.
 
 ## Understanding the relational convolutions architecture: correcting some misunderstandings
 
 > Novelty is limited and some part is confusion. pairwise relation for the input is the "attention matrix", the paper then uses convolution network on top of the attention matrix. why choose convolution on this level of reasoning? the inductive bias for convolution is locality. however, there is no this type of this attributes on pairwise relation obtained by MD-IPR layer in the model.
 
-**Our proposed architecture is *not* to apply a convolutional network on top of the attention matrix**. As you mention, the inductive bias for CNNs is spatial locality, which does not make sense as a way to process the relation tensor produced by the MD-IPR layer. **The "relational convolution" operation is in fact a novel operation we propose which is distinct from the spatial convolution operation in CNNs**. In particular, **in relational convolutions, the convolution is with respect to *groups*, not spatial translations as in the 2D spatial convolutions of CNNs.**
+**Our proposed architecture does *not* involve applying a convolutional network on top of the attention matrix**. As you mention, the inductive bias for CNNs is spatial locality, which does not make sense as a way to process the relation tensor produced by the MD-IPR layer. **The "relational convolution" operation is a novel operation we propose which is distinct from the spatial convolution operation in CNNs**. In particular, **in relational convolutions, the convolution is with respect to *groups*, not spatial translations as in the 2D spatial convolutions of CNNs.**
 
 We will explain the proposed architecture below in more detail and emphasize how it differs from the spatial convolutions of CNNs.
 
@@ -26,9 +26,9 @@ We will explain the proposed architecture below in more detail and emphasize how
 
 First, we summarize the architecture at a high level.
 
-1. Pairwise relations between object features are computed using the multi-dimensional inner product relations (MD-IPR) module. This is done by learning feature maps which extract or 'filter' attributes to be compared by an inner product. Multi-dimensional relations are enabled by multiple such feature maps. This produces a **relation tensor**.
+1. Pairwise relations between object features are computed using the multi-dimensional inner product relations (MD-IPR) module. This is achieved by learning feature maps that extract or 'filter' attributes for comparison through an inner product. Multiple feature maps enable the consideration of multi-dimensional relations. This produces a **relation tensor**.
 2. A set of **graphlet filters** are learned which represent a template of the relational pattern within a group of objects. This template is matched against patches of the relation tensor through a novel **relational convolution** operation. This operation computes a *representation of the relational pattern in each group of objects*.
-3. We propose an attention-based operation, which we call **"group attention"**, to *learn the relevant groupings end-to-end*. Group attention retrieves the relevant objects for each group *differentiably*. This avoids needing to consider a combinatorial number of groups when computing the relational convolution and is one of the key technical challenges we address.
+3. We propose an attention-based operation, which we call **"group attention"**, to *learn the relevant groupings end-to-end*. Group attention retrieves the relevant objects for each group *differentiably*. This approach alleviates the need to consider a combinatorial number of groups during the computation of the relational convolution, addressing a key technical challenge.
 4. The **relational convolution** operation returns a sequence of new "objects" (i.e., a sequence of vectors), with each object now representing the relational pattern within a group of input objects. This enables the overall operation to be repeated in order to *learn representations of higher-order relations*.
 
 With this high-level overview, we now describe the relational convolution operation in more technical detail. We will draw the contrast to standard spatial convolutions for both relational convolutions with discrete groups (Section 3.1) and relational convolutions with group attention (Section 3.2).
@@ -39,45 +39,45 @@ In this case, we consider a setting where a collection of discrete groups $\math
 
 We learn $n_f$ different graphlet filters, each of size $s \times s \times d_r$, where $s$ is the size of the graphlet (number of objects in each group). These act as templates of the relational pattern in a group of objects. $n_f$ and $s$ are both hyperparameters.
 
-**The relational convolution operation compares the pairwise relations within groups of $s$ objects against the graphlet filters**. Given a group $g \subset [n]$ of $s$ objects, the pairwise relations within this group are given by the relation subtensor $R[g] := [R[i,j]]_{i,j \in g}$. The relation subtensor is compared against the graphlet filters $\bm{f} = (f_1, \ldots, f_{n_f}) \in \reals^{n_f \times s \times s \times d_r}$ to produce an $n_f$-dimensional vector summarizing the relational pattern in group $g$ (see Eqs 3,4 in main text).
+**The relational convolution operation compares the pairwise relations within groups of $s$ objects against the graphlet filters**. For a group $g \subset [n]$ of $s$ objects, the pairwise relations within this group are given by the relation subtensor $R[g] := [R[i,j]]_{i,j \in g}$. The relation subtensor is compared against the graphlet filters $\bm{f} = (f_1, \ldots, f_{n_f}) \in \reals^{n_f \times s \times s \times d_r}$ to produce an $n_f$-dimensional vector summarizing the relational pattern in group $g$ (see Eqs 3,4 in main text).
 
 The graphlet filters are convolved *across groups* $g \in \mathcal{G}$ to produce a sequence of $|\mathcal{G}|$ objects as follows,
 $$R * \bm{f} := (\langle R[g], \bm{f}\rangle_{\mathrm{rel}})_{g \in \mathcal{G}}$$
 
-**In a relational convolution operation, the convolution is across *groups*, not spatial translations as in the 2D convolutions of CNNs.** In particular, $\bm{f}$ is matched against the groups in $\mathcal{G}$, whereas in a 2D Convolution, $\bm{f}$ would be matched against *contiguous* patches of the relation tensor (e.g., $[0:s], [1:s+1], [2:s+2], ..., [n-s:n]$, etc.). As you point out, this would not make sense in the context of relational processing. **To emphasize this contrast to the reader and highlight the novelty of our approach, we will add a brief discussion to the paper explaining the difference between relational convolutions and spatial convolutions.**
+**In a relational convolution operation, the convolution is performed across *groups*, rather than spatial translations as in the 2D convolutions of CNNs.** In particular, $\bm{f}$ is matched against the groups in $\mathcal{G}$, whereas in a 2D Convolution, $\bm{f}$ would be matched against *contiguous* patches of the relation tensor (e.g., $[0:s], [1:s+1], [2:s+2], ..., [n-s:n]$, etc.). As you point out, this would not make sense in the context of relational processing. **To emphasize this contrast to the reader and highlight the novelty of our approach, we will add a brief discussion to the paper explaining the difference between relational convolutions and spatial convolutions.**
 
 ### Relational Convolutions with Group Attention
 
-In some situations, the set of task-relevant discrete groups may not be available and considering all possible groups may be impractical. To address this setting, we propose a variant of relational convolutions where groups are learned and represented differentiably via an attention operation. This is one of the major contributions of our work. The contrast with spatial convolutions is the same.
+In some situations, the set of task-relevant discrete groups may not be available and considering all possible groups may be impractical. To address this setting, we propose a variant of relational convolutions in which groups are learned and represented differentiably via an attention operation. This is a key technical challenge addressed by our work.
 
 Below, we will summarize the methodology. Please see section 3.2 of the paper for the complete technical description.
 
-1. First, for each of $n_g$ groups ($n_g$ a hyperparameter) we retrieve $s$ objects from the collection of $n$ objects. We denote these objects by $\bar{x}_i^g$, where $g \in [n_g], i \in [s]$. (See Eq 7)
+1. First, for each of $n_g$ groups (with $n_g$ being a hyperparameter) we retrieve $s$ objects from the collection of $n$ objects. We denote these objects by $\bar{x}_i^g$, where $g \in [n_g], i \in [s]$. (See Eq 7)
 2. Next, we compute the relation tensor for each group $g \in [n_g]$ using a shared MD-IPR layer producing $\bar{R}[g] \in \reals^{s \times s \times d_r}$. (See Eq 8)
-3. For each group $g$, $\bar{R}[g]$ is compared against the graphlet filters $\bm{f}$ producing the relational convolution $\bar{R} * \bm{f}$, which consists of a sequence of $n_g$ vectors, summarizing the relational pattern within each learned group. (See Eq 9)
+3. For each group $g$, $\bar{R}[g]$ is compared against the graphlet filters $\bm{f}$ producing the relational convolution $\bar{R} * \bm{f}$, which consists of a sequence of $n_g$ vectors, each summarizing the relational pattern within a learned group. (See Eq 9)
 
-**This bears little resemblance to spatial convolutions and introduces several architectural innovations.**
+**This is entirely distinct from spatial convolutions and introduces several architectural innovations.**
 
 Does this clarify your confusion about the proposed architecture and the contrast to spatial convolutions? Please let us know if you have further questions. We look forward to your response.
 
 <!-- should we omit this section? it's a less important distinction and may be lost on the reviewer... -->
-### MD-IPR vs Attention Scores
+<!-- ### MD-IPR vs Attention Scores -->
 
-Finally, a minor comment about multi-dimensional inner product relations vs attention scores. Indeed, the MD-IPR layer bears a resemblance to the attention matrix of Transformers. A couple of clarifications are in order. This is not an "attention" matrix because it is not used to "retrieve" anything (i.e., in a Transformer, attention computes a convex combination of objects in the sequence weighted by the attention scores). That is, the attention matrix is an intermediate step used to direct the flow of object-level features. In MD-IPR, the relation tensor is the *final output* of the MD-IPR layer and is used directly as a representation of the relations. Related to this, the relation tensor is not normalized via a softmax as in attention.
+<!-- Finally, a minor comment about multi-dimensional inner product relations vs attention scores. Indeed, the MD-IPR layer bears a resemblance to the attention matrix of Transformers. A couple of clarifications are in order. This is not an "attention" matrix because it is not used in a "retrieval" operation (i.e., in a Transformer, attention computes a convex combination of objects in the sequence weighted by the attention scores). That is, in Transformers, the attention matrix is an intermediate step used to direct the flow of object-level features. In MD-IPR, the relation tensor is the *final output* of the MD-IPR layer and is used directly as a representation of the relations. Related to this, the relation tensor is not normalized via a softmax as in attention. -->
 
 ## Computational Efficiency & Scalability
 > The algorithm uses convolution network on top of the attention matrix, which is very slow. I assume the total complexity is at least O(n^3) (n is input number), cannot scale.
 
 As explained above, our architecture is not to "use [a] convolutional network on top of the attention matrix" and hence **the conclusion about computational complexity and scalability in the review is incorrect** (weakness 2). We discuss computational complexity at the end of Section 3.2 of the paper. The **computational complexity is in fact linear in $n$**, the number of objects in the input.
 
-The overall computational complexity of one layer in a relational convolutional network only scales linearly with the number of objects in the input. **In section 3.2, we discuss the computational complexity of each step in the relational convolution layer**. In particular, the group attention operation (Eq 7) has complexity $O(n \cdot n_g \cdot s \cdot d)$, where $n$ is the number of objects in the input. Computing the relation tensors for each group $\bar{R}[g]$ (Eq 8) has complexity $O(n_g \cdot s^2 \cdot d_r \cdot d_{\mathrm{proj}})$. Finally, the complexity of computing the relational convolution (Eq 9) is $O(n_g \cdot s^2 \cdot d_r \cdot n_f)$, where $n_f$ is the number of graphlet filters (also a hyperparameter). Note that *all of these operations can be computed in parallel independently* using well-optimized GPU operations. Moreover, note that the first operation (group attention) scales only linearly with input size, and the latter two scale only with the model size (i.e., hyperparameters) and not the size of the input.
+The overall computational complexity of one layer in a relational convolutional network scales *linearly* with the number of objects in the input. **Section 3.2 (L215-242) in the paper discusses the computational complexity of each step in the relational convolution layer**. In particular, the group attention operation (Eq 7) has complexity $O(n \cdot n_g \cdot s \cdot d)$, where $n$ is the number of objects in the input. Computing the relation tensors for each group $\bar{R}[g]$ (Eq 8) has complexity $O(n_g \cdot s^2 \cdot d_r \cdot d_{\mathrm{proj}})$. Finally, the complexity of computing the relational convolution (Eq 9) is $O(n_g \cdot s^2 \cdot d_r \cdot n_f)$, where $n_f$ is the number of graphlet filters (also a hyperparameter). Note that *all of these operations can be computed in parallel independently* using well-optimized GPU operations. Moreover, note that the first operation (group attention) scales only linearly with input size, and the latter two scale only with the model size (i.e., hyperparameters) and not the size of the input.
 
 
 ----
-
+<!-- reviewer does not ask about this. should we include it? not sure what kind of person we're dealing with here. if a long rebuttal would dissuade them from reading, we should probably not include this... it may also mask emphasis on the factual errors in the review. -->
 ## Contrast to GNNs
 
-We would like to mention an addition we've made to the paper which we believe strengthens it. An interesting facet of our proposed architecture is the **connection to graph neural networks and the advantages our approach has over GNNs for relational representation learning**. Although the current 8-page version of the manuscript contains some discussion of this, with the additional page allowance **we will expand upon this discussion in the final version**. This discussion is somewhat related to your concerns about the difference from spatial convolutions. Below is a draft of the discussion which we will add to the paper.
+Finally, we would like to mention an addition we've made to the paper which we believe strengthens it. An interesting facet of our proposed architecture is the **connection to graph neural networks and the advantages our approach has over GNNs for relational representation learning**. Although the current 8-page version of the manuscript contains some discussion of this, with the additional page allowance **we will expand upon this discussion in the final version**. This discussion is somewhat related to your concerns about the difference from spatial convolutions. Below is a draft of the discussion which we will add to the paper.
 
 ---
 
