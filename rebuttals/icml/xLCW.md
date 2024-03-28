@@ -2,32 +2,18 @@
 
 <!-- [1 / n]: CONFUSION ON TERMINOLOGY, SETTING, & EXISTING LITERATURE -->
 
-<!-- TODO: should we mention (more politely) that: the vast majority of the review is rambling about what they think "object" and "relations" should mean, without ever mentioning the technical contents of the paper -->
-<!-- TODO: mention even more papers that use the same terminology of "objects" and "relations" -->
-<!-- Should we write our rebuttal with the AC in mind, to try to demonstrate that this reviewer is unqualified? or should we try to reason with the reviewer? not sure if the latter is possible, but also don't know if the AC will take this into account -->
+Thank you for your review. This review centers around confusion on two basic terms used in our paper and the associated literature: "object" and "relation". *We kindly emphasize that this terminology is standard in this line of work* (e.g., see the following key works [1,2,3,4,5]). We believe this review lacks the basic understanding of the setting of this line of work which would be necessary to provide an informative evaluation. Unfortunately, this confusion has resulted in several fundamental inaccuracies and mischaracterizations, such as the assertion that our work is related to tabular data, which is incorrect. Furthermore, the review lacks a discussion of the technical content of our paper, such as the proposed methodology and experimental results.
 
-## Clarifying confusion on terminology, the setting, and existing literature
+We understand that reviewers have varying backgrounds and levels of expertise in different areas of research. We also understand that if the reviewer did not have an understanding of the basic setting they would be unable to evaluate the technical content. We will aim to constructively engage with the reviewer to help them understand this line of work better. To address these issues, our rebuttal will be structured as follows:
+1. Clarification on the terminology used in this line of work
+2. An introductory overview of existing methods in this literature
+3. A summary and reminder of the proposed methodology and contributions of this paper
 
-Thank you for your review and your questions. We believe your concerns and confusion arise from a lack of familiarity with this specific area of research. In particular, there is confusion regarding basic terminology ("What do you assume an object is? What is a relationship?"). In fact, this terminology is standard in this line of work as we explain below.
-
-For example, you talk about "Earth, cups or conferences, maybe all of the marriages" as objects in the first paragraph; and you refer to tabular datasets in the final paragraph "So it look just like a regular tabular dataset that we learned about in our first ML course".
-
-This reflects some basic misunderstanding of the *setting* of our work which hinders evaluating our contributions and proposed methods. We are grateful for your willingness to engage in discussion with us to better-understand the setting, existing literature, and our proposed method.
-
-> Pleas convince me that I am wrong because I think I am missing something.
-
-We greatly appreciate your honesty and your willingness to engage in discussion. Below, we will clarify terminology, review the literature to help you understand the setting and existing work, and then summarize our contributions in this paper. We hope to clarify your confusion and address your concerns below in turn.
-
-
-## Terminology & Existing Literature
-
-- Our work builds on a line of work on "relational architectures" and "relational representation" [1,2,3,4, 5]. This is all cited in the introduction to our paper.
-- **Our use of the terms "object" and "relation" is standard in this literature.** (e.g., see the references below.)
-- **Our setting matches this existing literature** (i.e., the kinds of problems we are tackling). The data format and the nature of the tasks we tackle is the same as this literature.
-
-Although you may be unfamiliar with this literature, we hope that we will be able to provide you with some of the background necessary to understand our work and provide an evaluation.
+We hope this will clarify the reviewer's confusion about the basic setting and enable them to engage more meaningfully with our work. We remain open to further discussions and clarifications.
 
 ---
+References:
+
 [1] Santoro, et al. "A simple neural network module for relational reasoning." NeurIPS 2017
 
 [2] Shanahan, et al. "An explicitly relational neural network architecture." ICML 2020
@@ -40,13 +26,27 @@ Although you may be unfamiliar with this literature, we hope that we will be abl
 
 ---
 
+## Clarifying confusion around the basic terminology
+
+As explained above, the majority of the text of the review centers around confusion on the terms "object" and "relation". For example, the opening reads,
+> I think of a list of all of the people on Earth, cups or conferences, maybe all of the marriages. (Are people, cups, conferences or marriages objects? If not, then what are objects?) You seem to only input a list the objects; so I presume we just give a unique number to each person. That can't be correct, as you need properties of the objects, but there are no relations input (e.g, which company made the cup)
+
+Since we do not understand the text of your review (it does not seem to be related to the setting we tackle), we will aim to provide a general introductory overview of this line of work.
+
+As explained above, these terms are standard in the literature [1-5]. Moreover, the experiments in our paper give concrete examples of the types of problems being tackled by this area of research. We note that this literature is cited and discussed in the paper. The setting of our work matches this literature. That is, the data format and the nature of the tasks we tackle are the same. This line of work tackles problems in which a machine learning model must reason about a collection of objects, inferring relations between them in order to perform the task.
+
+We invite the reviewer to look at the related literature to gain an improved understanding of this setting. For example, [1] applies their proposed method to reasoning about visual features of objects in a scene. [2] proposes the "relational games" suite of benchmark tasks, which we also use to evaluate our methods in this paper. [3] focuses on visual relational reasoning tasks based on cognitive tests. [4] tests their proposal on the benchmarks used in [2] and [3]. [5] tests their proposal on sequence modeling tasks such as "object-sorting" and mathematical problem-solving.
+
+"Relational reasoning" is a central component of generally intelligent behavior and has applications in a wide range of tasks.
+
+In the next section, we will explain the terminology of "object" and "relation" from the perspective of its representation in a neural architecture.
+
 <!-- [2 /n] DEFINING TERMINOLOGY AND EXAMPLES -->
-## Defining terminology ("objects" & "relations") & some examples
-Now, we give intuitive definitions of the terms "object" and "relation" as they are used in this literature, and go through some examples.
+## Explaining terminology ("objects" & "relations") & some examples
 
-**Defining terminology in this literature**. An "object" is a vector representation of the features of an entity. A (pairwise) "relation" is a mapping from a pair of objects to a representation of the relations between their features. A relational model receives as input a collection of objects, and must reason about the relations between them in order to perform a task.
+**Defining terminology in this literature**. An "object" is a vector representation of the features of an entity that the model must reason about in relation to other entities. A (pairwise) "relation" is a mapping from a pair of objects to a representation of the relations between their features. A relational model receives as input a collection of objects, and must reason about the relations between them in order to perform a task.
 
-**Example 1 (Relational Games).** Consider the "relational games" task in the first set of experiments (Section 4.1). Here, the model must reason about the relations between the visual attributes of different objects in a visual scene. In particular, the scene is presented as a 3x3 grid of objects. In this setting, each cell in the grid is an "object" and each object is represented by an RGB image. Thus, the input to the model is a sequence of 9 images (the objects).
+**Example 1 (Relational Games).** Consider the "relational games" task in the first set of experiments (Section 4.1). Recall that this suite of benchmark tasks is used in [2,4] as well. In these tasks, the model must reason about the relations between the visual attributes of different objects in a visual scene. In particular, the scene is presented as a 3x3 grid of objects. In this setting, each cell in the grid is an "object" and each object is represented by an RGB image. Thus, the input to the model is a sequence of 9 images (the objects).
 
 Note that each object varies across several feature attributes. In particular, their shape and color. Thus, in this example, a relation between two objects may be a mapping for the pair of images to a vector representing similarity across each of these attributes. The task is to learn to infer and represent these relations, then reason about these relations to perform the classification task.
 
@@ -108,7 +108,7 @@ To see how relational convolutions can represent multi-way relations, consider t
 
 <!-- Reviewer doesn't ask about this; they may not be able to understand it. we can skip it for this reviewer?  -->
 <!-- [7/n] -->
-## Addition of discussion about connection to GNNs/Transformers
+<!-- ## Addition of discussion about connection to GNNs/Transformers
 
 An interesting facet of our work (as well as the line of work it is a part of) is how it relates to graph neural networks---another kind of "relational" model. With the additional page allowance, **we will add an expanded discussion of this connection in the final version**. Below is a draft of the discussion which we will add to the paper.
 
@@ -135,16 +135,15 @@ By contrast, in relational convolutional networks, relations are at the center o
 
 ---
 
-We hope that you find this discussion interesting. We believe this addition meaningfully improves our work (particularly for readers less familiar with the literature).
+We hope that you find this discussion interesting. We believe this addition meaningfully improves our work (particularly for readers less familiar with the literature). -->
 
 <!-- [8/n] -->
 ## Final remarks
-We hope that the clarification above has helped you understand our work and the setting in which it operates. Your initial review reflects some fundamental misunderstandings of our work and the literature it is a part of. We hope that the clarification above provides you with enough background and context to evaluate our work with the appropriate understanding. Please let us know if you have any further questions or comments. We look forward to hearing back from you.
-
+We hope that the clarification above has helped you understand our work and the setting in which it operates. Your initial review reflects some fundamental misunderstandings of our work and the literature it is a part of. We hope that the clarification above provides you with enough background and context to engage with our work with the appropriate understanding. Please let us know if you have any further questions or comments. We look forward to hearing back from you.
 
 ---
 <!-- IGNORE THE BELOW FOR NOW, CAN DISCUSS LATER IF NECESSARY -->
 <!-- [?/n] COMMENT ABOUT OBJECT-CENTRIC REPRESENTATIONS AS INPUT -->
-[Our proposed module receives object-centric representations as input. In some applications (e.g., image processing), object-centric representations may not be immediately available and would need to be generated by some other module within the network. There exists a long line of work tackling this exact problem. For example, Slot Attention [CITE], Complex Autoencoders [CITE], etc...]
+<!-- [Our proposed module receives object-centric representations as input. In some applications (e.g., image processing), object-centric representations may not be immediately available and would need to be generated by some other module within the network. There exists a long line of work tackling this exact problem. For example, Slot Attention [CITE], Complex Autoencoders [CITE], etc...]
 
-Related but orthogonal problem.
+Related but orthogonal problem. -->
