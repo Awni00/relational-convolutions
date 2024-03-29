@@ -45,9 +45,9 @@ In the next section, we will explain the terminology of "object" and "relation" 
 <!-- [2 /n] DEFINING TERMINOLOGY AND EXAMPLES -->
 ## 1 [cont'd]: Explaining terminology ("objects" & "relations") & some examples
 
-**Defining terminology in this literature**. An "object" is a vector representation of the features of an entity that the model must reason about in relation to other entities. A (pairwise) "relation" is a mapping from a pair of objects to a representation of the relations between their features. A relational model receives as input a collection of objects, and must reason about the relations between them in order to perform a task.
+**Defining terminology in this literature**. An "object" is a vector representation of the features of an entity that the model must reason about in relation to other entities. A "relation" is a mapping from a pair of objects to a representation of the relations between their features. A relational model receives as input a collection of objects, and must reason about the relations between them in order to perform a task.
 
-**Example 1 (Relational Games).** Consider the "relational games" task in the first set of experiments (Section 4.1). Recall that this suite of benchmark tasks is used in [2,4] as well. In these tasks, the model must reason about the relations between the visual attributes of different objects in a visual scene. In particular, the scene is presented as a 3x3 grid of objects. In this setting, each cell in the grid is an "object" and each object is represented by an RGB image. Thus, the input to the model is a sequence of 9 images (the objects).
+**Example 1 (Relational Games).** Consider the "relational games" task in the first set of experiments (Section 4.1). In these tasks, the model must reason about the relations between the visual attributes of different objects in a visual scene. In particular, the scene is presented as a 3x3 grid of objects. In this setting, each cell in the grid is an "object" and each object is represented by an RGB image. Thus, the input to the model is a sequence of 9 images (the objects).
 
 Note that each object varies across several feature attributes. In particular, their shape and color. Thus, in this example, a relation between two objects may be a mapping for the pair of images to a vector representing similarity across each of these attributes. The task is to learn to infer and represent these relations, then reason about these relations to perform the classification task.
 
@@ -62,7 +62,7 @@ Note that each object varies across several feature attributes. In particular, t
 
 In hopes of further explaining the setting addressed by our work and the context of our work within the literature, we will briefly describe the methods proposed in two related works. We hope that providing examples of methodologies proposed for this setting in addition to our own will help explain the setting.
 
-[1] proposes the Relation Network (RN) module. The module receives as input a set of objects $X = (x_1, \ldots, x_n) \in \reals^{n \times d}$ where each $x_i \in \reals^d$ is an object whose features are represented as a vector. The module returns a processed vector which summarizes the relations between the objects as follows,
+[1] proposes the Relation Network (RN) module. The module receives as input a set of objects $X = (x_1, \ldots, x_n) \in \mathbb{R}^{n \times d}$ where each $x_i \in \mathbb{R}^d$ is an object whose features are represented as a vector. The module returns a processed vector which summarizes the relations between the objects as follows,
 $$ \mathrm{RN}(X) = f(\sum_{i,j} g([x_i, x_j])),$$
 where $g$ is an MLP, $[x_i, x_j]$ is the concatenation of the two vectors, and $f$ is another MLP. $g$ is intended to compute pairwise relations and $f$ processes the sum-aggregation of the pairwise relations to produce an output.
 
@@ -77,7 +77,7 @@ $$\mathrm{CoRelNet}(X) = \mathrm{MLP}(\mathrm{Flatten}(A)), \ A = \mathrm{Softma
 <!-- [4/n] Summary of our proposed method and contributions -->
 ## 3: Summary of our proposed method and contributions
 
-With the above clarification, we hope that you will be able to better-understand our proposed method and contributions. We will now summarize our proposed method, then explain its significance. We defer technical details to the main text of the paper. We invite you to ask any questions if further clarification is needed.
+With the above clarification, we hope that you will be able to better-understand our proposed method and contributions. We will now summarize our proposed method, then explain its significance.
 
 1. The input to the model is a collection or sequence of "objects". Each object's features are represented by a vector.
 2. Pairwise relations between object features are computed using the multi-dimensional inner product relations (MD-IPR) module. This is achieved by learning feature maps that extract or 'filter' attributes for comparison through an inner product. Multiple feature maps enable the consideration of multi-dimensional relations. This produces a **relation tensor**.
@@ -96,17 +96,17 @@ Hopefully, you now have a better understanding of our work, the setting in which
 
 > What does the notation of equation (2) mean? I think you want r(x,y)[k] = ... (i.e., the kth element of the vector).
 
-$r(x, y)$ is a $d_r$-dimensional vector describing the relation between object $x$ and object $y$. If you're unfamiliar, the notation $[m]$ means $\{1, 2, \ldots, m\}$. Thus, the $k$-th element of the vector $r(x, y)$ (where $k \in [d_r]$) is given by $\langle W_1^{(k)} \phi(x), W_2^{(k)} \phi(y) \rangle$. The notation $( \cdot )_{k \in [d_r]}$ of course means the vector of elements in the parentheses where $k$ ranges from $1$ to $d_r$.
+$r(x, y)$ is a $d_r$-dimensional vector describing the relation between object $x$ and object $y$. If you're unfamiliar, the notation $[m]$ means $\{1, 2, \ldots, m\}$. Thus, the $k$-th element of the vector $r(x, y)$ (where $k \in [d_r]$) is given by $\langle W_1^{(k)} \phi(x), W_2^{(k)} \phi(y) \rangle$.
 
 <!-- [6/n] representing multi-way relations -->
 ## On representing multi-way relations
 > pairwise relations are not very rich. Don't think that your relational sub-tensors can represent 3-way relations
 
-Indeed, pairwise relations are limited. Our proposed method **can** in fact naturally represent multi-way relations between several objects. This is achieved by our proposal of relational convolutions (and group attention). **This ability to represent multi-way (and higher-order) relations is a key contribution of our work over the existing literature.**
-
-To see how relational convolutions can represent multi-way relations, consider the following example based the *SET!* experiments which rely on this type of higher-order relations. Recall that we observe in our experiments that our model is the only one which was able to learn the task, where other relational architectures previously proposed in the literature where completely unable to learn in a way that generalizes. This validates the need for architectures which explicitly learn representations of higher-order relations, such as relational convolutional networks.
+Our proposed method **can** in fact naturally represent multi-way relations between several objects. This is achieved by our proposal of relational convolutions (and group attention). **This ability to represent multi-way (and higher-order) relations is a key contribution of our work over the existing literature.**
 
 **Example of $k$-way relations (*SET!*).** In the *SET!* task, the task-relevant information is the relational pattern between triplets of objects---that is, a 3-way relation. Recall that a "set" is a triplet of cards where across each of the 4 attributes, the cards are either all the same or all different. The property of being a "set" is a 3-way relational property. To represent such a property within the relational convolutions framework, you first compute the pairwise relations, which represent the same/different relation across each of the 4 attributes for each pair of objects. Then, you learn a *graphlet filter* which captures the all different/all same property. This captures the 3-way relation which would be needed to determine if a triplet of objects is a "set".
+
+Recall that in our experiments, relational convolutional networks were the only model which was able to learn the *SET!*-based task, with previous relational architectures completely unable to learn in a way that generalizes. This validates the need for architectures which explicitly learn representations of higher-order relations, such as relational convolutional networks.
 
 <!-- Reviewer doesn't ask about this; they may not be able to understand it. we can skip it for this reviewer?  -->
 <!-- [7/n] -->
