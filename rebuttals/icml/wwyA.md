@@ -23,7 +23,7 @@ We will explain both of these points in detail below. We aim to clarify any conf
 
 ## Understanding the relational convolutions architecture: correcting some misunderstandings (weakness 1)
 
-> Novelty is limited and some part is confusion. pairwise relation for the input is the "attention matrix", the paper then uses convolution network on top of the attention matrix. why choose convolution on this level of reasoning? the inductive bias for convolution is locality. however, there is no this type of this attributes on pairwise relation obtained by MD-IPR layer in the model.
+> Novelty is limited and some part is confusion. pairwise relation for the input is the "attention matrix", the paper then uses convolution network on top of the attention matrix. why choose convolution on this level of reasoning?
 
 **Our proposed architecture does *not* involve applying a convolutional network on top of the attention matrix**. As you mention, the inductive bias for CNNs is spatial locality, which does not make sense as a way to process the relation tensor produced by the MD-IPR layer. **The "relational convolution" operation is a novel operation we propose that is distinct from the spatial convolution operation in CNNs**. In particular, **in relational convolutions, the convolution is with respect to *groupings of objects* (which can be learned), not spatial translations as in the spatial convolutions of CNNs.**
 
@@ -33,7 +33,7 @@ We will explain the proposed architecture below in more detail and emphasize how
 
 First, we summarize the architecture at a high level.
 
-1. Pairwise relations between object features are computed using the multi-dimensional inner product relations (MD-IPR) module. This is achieved by learning feature maps that extract or 'filter' attributes for comparison through an inner product. This produces a **relation tensor**.
+1. Pairwise relations between object features are computed using the multi-dimensional inner product relations (MD-IPR) module. This is achieved by learning feature maps that extract or 'filter' attributes for comparison through an inner product.
 2. A set of **graphlet filters** are learned which represent a template of the relational pattern within a group of objects. The graphlet filters are "convolved" with the relation tensor through a novel **relational convolution** operation. This operation computes a *representation of the relational pattern in each group of objects*.
 3. We propose an attention-based operation, which we call **"group attention"**, to *learn the relevant groupings end-to-end*. Group attention retrieves the relevant objects for each group *differentiably*. This approach alleviates the need to consider a combinatorial number of groups during the computation of the relational convolution, addressing a key technical challenge (this is part of how we achieve linear complexity).
 4. The **relational convolution** operation returns a sequence of new "objects" (i.e., a sequence of vectors), with each object now representing the relational pattern within a group of input objects. This enables the overall operation to be repeated in order to *learn representations of higher-order relations*.
@@ -46,12 +46,12 @@ In this case, we consider a setting where a collection of discrete groups $\math
 
 We learn $n_f$ different graphlet filters, each of size $s \times s \times d_r$, where $s$ is the size of the graphlet (number of objects in each group). These act as templates of the relational pattern in a group of objects. $n_f$ and $s$ are both hyperparameters.
 
-**The relational convolution operation compares the pairwise relations within groups of $s$ objects against the graphlet filters**. For a group $g \subset [n]$ of $s$ objects, the pairwise relations within this group are given by the relation subtensor $R[g] := [R[i,j]]_{i,j \in g}$. The relation subtensor is compared against the graphlet filters $\bm{f} = (f_1, \ldots, f_{n_f}) \in \reals^{n_f \times s \times s \times d_r}$ to produce an $n_f$-dimensional vector summarizing the relational pattern in group $g$ (see Eqs 3,4 in main text).
+*The relational convolution operation compares the pairwise relations within groups of $s$ objects against the graphlet filters*. For a group $g \subset [n]$ of $s$ objects, the pairwise relations within this group are given by the relation subtensor $R[g] := [R[i,j]]_{i,j \in g}$. The relation subtensor is compared against the graphlet filters $\boldsymbol{f} = (f_1, \ldots, f_{n_f}) \in \mathbb{R}^{n_f \times s \times s \times d_r}$ to produce an $n_f$-dimensional vector summarizing the relational pattern in group $g$ (see Eqs 3,4 in main text).
 
 The graphlet filters are convolved *across groups* $g \in \mathcal{G}$ to produce a sequence of $|\mathcal{G}|$ objects as follows,
-$$R * \bm{f} := (\langle R[g], \bm{f}\rangle_{\mathrm{rel}})_{g \in \mathcal{G}}$$
+$$R * \boldsymbol{f} := (\langle R[g], \boldsymbol{f}\rangle_{\mathrm{rel}})_{g \in \mathcal{G}}$$
 
-**In a relational convolution operation, the convolution is performed across *groups*, rather than spatial translations as in the 2D convolutions of CNNs.** In particular, $\bm{f}$ is matched against the groups in $\mathcal{G}$, whereas in a spatial convolution, filters would be matched against *contiguous* patches of the relation tensor (e.g., $[0:s], [1:s+1], [2:s+2], ..., [n-s:n]$, etc.). As you point out, this would not make sense in the context of relational processing. **To emphasize this contrast to the reader and highlight the novelty of our approach, we will add a brief discussion to the paper explaining the difference between relational convolutions and spatial convolutions.**
+*In a relational convolution operation, the convolution is performed across **groups**, rather than spatial translations as in the 2D convolutions of CNNs.* In particular, $\boldsymbol{f}$ is matched against the groups in $\mathcal{G}$, whereas in a spatial convolution, filters would be matched against *contiguous* patches of the relation tensor (e.g., $[0:s], [1:s+1], [2:s+2], ..., [n-s:n]$, etc.). As you point out, this would not make sense in the context of relational processing. *To emphasize this contrast to the reader and highlight the novelty of our approach, we will add a brief discussion to the paper explaining the difference between relational convolutions and spatial convolutions.*
 
 ### Relational Convolutions with Group Attention
 
@@ -60,8 +60,8 @@ In some situations, the set of task-relevant discrete groups may not be availabl
 Below, we will summarize the methodology. Please see section 3.2 of the paper for the complete technical description.
 
 1. First, for each of $n_g$ groups (with $n_g$ being a hyperparameter) we retrieve $s$ objects from the collection of $n$ objects. We denote these objects by $\bar{x}_i^g$, where $g \in [n_g], i \in [s]$. (See Eq 7)
-2. Next, we compute the relation tensor for each group $g \in [n_g]$ using a shared MD-IPR layer producing $\bar{R}[g] \in \reals^{s \times s \times d_r}$. That is, the MD-IPR layer computes the relations within the *retrieved* objects in each group. (See Eq 8)
-3. For each group $g$, $\bar{R}[g]$ is compared against the graphlet filters $\bm{f}$ producing the relational convolution $\bar{R} * \bm{f}$, which consists of a sequence of $n_g$ vectors, each summarizing the relational pattern within a learned group. (See Eq 9)
+2. Next, we compute the relation tensor for each group $g \in [n_g]$ using a shared MD-IPR layer producing $\bar{R}[g] \in \mathbb{R}^{s \times s \times d_r}$. That is, the MD-IPR layer computes the relations within the *retrieved* objects in each group. (See Eq 8)
+3. For each group $g$, $\bar{R}[g]$ is compared against the graphlet filters $\boldsymbol{f}$ producing the relational convolution $\bar{R} * \boldsymbol{f}$, which consists of a sequence of $n_g$ vectors, each summarizing the relational pattern within a learned group. (See Eq 9)
 
 As you can see, this is *entirely distinct* from spatial convolutions and introduces several architectural innovations enabling a powerful (and computationally-efficient) way to learn complex relational representations.
 

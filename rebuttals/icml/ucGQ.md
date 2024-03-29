@@ -1,6 +1,8 @@
 # Reviewer 3 (ucGQ)
 
-Thank you for your thoughtful review. We hope to address your concerns below and look forward to further discussions with you.
+Thank you for your thoughtful review. We appreciate your positive feedback. 
+
+You note the lack of experiments on real-world data and the limited explanation about advantages over GNNs as the two primary weaknesses of this paper. We appreciate your comments. We hope to address your concerns below and look forward to further discussions with you.
 
 ## Expanded discussion on inductive bias and advantage over GNNs and Transformers
 
@@ -19,6 +21,8 @@ By contrast, in relational convolutional networks, relations are at the center o
 
 
 ---
+References:
+
 [1] Santoro, et al. "A simple neural network module for relational reasoning." NeurIPS 2017
 
 [2] Shanahan, et al. "An explicitly relational neural network architecture." ICML 2020

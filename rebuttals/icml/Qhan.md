@@ -10,8 +10,6 @@ We also appreciate your questions and constructive criticism. Below, we aim to a
 
 We agree that an expanded discussion about the advantages of the proposed method over GNNs would be an important addition to strengthen the paper. The current 8-page version of the manuscript contains a short discussion of this (related work section (L078-097) and the experiments section (L404-433)). **We will expand upon this discussion in the final version of the paper**, taking advantage of the additional page allowance.
 
-Exploring the connection to and advantages over GNNs and Transformers is important because GNNs are usually described as "relational" models. However, as we will explain below, GNNs operate in a different domain where the "relations" are assumed to be received as input to the model in the form of a graph. Unlike GNNs and Transformers, which operate on pre-defined graph structures, our model infers task-relevant relations and learns relational representations in an end-to-end fashion.
-
 Below, we provide a draft of the discussion which will be incorporated into the final version of the paper.
 
 ---
