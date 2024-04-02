@@ -53,3 +53,45 @@ ICML email says the following:
 ---
 <!-- possible message about wwyA if they don't respond to us -->
 <!-- - Reviewer `wwyA` has misunderstood our proposed method. They claim that it is a "convolution network [meaning 2D convolution in standard CNNs] applied to the attention scores". This justifies weakness 1: "novelty is limited". This is an incorrect characterization our proposed method. Our proposal involves defining a novel kind of convolution operation which is entirely distinct from  2D spatial convolutions, despite the resemblance in the name. Moreover, likely due to this misunderstanding, the reviewer claims our algorithm is computationally inefficient with a complexity of $O(n^3)$. This is in fact incorrect. The computational complexity of each step is described in the paper and the overall complexity is linear in $n$. We explain both these points in our rebuttal. -->
+
+## Follow up message: Bad faith behavior from reviewer xLCw
+
+Dear AC,
+
+We would like to follow up on our earlier message about reviewer xLCw. Earlier, we raised our concern about this review being uninformative and unprofessional. In particular, the review did not discuss the content of our paper. Rather, the review focused entirely on confusion around terminology which are standard in this line of work. We point out that no other review had this issue.
+
+We wrote a rebuttal which aimed to engage with the reviewer to clarify their confusion and provide them with the needed background to understand our work. Our rebuttal was factual, constructive, and understanding. The following is an excerpt from the opening of our rebuttal.
+
+> We understand that reviewers have varying backgrounds and levels of expertise in different areas of research. We also understand that if the reviewer did not grasp the basic setting they would be unable to evaluate the technical content. We will aim to constructively engage with the reviewer to help them understand this line of work better. To address these issues, our rebuttal will be structured as follows:
+>
+> 1. Clarification on the terminology used in this line of work
+> 2. An introductory overview of existing methods in this literature
+> 3. A summary and reminder of the proposed methodology and contributions of this paper
+
+In our rebuttal, we go on to give a thorough explanation of both our work as well as the related literature in hopes of helping the reviewer understand and provide an informative review.
+
+The reviewer responded to our rebuttal in a defensive and unprofessional manner. Their response is below.
+
+> There is not need to be rude in you response.
+> 
+> The paper needs to be understandable as a stand-alone paper for a general conference such as ICML. You need to define the terms you are using, particularly when you are using words with standard meanings with technical terms that do not match the normal meaning. Is there no definition you can provide? I think I will downgrade my rating.
+
+The reviewer has refused to engage in the review process in good faith and has instead turned to personal attacks and *threatened to downgrade their rating in retaliation*. We note that this reviewer had an unprofessional tone in their initial review as well. We believe this is inappropriate behavior for any venue, and certainly violates ICML's code of conduct.
+
+We kindly request that this review be removed. We would appreciate your advice on how to proceed given this code of conduct violation. What is the procedure for raising such issues and how does ICML handle such things?
+
+We would appreciate your response on this matter.
+
+
+Thank you sincerely,
+
+Authors
+
+
+<!-- outline: main points to cover -->
+- The original review did not mention anything about the content of the paper. It only expressed confusion around terminology.
+- The reviewer's comments in the original review had an unprofessional and confrontational tone:
+> you should say so up-front
+> you seem to be couching it in terms of...
+- Our rebuttal aimed to engage with the reviewer to help them understand our paper and the line of work it is a part of to help them provide an informative review. Our rebuttal addressed the content of the review factually and constructively.
+- The reviewer responded in bad faith. Their response contains personal attacks and is threatening to downgrade their rating. This constitutes "retaliation", which is against the ICML code of conduct.
