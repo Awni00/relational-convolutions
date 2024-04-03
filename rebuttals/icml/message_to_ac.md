@@ -70,13 +70,25 @@ We wrote a rebuttal which aimed to engage with the reviewer to clarify their con
 
 In our rebuttal, we go on to give a thorough explanation of both our work as well as the related literature in hopes of helping the reviewer understand and provide an informative review.
 
+Our rebuttal was understanding,
+> We understand that reviewers have varying backgrounds and levels of expertise in different areas of research. 
+
+constructive,
+> We will aim to constructively engage with the reviewer to help them understand this line of work better. To address these issues, our rebuttal will be structured as follows: [...]
+
+polite,
+> Does this clarify your confusion about terminology and the setting? Please let us know if you have any further questions and we would be happy to clarify further.
+
+and inviting,
+> Please let us know if you have any further questions or comments. We look forward to hearing back from you.
+
 The reviewer responded to our rebuttal in a defensive and unprofessional manner. Their response is below.
 
 > There is not need to be rude in you response.
 > 
 > The paper needs to be understandable as a stand-alone paper for a general conference such as ICML. You need to define the terms you are using, particularly when you are using words with standard meanings with technical terms that do not match the normal meaning. Is there no definition you can provide? I think I will downgrade my rating.
 
-The reviewer has refused to engage in the review process in good faith and has instead turned to personal attacks and *threatened to downgrade their rating in retaliation*. We note that this reviewer had an unprofessional tone in their initial review as well. We believe this is inappropriate behavior for any venue, and certainly violates ICML's code of conduct.
+The reviewer has refused to engage in the review process in good faith and has instead turned to personal attacks and *threatened to downgrade their rating in retaliation*. We note that this reviewer had an unprofessional tone in their initial review as well. We believe this is inappropriate behavior for any venue, and certainly violates ICML's code of conduct. We are also concerned about the effect this will have on the other reviewers.
 
 We kindly request that this review be removed. We would appreciate your advice on how to proceed given this code of conduct violation. What is the procedure for raising such issues and how does ICML handle such things?
 
