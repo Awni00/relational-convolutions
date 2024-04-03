@@ -34,26 +34,6 @@ References:
 
 ---
 
-<!-- ICML email -->
-ICML email says the following:
-
-> Area Chairs and Senior Area Chairs have been asked to read through reviews and work with Reviewers to ensure that they are high quality. However, with a conference the scale of ICML, it is unavoidable that some low quality preliminary reviews will slip through. If you receive a review that is inaccurate, disrespectful, or does not provide a meaningful assessment of your work, please send a confidential comment to the Area Chair handling your paper. You can use the “Official Comment” button to submit it. Note you cannot edit it after submitting, so proofread it carefully. Also, please ensure that the Readers field contains the Area Chair but not the Reviewers. (The readers field must also include the Senior Area Chair and Program Chairs.)
-
-
-> Use “Official comment” to talk directly with ACs or SACs, to request a new review or discuss an existing review. To do this, select the “Reader groups” to include just the ACs, SACs, or PCs, but not reviewers.
-
-<!-- what else should we mention in the message? -->
-<!-- should we mention issues with tone of review? aggressively confused. -->
-<!-- - explain our efforts to engage with the reviewer in our rebuttal: i.e., we explain terminology (and that it is standard), we give a review of the field, we explain our proposed method again in simple terms, and explain its significance.
- -->
-<!-- We made an effort to engage with this reviewer through our rebuttal, including attempting to provide an overview of the literature to help them provide a competent evaluation. -->
-
-
-
----
-<!-- possible message about wwyA if they don't respond to us -->
-<!-- - Reviewer `wwyA` has misunderstood our proposed method. They claim that it is a "convolution network [meaning 2D convolution in standard CNNs] applied to the attention scores". This justifies weakness 1: "novelty is limited". This is an incorrect characterization our proposed method. Our proposal involves defining a novel kind of convolution operation which is entirely distinct from  2D spatial convolutions, despite the resemblance in the name. Moreover, likely due to this misunderstanding, the reviewer claims our algorithm is computationally inefficient with a complexity of $O(n^3)$. This is in fact incorrect. The computational complexity of each step is described in the paper and the overall complexity is linear in $n$. We explain both these points in our rebuttal. -->
-
 ## Follow up message: Bad faith behavior from reviewer xLCw
 
 
@@ -63,7 +43,7 @@ We would like to follow up on our earlier message about the review by reviewer x
 
 We wrote a rebuttal that aimed to engage with the reviewer to provide them with the needed background to understand our work. Our rebuttal was factual, constructive, and sympathetic. The reviewer responded to our rebuttal in a defensive and unprofessional manner, continuing the adversarial tone of the original review.
 
-The reviewer has refused to engage in the review process in good faith and has instead turned to insults and a threat to downgrade their rating in retaliation. This behavior raises serious concerns about the fairness and integrity of the review process, and is in violation of the ICML code of conduct. We are also concerned about the effect this may have on the other reviewers.
+The reviewer has refused to engage in the review process in good faith and has instead turned to insults and a threat to downgrade their rating in retaliation. (Note that the reviewer has edited their initial response a couple of hours later; both versions are viewable under "Revisions".) This behavior raises serious concerns about the fairness and integrity of the review process, and is in violation of the ICML code of conduct. We are also concerned about the effect this may have on the other reviewers.
 
 ***We request that this review be removed. We would also appreciate your advice on how to proceed given this code of conduct violation.***
 
