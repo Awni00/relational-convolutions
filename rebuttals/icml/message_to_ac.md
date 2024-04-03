@@ -107,3 +107,4 @@ Authors
 > you seem to be couching it in terms of...
 - Our rebuttal aimed to engage with the reviewer to help them understand our paper and the line of work it is a part of to help them provide an informative review. Our rebuttal addressed the content of the review factually and constructively.
 - The reviewer responded in bad faith. Their response contains personal attacks and is threatening to downgrade their rating. This constitutes "retaliation", which is against the ICML code of conduct.
+- The reviewer's threat to downgrade our score is an attempt at retaliation for pointing out flaws in the review. The reviewer's response is defensive and inappropriate.
