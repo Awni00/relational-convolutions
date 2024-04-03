@@ -225,4 +225,4 @@ which means that $r(x, y)$ is a $d_r$-dimensional vector whose $k$-th entry is t
 
 > It is not clear to me that the input is just a set of the objects (where object is a feature vector). In the relational games dataset, the properties are not just the 12 x 12 x 3 RGB image, but also the position in the input vector (required to represent "between"). Please tell us the actual features (there is hidden information in the vector of inputs).
 
-There is no "hidden information" in the vector of inputs. The input is a *sequence* of vectors. Position information is encoded in the order of the sequence. In the relational games experiments, each object is just the $12 \times 12 \times 3$ RGB image.
+There is no "hidden information in the vector of inputs". The input is a *sequence* of vectors, and the order of the sequence is understood by the models to encode position information. In the relational games experiments, each object is just the $12 \times 12 \times 3$ RGB image.
