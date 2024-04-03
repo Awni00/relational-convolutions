@@ -158,7 +158,9 @@ Related but orthogonal problem. -->
 ---
 > You need to define the terms you are using, particularly when you are using words with standard meanings with technical terms that do not match the normal meaning. Is there no definition you can provide?
 
-As we explained in our rebuttal, our use of the terms "object" and relation are standard in the literature [1-10]. Our use of these terms matches this line of work exactly. The introduction and related work section of our paper also discusses this literature. We point out that no other reviewer had issues with the terminology or the basic setting of our work. In our rebuttal, we provide a thorough discussion of the meaning of this terminology (with examples), and even provide an overview of this literature. We made every attempt to constructively engage with you and help you understand our work.
+As we explained in our rebuttal, our use of the terms "object" and relation are standard in the literature [1-10]. Our use of these terms matches this line of work exactly. The introduction and related work section of our paper also discusses this literature.
+<!-- We point out that no other reviewer had issues with the terminology or the basic setting of our work.  -->
+In our rebuttal, we provide a thorough discussion of the meaning of this terminology (with examples), and even provide an overview of this literature. We made every attempt to constructively engage with you and help you understand our work.
 
 ---
 References:
