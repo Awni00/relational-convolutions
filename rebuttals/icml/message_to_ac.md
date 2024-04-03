@@ -56,6 +56,25 @@ ICML email says the following:
 
 ## Follow up message: Bad faith behavior from reviewer xLCw
 
+
+Dear AC,
+
+We would like to follow up on our earlier message about the review by reviewer xLCw, where we raised our concern about this review being uninformative and unprofessional.
+
+We wrote a rebuttal that aimed to engage with the reviewer to provide them with the needed background to understand our work. Our rebuttal was factual, constructive, and sympathetic. The reviewer responded to our rebuttal in a defensive and unprofessional manner, continuing the adversarial tone of the original review.
+
+The reviewer has refused to engage in the review process in good faith and has instead turned to insults and a threat to downgrade their rating in retaliation. This behavior raises serious concerns about the fairness and integrity of the review process, and is in violation of the ICML code of conduct. We are also concerned about the effect this may have on the other reviewers.
+
+***We request that this review be removed. We would also appreciate your advice on how to proceed given this code of conduct violation.***
+
+We appreciate your attention to this matter.
+
+Sincerely,
+
+Authors
+
+---
+<!-- old version, before John's edits -->
 Dear AC,
 
 We would like to follow up on our earlier message about reviewer xLCw. Earlier, we raised our concern about this review being uninformative and unprofessional. In particular, the review did not discuss the content of our paper. Rather, the review focused entirely on confusion around terminology which are standard in this line of work. We point out that no other review had this issue.
