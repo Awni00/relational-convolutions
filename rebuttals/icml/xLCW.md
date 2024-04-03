@@ -155,8 +155,37 @@ Related but orthogonal problem. -->
 > There is not need to be rude in you response.
 >
 > The paper needs to be understandable as a stand-alone paper for a general conference such as ICML. You need to define the terms you are using, particularly when you are using words with standard meanings with technical terms that do not match the normal meaning. Is there no definition you can provide? I think I will downgrade my rating.
+---
+> You need to define the terms you are using, particularly when you are using words with standard meanings with technical terms that do not match the normal meaning. Is there no definition you can provide?
 
-Our rebuttal was factual, constructive, and inviting. Your review did not discuss any aspect of our paper, but rather only expressed confusion about terminology that is standard in the literature, as we explained in our rebuttal. As authors, we are well within our rights to point out reviews which do not provide a fair evaluation of our work. This is the point of a rebuttal--to raise such issues. We did so politely and constructively, attempting to engage you in good-faith discussion by 1) clarifying terminology; 2) providing an overview of the literature to fill gaps in knowledge; and 3) discussing the proposal of our paper.
+As we explained in our rebuttal, our use of the terms "object" and relation are standard in the literature [1-10]. Our use of these terms matches this line of work exactly. The introduction and related work section of our paper also discusses this literature. We point out that no other reviewer had issues with the terminology or the basic setting of our work. In our rebuttal, we provide a thorough discussion of the meaning of this terminology (with examples), and even provide an overview of this literature. We made every attempt to constructively engage with you and help you understand our work.
+
+---
+References:
+
+[1] Santoro, et al. "A simple neural network module for relational reasoning." NeurIPS 2017
+
+[2] Shanahan, et al. "An explicitly relational neural network architecture." ICML 2020
+
+[3] Webb, et al. "Emergent Symbols through Binding in External Memory." ICLR 2020
+
+[4] Kerg, et al. "On Neural Architecture Inductive Biases for Relational Tasks." ICLR 2022 Workshop OSC
+
+[5] Altabaa, et al. "Abstractors and relational cross-attention: An inductive bias for explicit relational reasoning in Transformers." ICLR 2024
+
+[6] Santoro, et al. "Relational recurrent neural networks." NeurIPS 2018
+
+[7] Zambaldi, et al. "Deep reinforcement learning with relational inductive biases." ICLR 2019
+
+[8] Mondal, et al. "Learning to reason over visual objects." ICLR 2023
+
+[9] Locatello, et al. "Object-Centric Learning with Slot Attention" NeurIPS 2020
+
+[10] Barrett, et al. "Measuring abstract reasoning in neural networks" ICML 2020
+
+
+---
+Our rebuttal was factual, constructive, and inviting. Your review did not discuss any aspect of our paper, but rather only expressed confusion about terminology that is standard in the literature, as we explained in our rebuttal. As authors, we are well within our rights to point out flaws in the evaluation of our work. This is the point of a rebuttal--to raise such issues. We did so politely and constructively, attempting to engage you in good-faith discussion by 1) clarifying terminology; 2) providing an overview of the literature to fill gaps in knowledge; and 3) discussing the proposal of our paper.
 
 Our rebuttal was understanding,
 > We understand that reviewers have varying backgrounds and levels of expertise in different areas of research. 
