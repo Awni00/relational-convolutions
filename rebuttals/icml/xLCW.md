@@ -208,15 +208,16 @@ This response is inappropriate and violates the ICML code of conduct. We have ra
 
 ## Possible response to reviewer's edited comment 🤦‍♂️
 
-Your review did not discuss any aspect of our paper, instead focused entirely on confusion around terminology. As author's, we have a right to point out reviews which don't provide a meaningful evaluation of our work. We did so politely and constructively, attempting to engage you in discussion. We clarified confusion on terminology, provided an overview of the relevant literature, and explained our proposed methods. 
-
-As we point out in our rebuttal, we are sympathetic to the fact that different reviews had different backgrounds, and we aimed to engage with you constructively and attempt to give you the required background.
+The intent of our rebuttal was to constructively engage you in discussion.
+<!-- Your review did not discuss any aspect of our paper, instead focused entirely on confusion around terminology. As author's, we have a right to point out reviews which don't provide a meaningful evaluation of our work. -->
 
 ---
 
 > As for (2) then r: X x X -> R^{d_r} is not correct as then given x,y and k, there should be a real number.
 
-We don't know what you mean by this. $k$ is not a real number, it is an integer index in $[d_r] := \{1, ..., d_r \}$. $x$ and $y$ are each objects (represented as vectors), and $r(x, y)$ is a $d_r$-dimensional vector. Hence, $r$ is a function which maps pairs of objects in $\mathcal{X} \times \mathcal{X}$ to vectors in $\mathbb{R}^{d_r}$. Eq (2) defines the value of $r(x,y)$ by defining each component in the vector.
+We don't understand what you mean by this. What should be a real number?
+
+$k$ is not a real number, it is an integer index in $[d_r] := \{1, ..., d_r \}$. $x$ and $y$ are each objects (represented as vectors), $\phi: \mathcal{X} \to \mathbb{R}^{d_\phi}$ is feature map which produces $d_\phi$-dimensional vectors, $W_1^{(k)}, W_2^{(k)} \in \mathbb{R}^{d_\phi \times d_{\mathrm{proj}}}$ are matrices, and $r(x, y)$ is a $d_r$-dimensional vector. Hence, $r$ is a function which maps pairs of objects in $\mathcal{X} \times \mathcal{X}$ to vectors in $\mathbb{R}^{d_r}$. (The meaning of this notation is explained in L145-L157 in the paper.) Eq (2) defines the value of $r(x,y)$ by defining each component in the vector.
 
 The full equation reads,
 $$r(x, y) = (\langle W_1^{(k)} \phi(x), W_2^{(k)} \phi(y) \rangle)_{k \in [d_r]},$$
