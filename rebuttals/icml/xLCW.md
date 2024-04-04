@@ -208,7 +208,21 @@ This response is inappropriate and violates the ICML code of conduct. We have ra
 
 ## Possible response to reviewer's edited comment 🤦‍♂️
 
-The intent of our rebuttal was to constructively engage you in discussion.
+Our rebuttal was sympathetic,
+> We understand that reviewers have varying backgrounds and levels of expertise in different areas of research. 
+
+constructive,
+> We will aim to constructively engage with the reviewer to help them understand this line of work better. To address these issues, our rebuttal will be structured as follows: [...]
+
+polite,
+> Does this clarify your confusion about terminology and the setting? Please let us know if you have any further questions and we would be happy to clarify further.
+
+and inviting,
+> Please let us know if you have any further questions or comments. We look forward to hearing back from you.
+
+This review did not provide a meaningful assessment of work and we pointed this out politely in our rebuttal. In particular, the review made no mention of the proposed methods or experiments of the paper, focusing solely on confusion around terminology. This is a criticism of the review, not the reviewer. Our rebuttal clarified terminology, gave an overview of the literature, and summarized the methods of the paper in hopes of engaging you in constructive discussion.
+<!-- The response above, like the original review, continues to be unprofessional and adversarial. -->
+
 <!-- Your review did not discuss any aspect of our paper, instead focused entirely on confusion around terminology. As author's, we have a right to point out reviews which don't provide a meaningful evaluation of our work. -->
 
 ---
