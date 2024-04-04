@@ -220,7 +220,7 @@ polite,
 and inviting,
 > Please let us know if you have any further questions or comments. We look forward to hearing back from you.
 
-This review did not provide a meaningful assessment of work and we pointed this out politely in our rebuttal. In particular, the review made no mention of the proposed methods or experiments of the paper, focusing solely on confusion around terminology. This is a criticism of the review, not the reviewer. Our rebuttal clarified terminology, gave an overview of the literature, and summarized the methods of the paper in hopes of engaging you in constructive discussion.
+This review did not provide a meaningful assessment of our work and we pointed this out politely in our rebuttal. In particular, the review made no mention of the proposed methods or experiments of the paper, focusing solely on confusion around terminology. This is a criticism of the review, not the reviewer. We don't know what part of our rebuttal offended you, but that certainly wasn't our intent. Our rebuttal clarified terminology, gave an overview of the literature, and summarized the methods of the paper in hopes of engaging you in constructive discussion.
 <!-- The response above, like the original review, continues to be unprofessional and adversarial. -->
 
 <!-- Your review did not discuss any aspect of our paper, instead focused entirely on confusion around terminology. As author's, we have a right to point out reviews which don't provide a meaningful evaluation of our work. -->
@@ -229,14 +229,14 @@ This review did not provide a meaningful assessment of work and we pointed this 
 
 > As for (2) then r: X x X -> R^{d_r} is not correct as then given x,y and k, there should be a real number.
 
-We don't understand what you mean by this. What should be a real number?
-
-$k$ is not a real number, it is an integer index in $[d_r] := \{1, ..., d_r \}$. $x$ and $y$ are each objects (represented as vectors), $\phi: \mathcal{X} \to \mathbb{R}^{d_\phi}$ is feature map which produces $d_\phi$-dimensional vectors, $W_1^{(k)}, W_2^{(k)} \in \mathbb{R}^{d_\phi \times d_{\mathrm{proj}}}$ are matrices, and $r(x, y)$ is a $d_r$-dimensional vector. Hence, $r$ is a function which maps pairs of objects in $\mathcal{X} \times \mathcal{X}$ to vectors in $\mathbb{R}^{d_r}$. (The meaning of this notation is explained in L145-L157 in the paper.) Eq (2) defines the value of $r(x,y)$ by defining each component in the vector.
+We don't understand what you mean by this. Given a pair of objects $x, y \in \mathcal{X}$ and an index $k \in [d_r]$, the $k$-th component of the relation vector $r(x, y) \in \mathbb{R}^{d_r}$ is formed by an inner product (which is a real number, of course).
 
 The full equation reads,
 $$r(x, y) = (\langle W_1^{(k)} \phi(x), W_2^{(k)} \phi(y) \rangle)_{k \in [d_r]},$$
 which means that $r(x, y)$ is a $d_r$-dimensional vector whose $k$-th entry is the inner product $\langle W_1^{(k)} \phi(x), W_2^{(k)} \phi(y) \rangle$.
 
+To make the response self-contained, we remind you what each quantity is (this is in L145-157 Col 1). $k$ is an integer index in $[d_r] := \{1, ..., d_r \}$. $x$ and $y$ are each objects (represented as vectors), $\phi: \mathcal{X} \to \mathbb{R}^{d_\phi}$ is feature map which produces $d_\phi$-dimensional vectors, $W_1^{(k)}, W_2^{(k)} \in \mathbb{R}^{d_\phi \times d_{\mathrm{proj}}}$ are matrices, and $r(x, y)$ is a $d_r$-dimensional vector. Hence, $r$ is a function which maps pairs of objects in $\mathcal{X} \times \mathcal{X}$ to vectors in $\mathbb{R}^{d_r}$. Eq (2) defines the value of $r(x,y)$ by defining each component in the vector.
+
 > It is not clear to me that the input is just a set of the objects (where object is a feature vector). In the relational games dataset, the properties are not just the 12 x 12 x 3 RGB image, but also the position in the input vector (required to represent "between"). Please tell us the actual features (there is hidden information in the vector of inputs).
 
-There is no "hidden information in the vector of inputs". The input is a *sequence* of vectors, and the order of the sequence is understood by the models to encode position information. In the relational games experiments, each object is just the $12 \times 12 \times 3$ RGB image.
+There is no "hidden information in the vector of inputs". The input is a *sequence* of vectors, and the order of the sequence is understood by the models to encode position information. In the relational games experiments, each object is just the $12 \times 12 \times 3$ RGB image. In the *SET!* experiments, each object is also just an RGB image.
