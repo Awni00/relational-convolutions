@@ -1,0 +1,42 @@
+\section{Experiments Supplement}\label{sec:experiments_supplement}
+
+\subsection{Relational Games (\Cref{ssec:exp_relational_games})}
+
+The pentominoes split is used for training, and the hexominoes and stripes splits are used to test out-of-distribution generalization after training. We hold out 1000 samples for validation (during training) and 5000 samples for testing (after training), and use the rest as the training set. We train for 50 epochs using the categorical cross-entropy loss and the Adam optimizer with learning rate $0.001$, $\beta_1 = 0.9, \beta_2 = 0.999, \epsilon = 10^{-7}$. We use a batch size of 512. For each model and task, we run 5 trials with different random seeds.\Cref{tab:relational_games_tasks} contains text descriptions of each task in the relational games dataset in the experiments of~\Cref{ssec:exp_relational_games}.~\Cref{tab:relgames_architectures} contains a description of the architectures of each model (or shared component) in the experiments.
+\Cref{tab:ood_generalization} reports the accuracy on the hold-out object sets (i.e., the numbers depicted in~\Cref{fig:ood_generalization} of the main text).
+
+\subsection{SET (\Cref{ssec:experiments_set})}
+
+We train for 100 epochs using the categorical cross-entropy loss and the Adam optimizer with learning rate $0.001$, $\beta_1 = 0.9, \beta_2 = 0.999, \epsilon = 10^{-7}$. We use a batch size of 512. For each model and task, we run 5 trials with different random seeds.\Cref{tab:set_architectures} contains a description of the architecture of each model in the ``contains set'' experiments of~\Cref{ssec:experiments_set}.~\Cref{tab:set_acc} reports the generalization accuracies on the hold-out `sets' (i.e., the numbers depicted in~\Cref{fig:contains_set_acc} of the main text).
+
+\begin{table}[H]
+    \centering
+    \input{figs/experiments/tasks_table.tex}
+    \caption{Relational games tasks.}\label{tab:relational_games_tasks}
+\end{table}
+
+\begin{table}[H]
+    \centering
+    \input{figs/experiments/relgames_architectures_table.tex}
+    \caption{Model architectures for relational games experiments.}\label{tab:relgames_architectures}
+\end{table}
+
+\begin{table}[H]
+    \centering
+    \input{figs/experiments/generalization_table.tex}
+    \caption{Out-of-distribution generalization results on relational games. We report means $\pm$ standard error of mean over 5 trials. These are the numbers associated with~\Cref{fig:ood_generalization}.}\label{tab:ood_generalization}
+\end{table}
+
+\begin{table}[H]
+    \centering
+    \input{figs/experiments/set_architectures_table.tex}
+    \caption{Model architectures for ``contains set'' experiments.}\label{tab:set_architectures}
+\end{table}
+
+\begin{table}[H]
+    \centering
+    \input{figs/experiments/set_acc_table.tex}
+    \caption{Hold-out test accuracy on ``contains set'' task. We report means $\pm$ standard error of mean over 10 trials. These are the numbers associated with~\Cref{fig:contains_set_acc}.}\label{tab:set_acc}
+\end{table}
+\null
+\vfill
