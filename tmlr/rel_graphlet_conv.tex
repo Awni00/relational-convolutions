@@ -1,16 +1,16 @@
 \section{Relational Convolutions with Graphlet Filters}\label{sec:relconv}
 
 \subsection{Relational Convolutions with Discrete Groups}\label{ssec:relconv_discrete_groups}
-In this section, we formalize a \textit{relational convolution} operation which processes pairwise relations between objects to produce representations of the relational patterns within groups of objects. Suppose that we have a sequence of objects $(x_1, \ldots, x_n)$ and a relation tensor $R$ describing the pairwise relations between them, obtained by a MD-IPR layer via $R[i,j] = r(x_i, x_j)$. The key idea is to learn a \textit{template} of relations between a small set of objects, and to ``convolve'' the template with the relation tensor, matching it against the relational patterns in different groups of objects. This transforms the relation tensor into a sequence of vectors, each summarizing the relational pattern in some group of objects. Crucially, this can now be composed with another relational layer to compute \textit{higher-order} relations---i.e., relations on relations.
+In this section, we formalize a \textit{relational convolution} operation which processes pairwise relations between objects to produce representations of the relational patterns within groups of objects. Suppose that we have a sequence of objects $(x_1, \ldots, x_n)$ and a relation tensor $R$ describing the pairwise relations between them, obtained by an MD-IPR layer via $R[i,j] = r(x_i, x_j)$. The key idea is to learn a \textit{template} of relations between a small set of objects, and to ``convolve'' the template with the relation tensor, matching it against the relational patterns in different groups of objects. This transforms the relation tensor into a sequence of vectors, each summarizing the relational pattern in some group of objects. Crucially, this can now be composed with another relational layer to compute \textit{higher-order} relations---i.e., relations on relations.
 
 Fix some filter size $s < n$, where $s$ is a hyperparameter of the relational convolution layer. One `filter' of size $s$ is given by the \textit{graphlet filter} $f_1 \in \mathbb{R}^{s \times s \times d_r}$. This is a template for the pairwise relations between a group of $s$ objects. 
 Since pairwise relations can be viewed as edges on a graph, we use the term ``graphlet filter'' to refer to a template of pairwise relations between a small set of objects.
 % Note that the dimension of the relations in this filter matches that of the input relation tensor. 
-Let $g \subset [n]$ be a group of $s$ objects among $(x_1, \ldots, x_n)$. Then, denote the relation sub-tensor associated to this group by $R[g] := [R[i,j]]_{i,j \in g}$. We define the `relational inner product' between this relation subtensor and the filter $f_1$ by
+Let $g \subset [n]$ be a group of $s$ objects among $(x_1, \ldots, x_n)$. Then, denote the relation sub-tensor associated with this group by $R[g] := [R[i,j]]_{i,j \in g}$. We define the `relational inner product' between this relation subtensor and the filter $f_1$ by
 \begin{equation}\label{eq:relational_inner_prod_one_filt}
     \reliprod{R[g]}{f_1} \coloneqq \sum_{i,j \in g} \sum_{k \in [d_r]} R[i,j,k] f_1[i,j,k].
 \end{equation}
-This is simply the standard inner product in the corresponding euclidean space $\mathbb{R}^{s^2 d_r}$. This quantity represents how much the relational pattern in $g$ matches the template $f_1$.
+This is simply the standard inner product in the corresponding Euclidean space $\mathbb{R}^{s^2 d_r}$. This quantity represents how much the relational pattern in $g$ matches the template $f_1$.
 
 % Since pairwise relations can be viewed as edges on a graph, we use the term ``graphlet filter'' to refer to a template of pairwise relations between a small set of objects.
 
@@ -73,7 +73,7 @@ The relational convolution is computed as before via,
     \bar{R} \ast \bm{f} \equiv \paren{\reliprod{\bar{R}[g]}{\bm{f}}}_{g \in [n_g]}.
 \end{equation}
 
-Overall, relational convolution with group attention can be summarized as follows: 1) learn $n_g$ groupings of objects, retrieving $s$ objects per group; 2) compute the relation tensor of each group using a MD-IPR module; 3) compute a relational convolution with a learned set of graphlet filters $\bm{f}$, producing a sequence of $n_g$ vectors each describing the relational pattern within a (learned) group of objects.
+Overall, relational convolution with group attention can be summarized as follows: 1) learn $n_g$ groupings of objects, retrieving $s$ objects per group; 2) compute the relation tensor of each group using an MD-IPR module; 3) compute a relational convolution with a learned set of graphlet filters $\bm{f}$, producing a sequence of $n_g$ vectors each describing the relational pattern within a (learned) group of objects.
 
 \textbf{Computing input-dependent queries.} In the simplest case, the query vectors are simply learned parameters of the model, representing a fixed criterion for selecting the $n_g$ groups. The queries can also be produced in an input-dependent manner. There are many ways to do this. For example, the input $(x_1, \ldots, x_n)$ can be processed with some sequence or set embedder (e.g., through a self-attention operation) producing a vector embedding that can be mapped to different queries $\{q_{i}^g\}_{i,g}$ using learned linear maps.
 % For example, the query vectors can be produced sequentially by a recurrent neural network with each retrieved object fed back into the LSTM so that it can produce the next query according to the groups selected so far. 

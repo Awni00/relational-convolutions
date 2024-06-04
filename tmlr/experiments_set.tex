@@ -1,6 +1,6 @@
 \subsection{\textit{SET}: Grouping and Compositionality in Relational Reasoning}\label{ssec:experiments_set}
 
-\textit{SET} is a card game which forms a simple but challenging relational task. The `objects' are a set of cards with four attributes, each of which can take one of three possible values. `Color' can be red, green, or purple; `number' can be one, two, or three; `shape' can be diamond, squiggle, or oval; and `fill' can be solid, striped, or empty. A `set' is a triplet of cards such that each attribute is either a) the same on all three cards, or b) different on all three cards.
+\textit{SET} is a card game that forms a simple but challenging relational task. The `objects' are a set of cards with four attributes, each of which can take one of three possible values. `Color' can be red, green, or purple; `number' can be one, two, or three; `shape' can be diamond, squiggle, or oval; and `fill' can be solid, striped, or empty. A `set' is a triplet of cards such that each attribute is either a) the same on all three cards, or b) different on all three cards.
 
 \begin{figure}[ht]
     \vskip-10pt
@@ -60,9 +60,9 @@
 
 In \textit{SET}, the task is: given a hand of $n > 3$ cards, find a `set' among them.~\Cref{fig:contains_set_example} depicts a positive and negative example for $n=5$, with $*$ indicating the `set' in the positive example.
 % (typically, SET is played with $k=12$, with two players competing to find a `set' first). 
-This task is deceptively challenging, and is representative of the type of relational reasoning that humans excel at but machine learning systems still struggle with. To solve the task, one must process the sensory information of individual cards to identify the values of each attribute, then reason about the relational pattern in each triplet of cards.
+This task is deceptively challenging, and is representative of the type of relational reasoning that humans excel at but machine learning systems still struggle with. To solve the task, one must process the sensory information of individual cards to identify the values of each attribute, and then reason about the relational pattern in each triplet of cards.
 % Importantly, this type of relational reasoning requires attending over several attributes and relations simultaneously while representing some notion of `groups'.  
-The construct of relational convolutions proposed in this paper is a step towards developing machine learning systems which can perform this kind of relational reasoning.
+The construct of relational convolutions proposed in this paper is a step towards developing machine learning systems that can perform this kind of relational reasoning.
 
 % \begin{figure}[ht]
 %     \centering
@@ -88,7 +88,7 @@ In \textit{SET}, there exists $\binom{81}{3} = 85\,320$ triplets of cards, of wh
 We train for 100 epochs with the same loss, optimizer, and batch size as the experiments in the previous section.
 \Cref{fig:contains_set_acc} shows the hold-out test accuracy for each model.~\Cref{fig:contains_set_training_curves} shows the training and validation accuracy over the course of training.
 
-We observe a sharp separation between RelConvNet and all other baselines. While RelConvNet is able to learn the task and generalize to new `sets' with near perfect accuracy (97.9\%), no other model is able to reach generalization accuracy much better than random guessing (next best is the GCN with 59.5\%). Several models are able to fit the training data, reaching near-perfect training accuracy, but they are unable to ``learn the rule'' in a way that generalizes to the validation or test sets. This suggests that while these models are powerful function approximators, they lack the \textit{inductive biases} to learn hierarchical relations.
+We observe a sharp separation between RelConvNet and all other baselines. While RelConvNet is able to learn the task and generalize to new `sets' with near-perfect accuracy (97.9\%), no other model is able to reach generalization accuracy much better than random guessing (next best is the GCN with 59.5\%). Several models are able to fit the training data, reaching near-perfect training accuracy, but they are unable to ``learn the rule'' in a way that generalizes to the validation or test sets. This suggests that while these models are powerful function approximators, they lack the \textit{inductive biases} to learn hierarchical relations.
 
 \aanote{this part is new.}
 In~\Cref{fig:conv_rep} we analyze the the geometry of the representations learned by the relational convolution layer. We consider all triplets of cards, compute the relation subtensor using the learned MD-IPR layer, and plot the relational inner product with the learned graphlet filter $\bm{f} \in \reals^{s \times s \times d_r \times n_f}$. The result is a $n_f$-dimensional vector for each triplet of cards. We perform PCA to plot this in two dimensions, and color-code each triplet of cards by whether or not it forms a `set'. We find that the relational convolution layer learns a representation of the relational pattern in groups of objects that separates `sets' and `non-sets'. In particular, the two classes form clusters that are linearly separable even when projected down to two dimensions by PCA. This explains why RelConvNet was able to learn the task in a way that generalizes while the other models were not. In~\Cref{sec:appendix_rep_analysis} we expand on this discussion, and further analyze the representations learned by the MD-IPR layer, showing that the learned relations map to the color, number, shape, and fill attributes.
@@ -96,11 +96,11 @@ In~\Cref{fig:conv_rep} we analyze the the geometry of the representations learne
 \begin{wrapfigure}{R}{0.5\textwidth}
     \centering
     \includegraphics[width=0.5\textwidth]{figs/representation_analysis/conv_rep.pdf}
-    \caption{The relational convolution layer produces representations which separates `sets' from `non-sets'.}\label{fig:conv_rep}
+    \caption{The relational convolution layer produces representations that separates `sets' from `non-sets'.}\label{fig:conv_rep}
 \end{wrapfigure}
 
 It is perhaps surprising that models like GNNs and Transformers perform poorly on these relational tasks, given their apparent ability to process relations through neural message-passing and attention, respectively. We remark that GNNs operate in a different domain compared to relational models like RelConvNe, PrediNet, and CoRelNet. In GNNs, the relations are an input to the model, received in the form of a graph, and are used to dictate the flow of information in a neural message-passing operation. By contrast, in relational convolutional networks, the input is simply a set of objects without relations---the relations need to be \textit{inferred} as part of the feature representation process. 
-Thus, GNNs operate in domains where relational information is already present (e.g., analysis of social networks, biological networks, etc.), whereas our framework aims to solve tasks which rely on relations but those relations need to be inferred end-to-end. 
+Thus, GNNs operate in domains where relational information is already present (e.g., analysis of social networks, biological networks, etc.), whereas our framework aims to solve tasks that rely on relations but those relations need to be inferred end-to-end. 
 This offers a partial explanation for the inability of GNNs to learn this task---GNNs are good at processing network-style relations when they are given as input, but may not be able to infer and hierarchically process relations when they are not given. In the case of Transformers, relations are modeled implicitly to direct information retrieval in attention, but are not encoded explicitly in the final representations. By contrast, RelConvNet operates on collections of objects and possesses inductive biases for learning iteratively more complex relational representations, guided only by the supervisory signal of the downstream task. 
 
 Models like CoRelNet and PrediNet have relational inductive biases, but lack compositionality. On the other hand, deep models like Transformers and GNNs are compositional, but lack relational inductive biases. This experiment suggests that \textit{compositionality and relational inductive biases are both necessary ingredients to efficiently learn representations of higher-order relations}. RelConvNet is a compositional architecture imbued with relational inductive biases and a demonstrated ability to tackle hierarchical relational tasks.
