@@ -4,6 +4,7 @@ import tensorflow_models as tfm
 import sys; sys.path.append('..'); sys.path.append('../..')
 from relational_neural_networks.mdipr import MultiDimInnerProdRelation
 from relational_neural_networks.relational_graphlet_convolution import RelationalGraphletConvolution
+from relational_neural_networks.relation_net import RelationNetwork
 from relational_neural_networks.predinet import PrediNet
 from misc.abstractor import RelationalAbstracter
 
@@ -70,6 +71,20 @@ def create_transformer():
     return model
 #endregion
 
+# region RelNet
+def create_relnet(normalizer=None, freeze_embedder=False, object_selection=None):
+    relnet_kwargs = dict(neurons=[64, 64, 64], activation='relu')
+    relnet = RelationNetwork(**relnet_kwargs)
+
+    model = tf.keras.Sequential([
+        relnet,
+        create_predictormlp()
+        ], name='relnet'
+    )
+
+    return model
+#endregion
+
 #region CoRelNet
 def create_corelnet():
     corelnet = tf.keras.layers.Lambda(lambda x: tf.matmul(x, x, transpose_b=True), name='similarity_matrix')
@@ -104,8 +119,6 @@ def create_predinet():
     model = tf.keras.Sequential(
         [
             PrediNet(**predinet_kwargs),
-            # tf.keras.layers.Dense(hidden_dense_size, activation='relu', name='hidden_dense1'),
-            # tf.keras.layers.Dense(2, name='output')
             create_predictormlp()
             ],
         name='predinet')
@@ -223,6 +236,7 @@ model_creators = dict(
     relconvnet=create_relconvnet,
     relconvnet_maxpooling=create_relconvnet_maxpooling,
     transformer=create_transformer,
+    relnet=create_relnet,
     corelnet=create_corelnet,
     nosoftmax_corelnet=create_nosoftmax_corelnet,
     predinet=create_predinet,

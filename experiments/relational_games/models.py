@@ -237,7 +237,7 @@ def create_relnet(normalizer=None, freeze_embedder=False, object_selection=None)
         relnet,
         tf.keras.layers.Dense(hidden_dense_size, activation='relu', name='hidden_dense1'),
         tf.keras.layers.Dense(2, name='output')
-        ], name='relconv'
+        ], name='relnet'
     )
 
     return model
