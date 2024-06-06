@@ -8,6 +8,7 @@ import sys; sys.path.append('..'); sys.path.append('../..')
 from relational_neural_networks.mdipr import MultiDimInnerProdRelation
 from relational_neural_networks.relational_graphlet_convolution import RelationalGraphletConvolution, RelationalGraphletConvolutionGroupAttn
 from relational_neural_networks.grouping_layers import TemporalGrouping, FeatureGrouping
+from relational_neural_networks.relation_net import RelationNetwork
 from relational_neural_networks.tcn import TCN, GroupTCN
 from relational_neural_networks.predinet import PrediNet
 from misc.abstractor import RelationalAbstracter
@@ -214,6 +215,29 @@ def create_randomgroup_relconvnet(normalizer=None, freeze_embedder=False, object
         tf.keras.layers.Dense(hidden_dense_size, activation='relu', name='hidden_dense1'),
         tf.keras.layers.Dense(2, name='output')
         ], name='relconv'
+    )
+
+    return model
+
+# RelationNetwork
+
+def create_relnet(normalizer=None, freeze_embedder=False, object_selection=None):
+    object_selector = get_obj_selector(object_selection)
+    normalizer = get_normalizer(normalizer)
+    cnn_embedder = CNNEmbedder(**cnn_embedder_kwargs)
+    cnn_embedder.trainable = not freeze_embedder
+
+    relnet_kwargs = dict(neurons=[64, 64, 64], activation='relu')
+    relnet = RelationNetwork(**relnet_kwargs)
+
+    model = tf.keras.Sequential([
+        object_selector,
+        cnn_embedder,
+        object_selector,
+        relnet,
+        tf.keras.layers.Dense(hidden_dense_size, activation='relu', name='hidden_dense1'),
+        tf.keras.layers.Dense(2, name='output')
+        ], name='relnet'
     )
 
     return model
@@ -494,6 +518,7 @@ model_creators = dict(
     contextgroup_relconvnet=create_contextgroup_relconvnet,
     randomgroup_relconvnet=create_randomgroup_relconvnet,
     transformer=create_transformer,
+    relnet=create_relnet,
     corelnet=create_corelnet,
     nosoftmax_corelnet=create_nosoftmaxcorelnet,
     predinet=create_predinet,
