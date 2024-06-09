@@ -20,12 +20,12 @@
         \texttt{TransformerEncoder}: num layers = 1, num heads = 8, feedforward intermediate size = 32, activation = relu. \\\hline
     GCN               &
         \texttt{CNN} $\to$ (\texttt{GCNConv} $\to$ \texttt{Dense}) $\times 2$ $\to$ \texttt{AveragePooling} $\to$ \texttt{MLP}. \newline
-        \texttt{GCConv}: channels = 128, \texttt{Dense}: num neurons = 128, activation = 'relu' \\\hline
+        \texttt{GCConv}: channels = 128, \texttt{Dense}: num neurons = 128, activation = relu \\\hline
     GAT               &
         \texttt{CNN} $\to$ (\texttt{GATConv} $\to$ \texttt{Dense}) $\times 2$ $\to$ \texttt{AveragePooling} $\to$ \texttt{MLP}. \newline
-        \texttt{GATonv}: channels = 128, \texttt{Dense}: num neurons = 128, activation = 'relu' \\\hline
+        \texttt{GATonv}: channels = 128, \texttt{Dense}: num neurons = 128, activation = relu \\\hline
     GCN               &
         \texttt{CNN} $\to$ (\texttt{GINConv} $\to$ \texttt{Dense}) $\times 2$ $\to$ \texttt{AveragePooling} $\to$ \texttt{MLP}. \newline
-        \texttt{GINConv}: channels = 128, \texttt{Dense}: num neurons = 128, activation = 'relu' \\\hline
-    Common output MLP & \texttt{Dense(64, 'relu')} $\to$ \texttt{Dense(32, 'relu')} $\to$ \texttt{Dense(2)}. \\ \bottomrule
+        \texttt{GINConv}: channels = 128, \texttt{Dense}: num neurons = 128, activation = relu \\\hline
+    Common output MLP & \texttt{Dense(64, `relu')} $\to$ \texttt{Dense(32, `relu')} $\to$ \texttt{Dense(2)}. \\ \bottomrule
 \end{tabular}
