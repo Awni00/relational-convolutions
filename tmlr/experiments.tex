@@ -1,6 +1,6 @@
 \section{Experiments}\label{sec:experiments}
 
-\aanote{this part is new.}
+%\aanote{this part is new.}
 In this section, we empirically evaluate the proposed \textit{relational convolutional network} architecture (abbreviated RelConvNet) to assess its effectiveness at learning relational tasks. We compare this architecture to several existing relational architectures as well as general-purpose sequence models. The common input to all models is a sequence of objects $X = (x_1, \ldots, x_n) \in \reals^{n \times d}$. We evaluate against the following baselines.
 \begin{itemize}
     \item \textbf{\textit{Transformer}} \citep{vaswani2017attention}. The Transformer is a powerful general-purpose sequence model. It consists of alternating self-attention and multi-layer perceptron blocks. Self-attention performs an information retrieval operation, which updates the internal representation of each object as a function of its context.
@@ -11,7 +11,7 @@ In this section, we empirically evaluate the proposed \textit{relational convolu
     \item \textbf{\textit{Graph Neural Networks}}. Graph neural networks are a class of neural network architectures which operate on graphs-structured data. A graph neural network typically receives two inputs: a graph described by a set of edges, and feature vectors for each node in the graph. GNNs can be described through the unifying framework of neural message-passing. Under this framework, graph-structured data is processed through an iterative message-passing operation given by $h_i^{(l+1)} \gets \mathrm{Update}(h_i^{(l)}, \{h_j^{(l)}\}_{j \in \calN(i)})$, where $h_i^{(0)} \gets x_i$. That is, each node's internal representation is iteratively updated as a function of its neighborhood. Here, $\mathrm{Update}$ is parameterized by a neural network, and the variation between different GNN architectures lies in the architectural design of this update process. We use Graph convolution Networks~\citep{kipfSemiSupervisedClassificationGraph2017}, Graph Attention Networks~\citep{velickovicGraphAttentionNetworks2017}, and Graph Isomorphism Networks~\citep{xuHowPowerfulAre2018} as representative GNN baselines.
 \end{itemize}
 
-\aawarning{TODO---add RelationNet baseline?}
+%\aawarning{TODO---add RelationNet baseline?}
 
 \input{experiments_relational_games}
 
