@@ -30,7 +30,7 @@ For a given group $g \subset [n]$, the relational inner product with a graphlet 
 \end{equation}
 In this section, we assumed that $\calG$ was given.
 % (i.e., a pre-specified hyperparameter of the relational convolution module). 
-If some prior information is known about reasonable groupings, this can be encoded in $\calG$. Otherwise, if $n$ is small, $\calG$ can be all possible combinations of size $s$. However, when $n$ is large, considering all combinations will be intractable. In the next subsection, we consider the problem of \textit{differentiably learning} the relevant groups.
+If some prior information is known about what groupings are relevant, this can be encoded in $\calG$. Otherwise, if $n$ is small, $\calG$ can be all possible combinations of size $s$. However, when $n$ is large, considering all combinations will be intractable. In the next subsection, we consider the problem of \textit{differentiably learning} the relevant groups.
 
 % In the above, we either consider all possible groups or we somehow assume that the relevant groups $\calG$ are known and given. We may also wish to \textit{learn} the relevant groups.
 
@@ -82,7 +82,7 @@ Overall, relational convolution with group attention can be summarized as follow
 
 \textbf{Entropy regularization.} Intuitively, we would ideally like the group attention scores in~\cref{eq:group_attn} to be close to discrete assignments. 
 % That is, the vector $\alpha_{i,\cdot}^{g} \in \Delta^{n}$ is ideally a one-hot vector for each $g \in [n_g],\, i \in [s]$.
-To encourage the model to learn more structured group assignments, we add an entropy regularization to the loss function, $\calL_{\mathtt{entr}} = (n_g \cdot s)^{-1} \sum_{g, i} H(\alpha_{i,\cdot}^{g})$, where $H(\alpha_{i,\cdot}^{g}) = - \sum_{j} \alpha_{ij}^{g} \log(\alpha_{ij}^g)$ is the Shannon entropy. As a heuristic, this regularization can be scaled by $\propto \log(\mathtt{n\_classes}) / \log(n)$ so that it doesn't dominate the underlying task's loss.
+To encourage the model to learn more structured group assignments, we add an entropy regularization to the loss function, $\calL_{\mathtt{entr}} = (n_g \cdot s)^{-1} \sum_{g, i} H(\alpha_{i,\cdot}^{g})$, where $H(\alpha_{i,\cdot}^{g}) = - \sum_{j} \alpha_{ij}^{g} \log(\alpha_{ij}^g)$ is the Shannon entropy. As a heuristic, this regularization can be scaled by a factor proportional to $\log(\mathtt{n\_classes}) / \log(n)$ so that it doesn't dominate the underlying task's loss.
 
 \textbf{Symmetric relational inner products.} So far, we considered \textit{ordered} groups. That is, the relational pattern computed by the relational inner product $\reliprod{R[g]}{\bm{f}}$ for the group $(1, 2, 3)$ is different from the group $(2, 3, 1)$. In some scenarios, symmetry in the representation of the relational pattern is a useful inductive bias. To capture this, we define a symmetric variant of the relational inner product that is invariant to the ordering of the elements in the group. This can be done by pooling over all permutations in the group. In particular, we suggest max-pooling or average-pooling, although any set-aggregator would be valid. We define the permutation-invariant relational inner product as
 \begin{equation}\label{eq:symmetric_relational_inner_prod}
