@@ -32,7 +32,7 @@ Your point about terminology is well-taken. Of course, attention is not literall
 
 > How does entropy change during training? Are different factors more or less effective?
 
-We've added some examples of loss and entropy regularization curves (at different levels of regularization) to the appendix with some discussion. We summarize this here. In general, we find that the entropy regularization term starts at $\log(n)$ (the entropy of a uniform distribution) and decreases monotonically while the base cross-entropy loss also decreases monotonically. The loss curves display a two-stage nature, with a rapid decrease in the loss in the first stage followed by a slower gradual decrease.
+We've added some examples of loss and entropy regularization curves (at different levels of regularization) to the appendix with some discussion. We summarize this here. In general, we find that the entropy regularization term starts at $\log(n)$ (the entropy of a uniform distribution) and decreases monotonically while the base cross-entropy loss also decreases monotonically. The loss curves display a two-stage nature, with a rapid decrease in the loss in the first stage followed by a slower gradual decrease. Expectedly, the value to which the entropy of the group attention scores converges to is smaller when the scaling factor is larger. With no entropy regularization, we find that the model fails to learn certain tasks. But if even a small amount of regularization is added, the model is able to find a solution. Our intuition is that entropy regularization drives the first phase of training where it the supervisory signal is weak since attention basically computes an average at initialization, making the relations between such averaged objects information-less. However, once the group attention operation begins to perform selection, the base supervisory signal kicks in and the model is able to start learning the relevant relations.
 
 TODO: add to paper
 
@@ -48,8 +48,9 @@ This is an interesting and important question. Indeed, the modules we developed 
 
 Learning object-centric representations can be done in an unsupervised way. For example, one notable piece of work in this area is Locatello et al.'s *Slot Attention*. The output of such methods is a sequence of vector embeddings, each describing an object in the scene. The output of something like Slot Attention can produce the input to relational convolutional networks to yield an end-to-end system learning from raw perceptual inputs. An important direction of future work will be to explore how well relational convolutional networks integrate with object-discovery methods like Slot Attention, and whether such a system could successfully learn to perform abstract relational reasoning in complex scenes.
 
-We will add a brief discussion on the connection between object-discovery and learning relational representations from object-centric representations.
+We will add a brief discussion on the connection between learning object-centric representations and learning relational representations.
 
+TODO: add to paper
 
 > I wonder if a regular deep ConvNet baseline would make sense? ... The "Common CNN Embedder" described in Table 2 feels incredibly shallow.
 
@@ -68,3 +69,12 @@ TODO: add to paper
 > Final point, I know it may be unfair to compare to highly optimized transformer CUDA kernels, but I couldn't find it mentioned how the method fares computationally in practice. Does it seem to scale well?
 
 At the end of Section 3.2, we discuss computational efficiency. We note that the overall computational complexity of a relational convolution layer (with group attention) is $O(n \cdot n_g \cdot s \cdot d + n_g \cdot s^2 \cdot d_r \cdot \max(d_{\mathrm{proj}}, n_f))$, where $n$ is the number of input objects, and the rest are hyperparameters. This can be implemented efficiently in modern deep learning libraries like PyTorch/Tensorflow/Jax/etc. In particular, computing the relation tensors can be computed in parallel with efficient matrix-matrix multiplications, and the group attention operation can use modern fast kernels like FlashAttention. In our experiments, the run-time of the RelConvNet experimental runs was similar to the Transformer baseline. Detailed experimental logs (including run-time, resource usage, metrics, etc.) are available through an online portal linked through the open-source code, which will be included in the de-anonymized version of the paper.
+
+---
+
+We mentioned several additions to the paper in our response. As per TMLR recommendations, we are waiting until all three reviews are posted before uploading the revised PDF. In the meantime, we hope the description of the additions is helpful.
+
+TODO: check this before submitting (e.g., are we posting this response before or after the third review is submitted)
+---
+
+Thank you for your review and we look forward to hearing your thoughts.
