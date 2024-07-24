@@ -12,6 +12,7 @@ from relational_neural_networks.relation_net import RelationNetwork
 from relational_neural_networks.tcn import TCN, GroupTCN
 from relational_neural_networks.predinet import PrediNet
 from misc.abstractor import RelationalAbstracter
+from relational_neural_networks.grouping_layers import AddPositionalEmbedding
 
 # global parameters
 cnn_embedder_kwargs = dict(n_f=(16,16), s_f=(3,3), pool_size=2)
@@ -21,6 +22,58 @@ hidden_dense_size = 64
 
 def create_relconvnet(normalizer=None, freeze_embedder=False, object_selection=None):
     relconv_mhr_kwargs = dict(rel_dim=16, proj_dim=4, symmetric=True)
+    relconv_kwargs = dict(n_filters=16, graphlet_size=3,
+            symmetric_inner_prod=False)
+    object_selector = get_obj_selector(object_selection)
+    normalizer = get_normalizer(normalizer)
+    cnn_embedder = CNNEmbedder(**cnn_embedder_kwargs)
+    cnn_embedder.trainable = not freeze_embedder
+
+    mhr1 = MultiDimInnerProdRelation(**relconv_mhr_kwargs, name='mhr1')
+    rel_conv1 = RelationalGraphletConvolution(
+        **relconv_kwargs, groups='combinations', name='rgc1')
+
+    model = tf.keras.Sequential([
+        object_selector,
+        cnn_embedder,
+        mhr1,
+        rel_conv1,
+        tf.keras.layers.Flatten(name='flatten'),
+        tf.keras.layers.Dense(hidden_dense_size, activation='relu', name='hidden_dense1'),
+        tf.keras.layers.Dense(2, name='output')
+        ], name='relconv'
+    )
+
+    return model
+
+def create_relconvnet_asymrel(normalizer=None, freeze_embedder=False, object_selection=None):
+    relconv_mhr_kwargs = dict(rel_dim=16, proj_dim=4, symmetric=False)
+    relconv_kwargs = dict(n_filters=16, graphlet_size=3,
+            symmetric_inner_prod=False)
+    object_selector = get_obj_selector(object_selection)
+    normalizer = get_normalizer(normalizer)
+    cnn_embedder = CNNEmbedder(**cnn_embedder_kwargs)
+    cnn_embedder.trainable = not freeze_embedder
+
+    mhr1 = MultiDimInnerProdRelation(**relconv_mhr_kwargs, name='mhr1')
+    rel_conv1 = RelationalGraphletConvolution(
+        **relconv_kwargs, groups='combinations', name='rgc1')
+
+    model = tf.keras.Sequential([
+        object_selector,
+        cnn_embedder,
+        mhr1,
+        rel_conv1,
+        tf.keras.layers.Flatten(name='flatten'),
+        tf.keras.layers.Dense(hidden_dense_size, activation='relu', name='hidden_dense1'),
+        tf.keras.layers.Dense(2, name='output')
+        ], name='relconv'
+    )
+
+    return model
+
+def create_relconvnet_dr1(normalizer=None, freeze_embedder=False, object_selection=None):
+    relconv_mhr_kwargs = dict(rel_dim=1, proj_dim=16, symmetric=False)
     relconv_kwargs = dict(n_filters=16, graphlet_size=3,
             symmetric_inner_prod=False)
     object_selector = get_obj_selector(object_selection)
@@ -226,6 +279,7 @@ def create_relnet(normalizer=None, freeze_embedder=False, object_selection=None)
     normalizer = get_normalizer(normalizer)
     cnn_embedder = CNNEmbedder(**cnn_embedder_kwargs)
     cnn_embedder.trainable = not freeze_embedder
+    add_pos_emb = AddPositionalEmbedding(max_length=9)
 
     relnet_kwargs = dict(neurons=[64, 64, 64], activation='relu')
     relnet = RelationNetwork(**relnet_kwargs)
@@ -234,6 +288,7 @@ def create_relnet(normalizer=None, freeze_embedder=False, object_selection=None)
         object_selector,
         cnn_embedder,
         object_selector,
+        add_pos_emb,
         relnet,
         tf.keras.layers.Dense(hidden_dense_size, activation='relu', name='hidden_dense1'),
         tf.keras.layers.Dense(2, name='output')
@@ -387,6 +442,7 @@ def create_gcn(normalizer=None, freeze_embedder=False, object_selection=None):
         def __init__(self):
             super().__init__()
             self.cnn_embedder = CNNEmbedder(**cnn_embedder_kwargs)
+            self.add_pos_emb = AddPositionalEmbedding(max_length=9)
             self.convs = [GCNConv(gcn_kwargs['channels']) for _ in range(gcn_kwargs['n_layers'])]
             self.denses = [tf.keras.layers.Dense(gcn_kwargs['dense_dim'], activation='relu') for _ in range(gcn_kwargs['n_layers'])]
             self.pool = tf.keras.layers.GlobalAveragePooling1D()
@@ -398,6 +454,7 @@ def create_gcn(normalizer=None, freeze_embedder=False, object_selection=None):
 
         def call(self, inputs):
             x = self.cnn_embedder(inputs)
+            x = self.add_pos_emb(x)
             a = tf.ones(shape=(tf.shape(x)[0], self.n_objs, self.n_objs))
             for conv, dense in zip(self.convs, self.denses):
                 x = conv([x, a])
@@ -418,6 +475,7 @@ def create_gat(normalizer=None, freeze_embedder=False, object_selection=None):
         def __init__(self):
             super().__init__()
             self.cnn_embedder = CNNEmbedder(**cnn_embedder_kwargs)
+            self.add_pos_emb = AddPositionalEmbedding(max_length=9)
             self.convs = [GATConv(gat_kwargs['channels']) for _ in range(gat_kwargs['n_layers'])]
             self.denses = [tf.keras.layers.Dense(gat_kwargs['dense_dim'], activation='relu') for _ in range(gat_kwargs['n_layers'])]
             self.pool = tf.keras.layers.GlobalAveragePooling1D()
@@ -429,6 +487,7 @@ def create_gat(normalizer=None, freeze_embedder=False, object_selection=None):
 
         def call(self, inputs):
             x = self.cnn_embedder(inputs)
+            x = self.add_pos_emb(x)
             a = tf.ones(shape=(tf.shape(x)[0], self.n_objs, self.n_objs))
             for conv, dense in zip(self.convs, self.denses):
                 x = conv([x, a])
@@ -449,6 +508,7 @@ def create_gin(normalizer=None, freeze_embedder=False, object_selection=None):
         def __init__(self):
             super().__init__()
             self.cnn_embedder = CNNEmbedder(**cnn_embedder_kwargs)
+            self.add_pos_emb = AddPositionalEmbedding(max_length=9)
             self.convs = [GINConvBatch(gin_kwargs['channels']) for _ in range(gin_kwargs['n_layers'])]
             self.denses = [tf.keras.layers.Dense(gin_kwargs['dense_dim'], activation='relu') for _ in range(gin_kwargs['n_layers'])]
             self.pool = tf.keras.layers.GlobalAveragePooling1D()
@@ -460,6 +520,7 @@ def create_gin(normalizer=None, freeze_embedder=False, object_selection=None):
 
         def call(self, inputs):
             x = self.cnn_embedder(inputs)
+            x = self.add_pos_emb(x)
             a = tf.ones(shape=(tf.shape(x)[0], self.n_objs, self.n_objs))
             for conv, dense in zip(self.convs, self.denses):
                 x = conv([x, a])
@@ -472,6 +533,38 @@ def create_gin(normalizer=None, freeze_embedder=False, object_selection=None):
     return GINModel()
 # endregion GIN
 
+def create_cnn_model(normalizer=None, freeze_embedder=False, object_selection=None):
+    n_f = [16, 16, 32, 32, 64, 64, 128, 128]
+    s_f = [3]*8
+    pool_sizes = [2, None, 2, None, 2, None, 2, None]
+
+    layers = []
+    assert len(n_f) == len(s_f) == len(pool_sizes)
+
+    # transform sequence of images into single-image (i.e., (9, 12, 12, 3) |-> (36, 36, 3))
+    seq_img_transform = tf.keras.Sequential([
+        tf.keras.layers.Permute((1, 4, 2, 3)), # 9, c, 12, 12
+        tf.keras.layers.Reshape((3, 3, 3, 12, 12)), # 3, 3, c, 12, 12
+        tf.keras.layers.Permute((3, 1, 4, 2, 5)), # c, 3, 12, 3, 12
+        tf.keras.layers.Reshape((3, 36, 36)), # c, 36, 36
+        tf.keras.layers.Permute((2, 3, 1)) # 36, 36, c
+    ], name='seq_to_img_transform')
+    layers.append(seq_img_transform)
+
+    for l in range(len(n_f)):
+        layers.append(tf.keras.layers.Conv2D(n_f[l], s_f[l], activation='relu', padding='same'))
+        if pool_sizes[l] is not None:
+            layers.append(tf.keras.layers.MaxPool2D(pool_sizes[l]))
+
+    layers += [
+        tf.keras.layers.Flatten(),
+        tf.keras.layers.Dropout(0.1),
+        tf.keras.layers.Dense(128, activation='relu', name='hidden_dense1'), # NOTE: changed from hidden_dense_size = 64
+        tf.keras.layers.Dropout(0.1),
+        tf.keras.layers.Dense(2, name='output')
+    ]
+
+    return tf.keras.Sequential(layers)
 
 
 # region utilities for model configurations
@@ -528,5 +621,8 @@ model_creators = dict(
     gcn=create_gcn,
     gat=create_gat,
     gin=create_gin,
-    relconvnet_groupattn=create_relconvnet_groupattn
+    relconvnet_groupattn=create_relconvnet_groupattn,
+    relconvnet_asymrel=create_relconvnet_asymrel,
+    relconvnet_dr1=create_relconvnet_dr1,
+    cnn=create_cnn_model
     )
