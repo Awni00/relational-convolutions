@@ -36,6 +36,40 @@ def create_relconvnet():
 
     return model
 
+def create_relconvnet_asymrel():
+    relconv_mhr_kwargs = dict(rel_dim=16, proj_dim=16, symmetric=False)
+    relconv_kwargs = dict(n_filters=16, graphlet_size=3,
+        symmetric_inner_prod=True, permutation_aggregator='max')
+    mhr1 = MultiDimInnerProdRelation(**relconv_mhr_kwargs, name='mhr1')
+    rel_conv1 = RelationalGraphletConvolution(
+        **relconv_kwargs, groups='combinations', name='rgc1')
+
+    model = tf.keras.Sequential([
+        mhr1,
+        rel_conv1,
+        create_predictormlp()
+        ], name='relconv'
+    )
+
+    return model
+
+def create_relconvnet_dr1():
+    relconv_mhr_kwargs = dict(rel_dim=1, proj_dim=32, symmetric=False)
+    relconv_kwargs = dict(n_filters=16, graphlet_size=3,
+        symmetric_inner_prod=True, permutation_aggregator='max')
+    mhr1 = MultiDimInnerProdRelation(**relconv_mhr_kwargs, name='mhr1')
+    rel_conv1 = RelationalGraphletConvolution(
+        **relconv_kwargs, groups='combinations', name='rgc1')
+
+    model = tf.keras.Sequential([
+        mhr1,
+        rel_conv1,
+        create_predictormlp()
+        ], name='relconv'
+    )
+
+    return model
+
 def create_relconvnet_maxpooling():
     relconv_mhr_kwargs = dict(rel_dim=16, proj_dim=16, symmetric=True)
     relconv_kwargs = dict(n_filters=16, graphlet_size=3,
@@ -245,5 +279,7 @@ model_creators = dict(
     gcn=create_gcn,
     gat=create_gat,
     gin=create_gin,
-    abstractor=create_abstractor
+    abstractor=create_abstractor,
+    relconvnet_asymrel=create_relconvnet_asymrel,
+    relconvnet_dr1=create_relconvnet_dr1
     )
