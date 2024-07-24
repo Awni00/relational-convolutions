@@ -27,17 +27,13 @@ We train for 50 epochs using the categorical cross-entropy loss and the Adam opt
     % \vskip-12pt
 \end{figure}
 
+\textbf{Out-of-distribution generalization.}~\Cref{fig:ood_generalization} reports model performance on the two hold-out object sets after training. On the hexominoes objects, which are similar-looking to the pentominoes objects used for training, RelConvNet and CoRelNet do nearly perfectly. PrediNet and the Transformer do well on the simpler tasks, but struggle with the more difficult `match pattern' task. The `stripes' objects are visually more distinct from the objects in the training split, making generalization more difficult. We observe an overall drop in performance for all models. The drop is particularly dramatic for CoRelNet\footnote{The experiments in \citet{kergNeuralArchitecture2022} on the relational games benchmark use a technique called ``context normalization''~\citep{webbLearningRepresentationsThat2020} as a preprocessing step. We choose not to use this technique since it is an added confounder. We discuss this choice in~\Cref{sec:appendix_tcn_discussion}.}.
+% We conjecture that this is due to CoRelNet's inability to model multi-dimensional relations, necessitating that all relational information is squeezed into a scalar quantity. % Or perhaps it's because of the softmax normalization?
+The separation between RelConvNet and the other models is largest on the `match pattern' task of the stripes split (the most difficult task and the most difficult generalization split). Here, RelConvNet maintains a mean accuracy of 87\% while the other models drop below 65\%. We attribute this to RelConvNet's ability to naturally represent higher-order relations and model groupings of objects. The CNN baseline learns the easier `same', `between', and `occurs' tasks nearly perfectly, but completely fails to learn the more difficult `xoccurs' and `match pattern' tasks. This hard boundary suggests that explicit relational architectural inductive biases are necessary for learning more difficult relational tasks.
+
 \textbf{Data efficiency.} We observe that the relational inductive biases of RelConvNet, and relational models more generally, grant a significant advantage in sample-efficiency.~\Cref{fig:training_curves} shows the training accuracy over the first 2,000 batches for each model. RelConvNet, CoRelNet, and PrediNet are explicitly relational architectures, whereas the Transformer is not. The Transformer is able to process relational information through its attention mechanism, but this information is entangled with the features of individual objects (which, for these relational tasks, is extraneous information). The Transformer consistently requires the largest amount of data to learn the relational games tasks. PrediNet tends to be more sample-efficient. RelConvNet and CoRelNet are the most sample-efficient, with RelConvNet only slightly more sample-efficient on most tasks.
 
 On the `match pattern' task, which is the most difficult, RelConvNet is significantly more sample-efficient. We attribute this to the fact that RelConvNet is able to model higher-order relations through its relational convolution module. The `match pattern' task can be thought of as a second-order relational task---it involves computing the relational pattern in each of two groups, and comparing the two relational patterns. The relational convolution module naturally models this kind of situation since it learns representations of the relational patterns within groups of objects. %The performance we observe here indicates that the relational games dataset is in some sense saturated by models like RelConvNet and CoRelNet and that more complex relational benchmarks are needed to evaluate the limits of these models.
-
-\begin{figure}[t]
-    \centering
-    \includegraphics[width=0.95\textwidth]{figs/experiments/all_training_curves.pdf}
-    % \vskip-10pt
-    \caption{Training curves, up to 2,000 batch steps, for each relational games task. Solid lines indicate the mean over 5 trials and the shaded regions indicate a bootstrap 95\% confidence interval.}\label{fig:training_curves}
-    % \vskip-5pt
-\end{figure}
 
 \begin{figure}[t]
     \centering
@@ -46,12 +42,13 @@ On the `match pattern' task, which is the most difficult, RelConvNet is signific
     \caption{Out-of-distribution generalization on hold-out object sets. Bar heights indicate the mean over 5 trials and the error bars indicate a bootstrap 95\% confidence interval.}\label{fig:ood_generalization}
     % \vskip-12.5pt
 \end{figure}
-
-\textbf{Out-of-distribution generalization.}~\Cref{fig:ood_generalization} reports model performance on the two hold-out object sets after training. On the hexominoes objects, which are similar-looking to the pentominoes objects used for training, RelConvNet and CoRelNet do nearly perfectly. PrediNet and the Transformer do well on the simpler tasks, but struggle with the more difficult `match pattern' task. The `stripes' objects are visually more distinct from the objects in the training split, making generalization more difficult. We observe an overall drop in performance for all models. The drop is particularly dramatic for CoRelNet\footnote{The experiments in \citet{kergNeuralArchitecture2022} on the relational games benchmark use a technique called ``context normalization''~\citep{webbLearningRepresentationsThat2020} as a preprocessing step. We choose not to use this technique since it is an added confounder. We discuss this choice in~\Cref{sec:appendix_tcn_discussion}.}.
-% We conjecture that this is due to CoRelNet's inability to model multi-dimensional relations, necessitating that all relational information is squeezed into a scalar quantity. % Or perhaps it's because of the softmax normalization?
-The separation between RelConvNet and the other models is largest on the `match pattern' task of the stripes split (the most difficult task and the most difficult generalization split). Here, RelConvNet maintains a mean accuracy of 87\% while the other models drop below 65\%. We attribute this to RelConvNet's ability to naturally represent higher-order relations and model groupings of objects.
-
-
+\begin{figure}[t]
+    \centering
+    \includegraphics[width=0.95\textwidth]{figs/experiments/all_training_curves.pdf}
+    % \vskip-10pt
+    \caption{Training curves, up to 2,000 batch steps, for each relational games task. Solid lines indicate the mean over 5 trials and the shaded regions indicate a bootstrap 95\% confidence interval. Note that this is in-distribution (i.e., on the ``pentominoes'' split).}\label{fig:training_curves}
+    % \vskip-5pt
+\end{figure}
 
 % \begin{table}
 %     \centering
