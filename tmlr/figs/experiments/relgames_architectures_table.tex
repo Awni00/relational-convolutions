@@ -1,26 +1,36 @@
 \begin{tabular}{p{0.25\textwidth}p{0.75\textwidth}}
     \toprule
-    Model / Component & Architecture \\ \midrule
+    Model / Component & Architecture \\ \hline\hline
+
     Common CNN \newline Embedder & \texttt{Conv2D} $\to$ \texttt{MaxPool2D} $\to$ \texttt{Conv2D} $\to$ \texttt{MaxPool2D} $\to$ \texttt{Flatten}. \newline
                         \texttt{Conv2D}: num filters = 16, filter size = $3 \times 3$, activation = relu. \newline
                         \texttt{MaxPool2D}: stride = 2. \\\hline
-    RelConvNet        & \texttt{CNN} $\to$ \texttt{MD-IPR} $\to$ \texttt{RelConv} $\to$ \texttt{Flatten} $\to$ \texttt{MLP}. \newline
-                        \texttt{MD-IPR}: relation dim = 16, projection dim = 4, symmetric. \newline
-                        \texttt{RelConv}: num filters = 16, filter size = 3, discrete groups = combinations. \\\hline
-    CoRelNet          & \texttt{CNN} $\to$ \texttt{CoRelNet} $\to$ \texttt{Flatten} $\to$ \texttt{MLP}. \newline
-                        Standard CoRelNet has no hyperparameters. \\\hline
-    PrediNet          & \texttt{CNN} $\to$ \texttt{PrediNet} $\to$ \texttt{Flatten} $\to$ \texttt{MLP}. \newline
-                        \texttt{PrediNet}: key dim = 4, number of heads = 4, num relations = 16. \\\hline
-    Transformer       & \texttt{CNN} $\to$ \texttt{TransformerEncoder} $\to$ \texttt{AveragePooling} $\to$ \texttt{MLP}. \newline
-                    \texttt{TransformerEncoder}: num layers = 1, num heads = 8, feedforward intermediate size = 32, activation = relu. \\\hline
+    Common output MLP & \texttt{Dense(64, `relu')} $\to$ \texttt{Dense(2)}. \\ \hline\hline
+
+    RelConvNet        &
+        \texttt{CNN Embedder} $\to$ \texttt{MD-IPR} $\to$ \texttt{RelConv} $\to$ \texttt{Flatten} $\to$ \texttt{MLP}. \newline
+        \texttt{MD-IPR}: relation dim = 16, projection dim = 4, symmetric. \newline
+        \texttt{RelConv}: num filters = 16, filter size = 3, discrete groups = combinations. \\\hline
+    CoRelNet          &
+        \texttt{CNN Embedder} $\to$ \texttt{CoRelNet} $\to$ \texttt{Flatten} $\to$ \texttt{MLP}. \newline
+        Standard CoRelNet has no hyperparameters. \\\hline
+    PrediNet          &
+        \texttt{CNN Embedder} $\to$ \texttt{PrediNet} $\to$ \texttt{Flatten} $\to$ \texttt{MLP}. \newline
+        \texttt{PrediNet}: key dim = 4, number of heads = 4, num relations = 16. \\\hline
+    Transformer       &
+        \texttt{CNN Embedder} $\to$ \texttt{TransformerEncoder} $\to$ \texttt{AveragePooling} $\to$ \texttt{MLP}. \newline
+        \texttt{TransformerEncoder}: num layers = 1, num heads = 8, feedforward intermediate size = 32, activation = relu. \\\hline
     GCN               &
-        \texttt{CNN} $\to$ \texttt{AddPosEmb} $\to$ (\texttt{GCNConv} $\to$ \texttt{Dense}) $\times 2$ $\to$ \texttt{AveragePooling} $\to$ \texttt{MLP}. \newline
+        \texttt{CNN Embedder} $\to$ \texttt{AddPosEmb} $\to$ (\texttt{GCNConv} $\to$ \texttt{Dense}) $\times 2$ $\to$ \texttt{AveragePooling} $\to$ \texttt{MLP}. \newline
         \texttt{GCConv}: channels = 32, \texttt{Dense}: num neurons = 32, activation = relu \\\hline
     GAT               &
-        \texttt{CNN} $\to$ \texttt{AddPosEmb} $\to$ (\texttt{GATConv} $\to$ \texttt{Dense}) $\times 2$ $\to$ \texttt{AveragePooling} $\to$ \texttt{MLP}. \newline
+        \texttt{CNN Embedder} $\to$ \texttt{AddPosEmb} $\to$ (\texttt{GATConv} $\to$ \texttt{Dense}) $\times 2$ $\to$ \texttt{AveragePooling} $\to$ \texttt{MLP}. \newline
         \texttt{GATonv}: channels = 32, \texttt{Dense}: num neurons = 32, activation = relu \\\hline
     GCN               &
-        \texttt{CNN} $\to$ \texttt{AddPosEmb} $\to$ (\texttt{GINConv} $\to$ \texttt{Dense}) $\times 2$ $\to$ \texttt{AveragePooling} $\to$ \texttt{MLP}. \newline
+        \texttt{CNN Embedder} $\to$ \texttt{AddPosEmb} $\to$ (\texttt{GINConv} $\to$ \texttt{Dense}) $\times 2$ $\to$ \texttt{AveragePooling} $\to$ \texttt{MLP}. \newline
         \texttt{GINConv}: channels = 32, \texttt{Dense}: num neurons = 32, activation = relu \\\hline
-                Common output MLP & \texttt{Dense(64, `relu')} $\to$ \texttt{Dense(2)}. \\ \bottomrule
+    CNN               &
+    (\texttt{Conv2D} $\to$ \texttt{MaxPool2D}) $\times 8$ $\to$ \texttt{Flatten} $\to$ \texttt{Dense(128, `relu')} $\to$ \texttt{Dense(2)} \newline
+    \texttt{Conv2D}: num filters = [16, 16, 32, 32, 64, 64, 128, 128], filter size = $3$ \newline
+    \texttt{MaxPool2D}: stride = 2, apply every other layer. \\ \bottomrule
 \end{tabular}
