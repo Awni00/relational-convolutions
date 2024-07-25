@@ -3,12 +3,12 @@
 \subsection{Relational Games (\Cref{ssec:exp_relational_games})}
 
 The pentominoes split is used for training, and the hexominoes and stripes splits are used to test out-of-distribution generalization after training. We hold out 1000 samples for validation (during training) and 5000 samples for testing (after training), and use the rest as the training set. We train for 50 epochs using the categorical cross-entropy loss and the Adam optimizer with learning rate $0.001$, $\beta_1 = 0.9, \beta_2 = 0.999, \epsilon = 10^{-7}$. We use a batch size of 512. For each model and task, we run 5 trials with different random seeds.\Cref{tab:relational_games_tasks} contains text descriptions of each task in the relational games dataset in the experiments of~\Cref{ssec:exp_relational_games}.~\Cref{tab:relgames_architectures} contains a description of the architectures of each model (or shared component) in the experiments.
-\Cref{tab:ood_generalization} reports the accuracy on the hold-out object sets (i.e., the numbers depicted in~\Cref{fig:ood_generalization} of the main text).~\Cref{fig:groupattn_entropy_reg} explores the effect of entropy regularization in group attention on learning using the ``match pattern'' task as an example.
+\Cref{tab:ood_generalization} reports the accuracy on the hold-out object sets (i.e., the numbers depicted in~\Cref{fig:ood_generalization} of the main text).~\Cref{fig:groupattn_entropy_reg,fig:groupattn_entropy_reg_tradeoff} explore the effect of entropy regularization in group attention on learning using the ``match pattern'' task as an example.
 
 
-\subsection{SET (\Cref{ssec:experiments_set})}
+\subsection{\textit{Set} (\Cref{ssec:experiments_set})}
 
-We train for 100 epochs using the categorical cross-entropy loss and the Adam optimizer with learning rate $0.001$, $\beta_1 = 0.9, \beta_2 = 0.999, \epsilon = 10^{-7}$. We use a batch size of 512. For each model and task, we run 5 trials with different random seeds.\Cref{tab:set_architectures} contains a description of the architecture of each model in the ``contains set'' experiments of~\Cref{ssec:experiments_set}.~\Cref{tab:set_acc} reports the generalization accuracies on the hold-out `sets' (i.e., the numbers depicted in~\Cref{fig:contains_set_acc} of the main text).
+We train for 100 epochs using the categorical cross-entropy loss and the Adam optimizer with learning rate $0.001$, $\beta_1 = 0.9, \beta_2 = 0.999, \epsilon = 10^{-7}$. We use a batch size of 512. For each model and task, we run 5 trials with different random seeds.\Cref{tab:set_architectures} contains a description of the architecture of each model in the ``contains set'' experiments of~\Cref{ssec:experiments_set}.~\Cref{tab:set_acc} reports the generalization accuracies on the hold-out `sets' (i.e., the numbers depicted in~\Cref{fig:contains_set_acc} of the main text).~\Cref{fig:set_relconvnet_ablations} explores the effect of different RelConvNet hyperparameters on the model's ability to learn the the \textit{Set} task.
 
 \begin{table}[H]
     \centering
@@ -34,18 +34,29 @@ We train for 100 epochs using the categorical cross-entropy loss and the Adam op
     \caption{Model architectures for ``contains set'' experiments.}\label{tab:set_architectures}
 \end{table}
 
+
+\begin{figure}[H]
+    \centering
+    \includegraphics{figs/experiments/group_attn_entropy_tradeoff.pdf}
+    \caption{Trade-off between task loss and group attention entropy. RelConvNet models are trained on the ``match pattern'' task in the Relational Games benchmark varying the entropy regularization level. The overall model loss is $\calL_{\mathtt{loss}} + \lambda \calL_{\mathtt{entr}}$, where $\calL_{\mathtt{loss}} = \mathrm{CrossEntropy}(y, \hat{y})$ is the task loss (blue line), $\calL_{\mathtt{entr}}$ is the entropy regularization term for the group attention scores (orange line) as defined in~\Cref{ssec:relconv_groupattn}, and $\lambda$ is a scaling factor. Different lines correspond to different values of $\lambda$. When $\lambda = 0$ (no entropy regularization) the model fails to learn the task. A small amount of regularization is enough to guide the model to a good solution. Increasing $\lambda$ causes smaller group attention entropy at convergence, approaching discrete assignments.}\label{fig:groupattn_entropy_reg_tradeoff}
+\end{figure}
+
 \begin{figure}[H]
     \centering
     \includegraphics{figs/experiments/group_attn_entropy.pdf}
-    \caption{Effect of group attention entropy regularization. Group attention entropy (left) and baseline cross-entropy loss (right) of a relational convolutional network model trained on the ``match pattern'' task with different levels of entropy regularization. The overall model loss is $\calL_{\mathtt{loss}} + \lambda \calL_{\mathtt{entr}}$, where $\calL_{\mathtt{loss}} = \mathrm{CrossEntropy}(y, \hat{y})$, $\calL_{\mathtt{entr}}$ is the entropy regularization term for the group attention scores as defined in~\Cref{ssec:relconv_groupattn}, and $\lambda$ is a scaling factor. Different lines correspond to different values of $\lambda$. Without entropy regularization, the model fails to learn the task. With sufficient entropy regularization, the model is able to learn the task and group attention converges towards discrete assignments. The group attention entropy starts at $\log 9 \approx 2.2$ (the entropy of a uniform distribution) and decreases over the course of training.}\label{fig:groupattn_entropy_reg}
+    \caption{Effect of group attention entropy regularization. Group attention entropy (left) and baseline cross-entropy loss (right) of a relational convolutional network model trained on the ``match pattern'' task with different levels of entropy regularization. The overall model loss is $\calL_{\mathtt{loss}} + \lambda \calL_{\mathtt{entr}}$, where $\calL_{\mathtt{loss}}$ is the task loss, $\calL_{\mathtt{entr}}$ is the entropy regularization term, and $\lambda$ is a scaling factor. Different lines correspond to different values of $\lambda$. Without entropy regularization, the model fails to learn the task. With sufficient entropy regularization, the model is able to learn the task and group attention converges towards discrete assignments. The group attention entropy starts at $\log 9 \approx 2.2$ (the entropy of a uniform distribution) and decreases over the course of training. Expectedly, larger $\lambda$ values cause the entropy to decrease faster, converging towards a smaller value. When $\lambda$ is too large, the entropy regularization overwhelms the base cross-entropy loss and results in converging to a worse cross-entropy loss. Intuitively, one needs to strike a balance such that both the entropy regularization and the cross-entropy loss guide the evolution of the group attention map.}\label{fig:groupattn_entropy_reg}
 \end{figure}
-
-\aafatal{TODO -- add additional trials. add further discussion}
 
 \begin{table}[H]
     \centering
     \input{figs/experiments/set_acc_table.tex}
     \caption{Hold-out test accuracy on ``contains set'' task. We report means $\pm$ standard error of mean over 10 trials. These are the numbers associated with~\Cref{fig:contains_set_acc}.}\label{tab:set_acc}
 \end{table}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics{figs/experiments/contains_set_training_curves_relconvnet_ablation.pdf}
+    \caption{Exploring the effect of multi-dimensional relations and symmetric relations in RelConvNet. RelConvNet models matching the architecture described in~\Cref{tab:set_architectures} are trained on the \textit{Set} task. We test two variants: 1) set the relation dimension to be $d_r = 1$ (instead of $d_r = 16$), and 2) remove the symmetry inductive bias (i.e., $W_1 \neq W_2$ in~\Cref{eq:relation_function_lin_proj}). We find that with $d_r = 1$ (which is analogous to CoRelNet's single-dimensional similarity matrix), the model struggles to find good solutions. In 10 different runs with random seeds, one run was able to find a good solution reaching an accuracy of $98.5\%$, whereas the other runs were stuck below $65\%$. This suggests that having multi-dimensional relations yields a more robust model with multiple different avenues for finding good solutions during the optimization process. In the case of the model with the asymmetric relations (i.e., lacking a symmetry inductive bias), the model is able to fit the training data, but fails to generalize. This suggests the symmetry is an important inductive bias for certain tasks.}\label{fig:set_relconvnet_ablations}
+\end{figure}
 \null
 \vfill
