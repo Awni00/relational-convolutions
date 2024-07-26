@@ -1,10 +1,12 @@
 Thank you for your review.
 
+We have uploaded a revised version of the manuscript with several additions to address feedback from reviews. Please see the global response for an overview of these additions. Below, we will address your particular concerns and highlight additions related to your review in more detail.
+
 > Since the method involves several modules, ablation studies on the contribution of each module would be beneficial.
 
 We have updated the paper to add some discussion of the effects of different configurations of the proposed module. In particular, the effect of the relation dimension $d_r$, imposed symmetry of the relations, entropy regularization, and others. For brevity, here we will highlight what we thought was most interesting.
 
-Recall that the *SET!* task was by far the most difficult relational task in our experiments, with all other baselines failing to learn the task beyond 60\% accuracy. Here, we discuss what factors contribute to the success of relational convolutional networks on the task.
+Recall that the *Set* task was by far the most difficult relational task in our experiments, with all other baselines failing to learn the task beyond 60\% accuracy. Here, we discuss what factors contribute to the success of relational convolutional networks on the task.
 
 We find that the symmetry of relations is a crucial inductive bias. We experiment with variants of RelConvNet with symmetric ($W_1 = W_2$) and asymmetric ($W_1, W_2$ independent parameters) relations. We find that RelConvNet fails to learn the *SET!* task in a way that generalizes without the symmetry constraint---it is able to fit the training data but does not learn the rule in a way that generalizes.
 
@@ -12,8 +14,7 @@ We also find have multi-dimensional relations to be crucial for reliably learnin
 
 Part of what makes this task very challenging is the need to perform some kind of combinatorial search with a limited supervision signal. This manifests itself in the shape of the accuracy curve over the curse over the course of training. It exhibits a "staircase" shape, suggesting that, when the model successfully learns the task, it does so all at once. We find that having symmetric and multi-dimensional relations is crucial for learning such tasks that require hierarchical combinatorial-like relational reasoning tasks.
 
-TODO: add to paper
-
+These new results are depicted in Figure 11 in the appendix.
 
 > In the introduction, it is helpful to give a clear explanation of the originality of the work over existing ones (e.g., with respect to the problem setting considered or learning method).
 
