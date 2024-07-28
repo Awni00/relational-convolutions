@@ -19,12 +19,12 @@
         \texttt{PrediNet}: key dim = 4, number of heads = 4, num relations = 16. \\\hline
     Transformer       & 
         \texttt{CNN Embedder} $\to$ \texttt{TransformerEncoder} $\to$ \texttt{AveragePooling} $\to$ \texttt{MLP}. \newline
-        \texttt{TransformerEncoder}: num layers = 1, num heads = 8, feedforward intermediate size = 32, activation = relu. \\\hline
+        \texttt{TransformerEncoder}: num layers = 2, num heads = 8, feedforward intermediate size = 128, activation = relu. \\\hline
     GCN               &
         \texttt{CNN Embedder} $\to$ (\texttt{GCNConv} $\to$ \texttt{Dense}) $\times 2$ $\to$ \texttt{AveragePooling} $\to$ \texttt{MLP}. \newline
         \texttt{GCConv}: channels = 128, \texttt{Dense}: num neurons = 128, activation = relu \\\hline
     GAT               &
-        \texttt{CNN Embedder} $\to$ (\texttt{GATConv} $\to$ \texttt{Dense}) $\times 2$ $\to$ \texttt{AveragePooling} $\to$ \texttt{MLP}. \newline
+        \texttt{CNN Embedder} $\to$ (\texttt{GATConv} $\to$ \texttt{Dense}) $\times 1$ $\to$ \texttt{AveragePooling} $\to$ \texttt{MLP}. \newline
         \texttt{GATonv}: channels = 128, \texttt{Dense}: num neurons = 128, activation = relu \\\hline
     GCN               &
         \texttt{CNN Embedder} $\to$ (\texttt{GINConv} $\to$ \texttt{Dense}) $\times 2$ $\to$ \texttt{AveragePooling} $\to$ \texttt{MLP}. \newline
