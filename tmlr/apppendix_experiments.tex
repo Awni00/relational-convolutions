@@ -5,11 +5,6 @@
 The pentominoes split is used for training, and the hexominoes and stripes splits are used to test out-of-distribution generalization after training. We hold out 1000 samples for validation (during training) and 5000 samples for testing (after training), and use the rest as the training set. We train for 50 epochs using the categorical cross-entropy loss and the Adam optimizer with learning rate $0.001$, $\beta_1 = 0.9, \beta_2 = 0.999, \epsilon = 10^{-7}$. We use a batch size of 512. For each model and task, we run 5 trials with different random seeds.\Cref{tab:relational_games_tasks} contains text descriptions of each task in the relational games dataset in the experiments of~\Cref{ssec:exp_relational_games}.~\Cref{tab:relgames_architectures} contains a description of the architectures of each model (or shared component) in the experiments.
 \Cref{tab:ood_generalization} reports the accuracy on the hold-out object sets (i.e., the numbers depicted in~\Cref{fig:ood_generalization} of the main text).~\Cref{fig:groupattn_entropy_reg,fig:groupattn_entropy_reg_tradeoff} explore the effect of entropy regularization in group attention on learning using the ``match pattern'' task as an example.
 
-
-\subsection{\textit{Set} (\Cref{ssec:experiments_set})}
-
-We train for 100 epochs using the categorical cross-entropy loss and the Adam optimizer with learning rate $0.001$, $\beta_1 = 0.9, \beta_2 = 0.999, \epsilon = 10^{-7}$. We use a batch size of 512. For each model and task, we run 5 trials with different random seeds.\Cref{tab:set_architectures} contains a description of the architecture of each model in the ``contains set'' experiments of~\Cref{ssec:experiments_set}.~\Cref{tab:set_acc} reports the generalization accuracies on the hold-out `sets' (i.e., the numbers depicted in~\Cref{fig:contains_set_acc} of the main text).~\Cref{fig:set_relconvnet_ablations} explores the effect of different RelConvNet hyperparameters on the model's ability to learn the the \textit{Set} task.
-
 \begin{table}[H]
     \centering
     \input{figs/experiments/tasks_table.tex}
@@ -28,12 +23,21 @@ We train for 100 epochs using the categorical cross-entropy loss and the Adam op
     \caption{Out-of-distribution generalization results on relational games. We report means $\pm$ standard error of mean over 5 trials. These are the numbers associated with~\Cref{fig:ood_generalization}.}\label{tab:ood_generalization}
 \end{table}
 
+\subsection{\textit{Set} (\Cref{ssec:experiments_set})}
+
+We train for 100 epochs using the categorical cross-entropy loss and the Adam optimizer with learning rate $0.001$, $\beta_1 = 0.9, \beta_2 = 0.999, \epsilon = 10^{-7}$. We use a batch size of 512. For each model and task, we run 5 trials with different random seeds.\Cref{tab:set_architectures} contains a description of the architecture of each model in the ``contains set'' experiments of~\Cref{ssec:experiments_set}.~\Cref{tab:set_acc} reports the generalization accuracies on the hold-out `sets' (i.e., the numbers depicted in~\Cref{fig:contains_set_acc} of the main text).~\Cref{fig:set_relconvnet_ablations} explores the effect of different RelConvNet hyperparameters on the model's ability to learn the the \textit{Set} task.
+
 \begin{table}[H]
     \centering
     \input{figs/experiments/set_architectures_table.tex}
     \caption{Model architectures for ``contains set'' experiments.}\label{tab:set_architectures}
 \end{table}
 
+\begin{table}[H]
+    \centering
+    \input{figs/experiments/set_acc_table_tunedbaselines.tex}
+    \caption{Hold-out test accuracy on ``contains set'' task. We report means $\pm$ standard error of mean over 10 trials. These are the numbers associated with~\Cref{fig:contains_set_acc}.}\label{tab:set_acc}
+\end{table}
 
 \begin{figure}[H]
     \centering
@@ -47,16 +51,83 @@ We train for 100 epochs using the categorical cross-entropy loss and the Adam op
     \caption{Effect of group attention entropy regularization. Group attention entropy (left) and baseline cross-entropy loss (right) of a relational convolutional network model trained on the ``match pattern'' task with different levels of entropy regularization. The overall model loss is $\calL_{\mathtt{loss}} + \lambda \calL_{\mathtt{entr}}$, where $\calL_{\mathtt{loss}}$ is the task loss, $\calL_{\mathtt{entr}}$ is the entropy regularization term, and $\lambda$ is a scaling factor. Different lines correspond to different values of $\lambda$. Without entropy regularization, the model fails to learn the task. With sufficient entropy regularization, the model is able to learn the task and group attention converges towards discrete assignments. The group attention entropy starts at $\log 9 \approx 2.2$ (the entropy of a uniform distribution) and decreases over the course of training. Expectedly, larger $\lambda$ values cause the entropy to decrease faster, converging towards a smaller value. When $\lambda$ is too large, the entropy regularization overwhelms the base cross-entropy loss and results in converging to a worse cross-entropy loss. Intuitively, one needs to strike a balance such that both the entropy regularization and the cross-entropy loss guide the evolution of the group attention map.}\label{fig:groupattn_entropy_reg}
 \end{figure}
 
-\begin{table}[H]
-    \centering
-    \input{figs/experiments/set_acc_table.tex}
-    \caption{Hold-out test accuracy on ``contains set'' task. We report means $\pm$ standard error of mean over 10 trials. These are the numbers associated with~\Cref{fig:contains_set_acc}.}\label{tab:set_acc}
-\end{table}
-
 \begin{figure}[H]
     \centering
     \includegraphics{figs/experiments/contains_set_training_curves_relconvnet_ablation.pdf}
     \caption{Exploring the effect of multi-dimensional relations and symmetric relations in RelConvNet. RelConvNet models matching the architecture described in~\Cref{tab:set_architectures} are trained on the \textit{Set} task. We test two variants: 1) set the relation dimension to be $d_r = 1$ (instead of $d_r = 16$), and 2) remove the symmetry inductive bias (i.e., $W_1 \neq W_2$ in~\Cref{eq:relation_function_lin_proj}). We find that with $d_r = 1$ (which is analogous to CoRelNet's single-dimensional similarity matrix), the model struggles to find good solutions. In 10 different runs with random seeds, one run was able to find a good solution reaching an accuracy of $98.5\%$, whereas the other runs were stuck below $65\%$. This suggests that having multi-dimensional relations yields a more robust model with multiple different avenues for finding good solutions during the optimization process. In the case of the model with the asymmetric relations (i.e., lacking a symmetry inductive bias), the model is able to fit the training data, but fails to generalize. This suggests the symmetry is an important inductive bias for certain tasks.}\label{fig:set_relconvnet_ablations}
 \end{figure}
+
+\section{Hyperparameter sweep for baseline models}\label{ssec:baseline_hyperparameter_sweep}
+
+In order to ensure that we compare RelConvNet against the best-achievable performance by each baseline architecture, we carry out an extensive hyperparameter sweep over combinations of architectural hyperparameters and optimization hyperparameters. In particular, as seen in~\Cref{ssec:set_no_hyperparameter_sweep}, the baseline models severely overfit on the \textit{Set} task, fitting the training data but failing to generalize to unseen `sets'. Hence, we explore whether it is possible to avoid or alleviate overfitting through an appropriate choice of hyperparameters.
+
+In~\Cref{fig:hyperparameter_sweep_nlayers}, we vary the number of layers in the baseline models to select an optimal configuration of each architecture. We find that increased depth beyond 2 layers is generally detrimental on this task. Based on these results, we choose the optimal number of layers as 2 for the Transformer, GCN, GIN baselines and 1 for the GAT baseline.
+
+In~\Cref{fig:hyperparameter_sweep_weight_decay}, we vary the level of weight decay. Expectedly, larger weight decay results in decreased training accuracy. Generally, weight decay has a small effect on validation performance (e.g., no discernable effect in CoRelNet or CNN). For some models, some choices of weight decay result in improved validation performance. Based on these results, we use a weight decay of 0 for CoRelNet/CNN, 0.032 for Transformer/GAT/GIN, and 1.024 for PrediNet/GCN/LSTM.
+
+In~\Cref{fig:hyperparameter_sweep_lr_sched}, we explore the effect of the learning rate schedule, comparing a cosine decay schedule against our default constant learning rate. For most models, there is no significant difference, with a constant learning rate sometimes slightly better. On the GAT model, however, the cosine learning rate schedule results in significantly improved performance. Based on these results, we use a cosine learning rate schedule for GAT and a constant learning rate for all other models.
+
+\begin{figure}[H]
+    \includegraphics{figs/experiments/contains_set_n_layers_exploration_adamw-lr_none-trainval.pdf}
+    \caption{Hyperparameter sweep over number of layers in baseline architectures. Transformers and GNNs (e.g., GCN, GAT, GIN) are ``compositional'' deep learning architectures. Here, we explore the effect of depth (i.e., number of layers) on task performance for these baselines. The plots show the maximum training and validation accuracy reached throughout training for each depth (5 trials with different random seeds). Generally, we find that generalization performance drops with increasing depth. The optimal depth for the Transformer, GCN, and GIN models is 2 layers, and the optimal depth for the GAT model is 1-layer. The performance drop with depth can perhaps be attributed to increased difficulty of training and overfitting due to limited data and a lack of relational inductive biases. The AdamW optimizer is used with a constant learning rate of $10^{-3}$.}\label{fig:hyperparameter_sweep_nlayers}
+\end{figure}
+
+\begin{figure}[H]
+    \includegraphics{figs/experiments/contains_set_weight_decay_exploration_adamw-lr_none-trainval.pdf}
+    \caption{Hyperparameter sweep of weight decay in baseline architectures. To alleviate possible overfitting, we optimally tune a weight decay parameter for each model independently. We test weight decay values including $0$ and $0.004 \cdot 2^{i}, i \in \{0, ..., 10\}$. We use the AdamW optimizer. The default weight decay in Tensorflow is $0.004$. }\label{fig:hyperparameter_sweep_weight_decay}
+\end{figure}
+
+\begin{figure}[H]
+    \includegraphics{figs/experiments/contains_set_lr_sched_exploration_adamw-wt_dec0.032.pdf}
+    \caption{Hyperparameter sweep over learning rate schedule (constant vs cosine decay). We explore the effect of the learning rate schedule on model performance, comparing a constant learning rate against a cosine decay schedule. For most models, there is no significant difference, with a constant learning rate sometimes slightly better. On the GAT model, however, the cosine learning rate schedule results in significantly improved performance.}\label{fig:hyperparameter_sweep_lr_sched}
+\end{figure}
+
+\subsection{Results without hyperparameter tuning}\label{ssec:set_no_hyperparameter_sweep}
+
+\Cref{fig:contains_set_experiment_notuning,tab:set_acc_notuning} show the results of the \textit{Set} experiment with a common default optimizer, without individual hyperparameter tuning.
+
+\begin{figure}[ht]
+    \vskip-10pt
+    \centering
+    % \begin{subfigure}[b]{0.49\textwidth}
+    %     \centering
+    %     \raisebox{20pt}{\includegraphics[width=\textwidth]{figs/contains_set_example.pdf}}
+    %     \caption{Example of ``contains set'' task.}\label{fig:contains_set_example}
+    % \end{subfigure}
+    \begin{subfigure}[b]{0.5\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{figs/experiments/contains_set_acc.pdf}
+        \vskip-5pt
+        \caption{\footnotesize{Hold-out test accuracy.}}\label{fig:contains_set_acc_notuning}
+    \end{subfigure}
+
+    \begin{subfigure}[t]{0.97\textwidth}
+        \centering
+        \includegraphics[width=0.975\textwidth]{figs/experiments/contains_set_training_curves.pdf}
+        \caption{Training accuracy and validation accuracy over the course of training, without hyperparameter tuning (i.e., Adam optimizer, no weight decay, constant learning rate of $0.001$.}\label{fig:contains_set_training_curves_notuning}
+    \end{subfigure}
+    % \begin{subfigure}[t]{0.45\textwidth}
+    %     \centering
+    %     \includegraphics[width=0.9\textwidth]{figs/experiments/contains_set_training_curves_trainacc.pdf}
+    %     \vskip-5pt
+    %     \caption{Training accuracy over the course of training.}\label{fig:contains_set_training_curves_trainacc}
+    % \end{subfigure}
+    % \begin{subfigure}[t]{0.45\textwidth}
+    %     \centering
+    %     \includegraphics[width=0.9\textwidth]{figs/experiments/contains_set_training_curves_valacc.pdf}
+    %     \vskip-5pt
+    %     \caption{Validation accuracy over the course of training.}\label{fig:contains_set_training_curves_valacc}
+    % \end{subfigure}
+    \caption{Results of ``contains set'' experiments with default optimization hyperparameters. Bar height/solid lines indicate the mean over 10 trials and error bars/shaded regions indicate 95\% bootstrap confidence intervals.}\label{fig:contains_set_experiment_notuning}
+    \vskip-5pt
+\end{figure}
+
+\begin{table}[H]
+    \centering
+    \input{figs/experiments/set_acc_table.tex}
+    \caption{Hold-out test accuracy on ``contains set'' task, with default optimizer hyperparameters. We report means $\pm$ standard error of mean over 10 trials. These are the numbers associated with~\Cref{fig:contains_set_acc_notuning}.}\label{tab:set_acc_notuning}
+\end{table}
+
+
 \null
 \vfill
