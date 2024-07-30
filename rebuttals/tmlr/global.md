@@ -1,9 +1,9 @@
+Hi all,
 
-- Exploration of effect of entropy regularization on training dynamics and model performance.
-- Exploration of effect of RelConvNet architecture hyperparameters on ability to learn the *Set* task. In particular, the relation dimension $d_r$ and the symmetry constraint on the relations in MD-IPR.
-- Addition of (deep) CNN baseline evaluating possibility of learning relational tasks end-to-end from raw image input.
-- Hyperparameter sweep for baselines to validate conclusions hold generally. [rephrase this]. In particular, depth and optimization hyperparameters.
-- Added discussion on...
+Thank you for the constructive feedback. We have made several additions to the paper in response to the reviews that we believe improve the paper and hope address reviewers' concerns. We will summarize the additions at a high-level in this global response and delve into more detail in the individual responses.
 
-TODO: add reference to location in updated manuscript (i.e., fig numbers etc)
-TODO: make sure old figure references are accurate.
+- We have added an exploration of the effect of entropy regularization in group attention on training dynamics and model performance. We confirm that entropy regularization is necessary for escaping the local minimum at initialization. Higher regularization leads to lower entropy and sparser group attention scores, but good performance is achievable even with a small amount of regularization. [Appendix XX, Figures YY]
+- We have added an exploration and discussion of the effect of RelConvNet architecture hyperparameters on the ability to learn the challenging *Set* task. We find that multi-dimensional relations and a symmetry inductive bias are crucial for learning the task in a manner that generalizes. [Appendix XX, Figure YY].
+- We added a CNN baseline to all experiments to explore a reviewer question about whether a deep CNN could learning relational tasks end-to-end from raw image input. We find that the CNN model succeeds at learning the easier relational games tasks, but completely fails to learn the more challenging relational games tasks and the *Set* task. [Updated Section 4, Figures YY, Appendix XX]
+- In our initial experiments, we used the same optimization hyperparameters for all models, without an individual hyperparameter sweep. Based on a reviewer question, we carried out an extensive hyperparameter sweep over architectural hyperparameters and optimization hyperparameters, for each baseline model individually. Our aim is to compare against the best-achievable performance for each baseline model class, giving the baselines the advantage of hyperparameter tuning which was unnecessary for RelConvNet. We find that some baselines benefited marginally from hyperparameter tuning (some more than others), but the message of our experimental results remains the same. E.g., RelConvNet remains the only model which can solve the *Set* task.
+
