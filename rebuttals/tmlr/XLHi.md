@@ -40,17 +40,13 @@ We've added in the appendix an exploration of the effect of entropy regularizati
 
 We've added some references.
 
-TODO: add to paper
-
 > One elephant in the room is what happens when objects are not neatly separated in the input space? or when the notion of what's an object or a collection of objects is blurry?
 
 This is an interesting and important question. Indeed, the modules we developed in this paper assume object-centric representations as input (e.g., a sequence of vector embeddings each corresponding to an object in the scene). The task of learning such object-centric representations from raw perceptual inputs is an active area of research, sometimes referred to as *object-discovery*. The problem of learning object-centric representations is related but separate to the problem of learning relational representations. In our paper, we tackle the latter.
 
 Learning object-centric representations can be done in an unsupervised way. For example, one notable piece of work in this area is Locatello et al.'s *Slot Attention*. The output of such methods is a sequence of vector embeddings, each describing an object in the scene. The output of something like Slot Attention can produce the input to relational convolutional networks to yield an end-to-end system learning from raw perceptual inputs. An important direction of future work will be to explore how well relational convolutional networks integrate with object-discovery methods like Slot Attention, and whether such a system could successfully learn to perform abstract relational reasoning in complex scenes.
 
-We will add a brief discussion on the connection between learning object-centric representations and learning relational representations.
-
-TODO: add to paper
+We have added a discussion on the connection between learning object-centric representations and learning relational representations [Section 5 of the updated manuscript].
 
 > I wonder if a regular deep ConvNet baseline would make sense? ... The "Common CNN Embedder" described in Table 2 feels incredibly shallow.
 
