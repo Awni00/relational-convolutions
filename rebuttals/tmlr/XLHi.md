@@ -26,7 +26,7 @@ where $\mathcal{G}$ is the set of discrete groups. The computational cost of thi
 
 *The bigger issue is that $|\mathcal{G}|$ becomes the number of objects at the next layer.* That is, the input to the next layer is a sequence of $|\mathcal{G}|$ objects, with the next layer then needing to compute a $|\mathcal{G}| \times |\mathcal{G}|$ relation tensor, etc. This causes a combinatorial explosion in the number of objects at deeper layers (e.g., number of objects at layer $\ell$ is $n_\ell = \binom{n_{\ell-1}}{s}$).
 
-Explicitly modeling the task-relevant groups as we propose enables us to keep the number of objects in each layer at fixed amount, as a controllable hyperparameter.
+Explicitly modeling the task-relevant groups as we propose enables us to keep the number of objects in each layer at a fixed amount, as a controllable hyperparameter.
 
 > About the attention grouping, the text notes: "learn $n_g$ groupings of objects, retrieving $s$ objects per group." I'm a bit ambivalent w.r.t. describing this as "retrieving objects". In the limit, the attention operation in (6) can just average all the objects' embeddings, did it really "retrieve" something or did it do some intermediate aggregation operation?
 
