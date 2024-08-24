@@ -79,7 +79,7 @@ Awni Altabaa<sup>1</sup>, John Lafferty<sup>2</sup>
     <a href="https://github.com/Awni00/relational-convolutions/" class="btn" target="_blank">
     <span class="material-symbols-outlined">code</span>&nbsp;Code&nbsp;
     </a>
-    <a href="#experiment-logs" class="btn">
+    <a href="https://wandb.ai/relational-convolutions" class="btn">
     <span class="material-symbols-outlined">experiment</span>&nbsp;Experimental Logs&nbsp;
     </a>
 </div>
@@ -171,13 +171,13 @@ fetch('figs/contains_set_conv_rep.json')
 MathJax.Hub.Queue(["Typeset",MathJax.Hub,'contains_set_conv_rep']);
 </script>
 
-## Experiment Logs
+<!-- ## Experiment Logs
 
 Detailed experimental logs are publicly available. They include training and validation metrics tracked during training, test metrics after training, code/git state, resource utilization, etc.
 
 **Relational games.** For code and instructions to reproduce the experiments, see [`this readme in the github repo`](https://github.com/Awni00/relational-convolutions/tree/main/experiments/relational_games). The experimental logs for each task can be found at the following links: [`same`](https://wandb.ai/awni00/relational_games-same), [`occurs`](https://wandb.ai/awni00/relational_games-occurs), [`xoccurs`](https://wandb.ai/awni00/relational_games-xoccurs), [`between`](https://wandb.ai/awni00/relational_games-1task_between), and [`match pattern`](https://wandb.ai/awni00/relational_games-1task_match_patt).
 
-**SET.** For code and instructions to reproduce the experiments, see [`this readme in the github repo`](https://github.com/Awni00/relational-convolutions/tree/main/experiments/set). The experimental logs can be found [`here`](https://wandb.ai/awni00/relconvnet-contains_set).
+**SET.** For code and instructions to reproduce the experiments, see [`this readme in the github repo`](https://github.com/Awni00/relational-convolutions/tree/main/experiments/set). The experimental logs can be found [`here`](https://wandb.ai/awni00/relconvnet-contains_set). -->
 
 ## Citation
 
