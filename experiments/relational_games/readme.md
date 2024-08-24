@@ -25,8 +25,8 @@ The experimental logs from our runs are linked below.
 
 | Task          	| Experimental logs                                         	|
 |---------------	|-----------------------------------------------------------	|
-| same          	| https://wandb.ai/awni00/relational_games-same             	|
-| occurs        	| https://wandb.ai/awni00/relational_games-occurs           	|
-| xoccurs       	| https://wandb.ai/awni00/relational_games-xoccurs          	|
-| between       	| https://wandb.ai/awni00/relational_games-1task_between    	|
-| match pattern 	| https://wandb.ai/awni00/relational_games-1task_match_patt 	|
+| same          	| https://wandb.ai/relational-convolutions/relational_games-same             	|
+| occurs        	| https://wandb.ai/relational-convolutions/relational_games-occurs           	|
+| xoccurs       	| https://wandb.ai/relational-convolutions/relational_games-xoccurs          	|
+| between       	| https://wandb.ai/relational-convolutions/relational_games-1task_between    	|
+| match pattern 	| https://wandb.ai/relational-convolutions/relational_games-1task_match_patt 	|

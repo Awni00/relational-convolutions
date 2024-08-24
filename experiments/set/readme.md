@@ -14,4 +14,4 @@ The task in this experiment is: given a sequence of $k=5$ card images, determine
     ```
     This evaluates the given model on the task and logs the results.
 
-The experimental logs from our runs can be found here: https://wandb.ai/awni00/relconvnet-contains_set
+The experimental logs from our runs can be found here: https://wandb.ai/relational-convolutions/relconvnet-contains_set
