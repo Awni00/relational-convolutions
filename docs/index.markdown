@@ -173,7 +173,7 @@ MathJax.Hub.Queue(["Typeset",MathJax.Hub,'contains_set_conv_rep']);
 
 ## Experiment Logs
 
-Detailed experimental logs are publicly available. They include training and validation metrics tracked during training, test metrics after training, code/git state, resource utilization, etc. Experimental logs for all experiments in the paper can be accessed through the following <a href = https://wandb.ai/relational-convolutions/projects>web portal</a>.
+Detailed experimental logs are publicly available. They include training and validation metrics tracked during training, test metrics after training, code/git state, resource utilization, etc. Experimental logs for all experiments in the paper can be accessed through the following <a href = "https://wandb.ai/relational-convolutions/projects">web portal</a>.
 
 
 <!-- **Relational games.** For code and instructions to reproduce the experiments, see [`this readme in the github repo`](https://github.com/Awni00/relational-convolutions/tree/main/experiments/relational_games). The experimental logs for each task can be found at the following links: [`same`](https://wandb.ai/awni00/relational_games-same), [`occurs`](https://wandb.ai/awni00/relational_games-occurs), [`xoccurs`](https://wandb.ai/awni00/relational_games-xoccurs), [`between`](https://wandb.ai/awni00/relational_games-1task_between), and [`match pattern`](https://wandb.ai/awni00/relational_games-1task_match_patt).
