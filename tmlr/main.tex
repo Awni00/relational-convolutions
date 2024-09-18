@@ -1,7 +1,7 @@
 \documentclass[10pt]{article}
 
 \usepackage[dvipsnames]{xcolor}
-\usepackage{tmlr}
+\usepackage[accepted]{tmlr}
 % If accepted, instead use the following line for the camera-ready submission:
 %\usepackage[accepted]{tmlr}
 % To de-anonymize and remove mentions to TMLR (for example for posting to preprint servers), instead use the following:
@@ -39,8 +39,8 @@
 % region set up fixme and in-text annotations
 \usepackage{pdfcomment}
 % put draft in options if, otherwise remove
-% \usepackage[draft, noinline, margin, mode=multiuser, author=]{fixme}
-\usepackage[noinline, margin, mode=multiuser, author=]{fixme}
+\usepackage[draft, noinline, margin, mode=multiuser, author=]{fixme}
+% \usepackage[noinline, margin, mode=multiuser, author=]{fixme}
 \usepackage[us]{datetime}
 \fxloadlayouts{pdfcnote}
 \fxuseenvlayout{colorsig} % plain, signature, color, colorsig
@@ -99,9 +99,9 @@
 % \newcommand{\fix}{\marginpar{FIX}}
 % \newcommand{\new}{\marginpar{NEW}}
 
-\def\month{MM}  % Insert correct month for camera-ready version
-\def\year{YYYY} % Insert correct year for camera-ready version
-\def\openreview{\url{https://openreview.net/forum?id=XXXX}} % Insert correct link to OpenReview for camera-ready version
+\def\month{09}  % Insert correct month for camera-ready version
+\def\year{2024} % Insert correct year for camera-ready version
+\def\openreview{\url{https://openreview.net/forum?id=vNZlnznmV2}} % Insert correct link to OpenReview for camera-ready version
 
 \begin{document}
 \maketitle
@@ -120,19 +120,11 @@
 
 \input{discussion}
 
-% \section*{Broader Impact Statement}
-% This work proposes an architectural framework for learning representations of hierarchical relations. In our assessment, the potential societal consequences are not distinctive and do not require detailed discussion here.
-
-%\aawarning{temporary version for anonymized submission}
 \section*{Code and Reproducibility}
-Our public github repository includes an implementation of all modules described in this paper together with simple instructions for reproducing our experimental results. We will also make detailed experimental logs available through an online portal that include: metrics tracked over the course of training, the git commit ID corresponding to the version of the code used for each run, the hardware used for each run, the command and script to replicate the experimental run, etc. The links will be added in the de-anonymized version.
-% Code, detailed experimental logs, and instructions for reproducing our experimental results are available at: 
-% \url{anonymized}
-% \url{https://github.com/Awni00/Relational-Convolutions}.
+The project repository can be found here: \url{https://github.com/Awni00/Relational-Convolutions}. It includes an implementation of Relational convolutional Networks, code and instructions for reproducing our experimental results, and links to experimental logs.
 
-% \section*{Acknowledgment}
-% This work is supported by the funds provided by the National Science Foundation and by DoD OUSD (R\&E) under Cooperative Agreement PHY-2229929 (The NSF AI Institute for Artificial and Natural Intelligence).
-%\aanote{Acknowledgment removed for anonymized submission for now}
+\section*{Acknowledgment}
+This work is supported by the funds provided by the National Science Foundation and by DoD OUSD (R\&E) under Cooperative Agreement PHY-2229929 (The NSF AI Institute for Artificial and Natural Intelligence).
 
 % bibliography
 \printbibliography
