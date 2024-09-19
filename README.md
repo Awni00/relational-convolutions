@@ -1,13 +1,13 @@
 # Relational Convolutional Networks
 
 <p align='center'>
-    <a href=https://arxiv.org/abs/2310.03240>
+    <a href=https://arxiv.org/abs/2310.03240 target="_blank">
         <img alt="arXiv Paper" src="https://img.shields.io/badge/arXiv-paper-brown?logo=arxiv">
     </a>
-    <a href=https://awni.xyz/relational-convolutions>
+    <a href=https://awni.xyz/relational-convolutions target="_blank">
         <img alt="Project Webpage" src="https://img.shields.io/badge/www-website-royalblue">
     </a>
-    <a href=https://wandb.ai/relational-convolutions/projects>
+    <a href=https://wandb.ai/relational-convolutions/projects target="_blank">
         <img alt="Experimental Logs" src="https://img.shields.io/badge/W&B-experiment logs-yellow">
     </a>
 </p>
