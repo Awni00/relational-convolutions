@@ -27,13 +27,15 @@ layout: home
 <style>
 /* Style buttons */
 .btn {
-    background-color: DodgerBlue; /* Blue background */
+    background-color: #24292e;
+    font-weight: bold;
     border: none; /* Remove borders */
     color: white; /* White text */
-    padding: 12px 16px; /* Some padding */
-    font-size: 16px; /* Set a font size */
+    padding: 5px 12px; /* Some padding */
+    font-size: 15px; /* Set a font size */
+    font-family: Courier;
     cursor: pointer; /* Mouse pointer on hover */
-    border-radius: 5px; /* Add border radius */
+    border-radius: 20px; /* Add border radius */
     display: flex; /* Enable flex layout */
     align-items: center; /* Center vertically */
     justify-content: center; /* Center horizontally */
@@ -42,7 +44,8 @@ layout: home
 
 /* Darker background on mouse-over */
 .btn:hover {
-    background-color: RoyalBlue;
+    /* background-color: RoyalBlue; */
+    background-color: Black;
     text-decoration: none;
     color: white;
 }
@@ -60,8 +63,7 @@ layout: home
 </style>
 
 <div style="text-align: center">
-<h1> Relational Convolutional Networks: A framework for learning
-representations of hierarchical relations </h1>
+<h1> Learning Hierarchical Relational Representations through Relational Convolutions </h1>
 
 Awni Altabaa<sup>1</sup>, John Lafferty<sup>2</sup>
 <br>
@@ -79,7 +81,7 @@ Awni Altabaa<sup>1</sup>, John Lafferty<sup>2</sup>
     <a href="https://github.com/Awni00/relational-convolutions/" class="btn" target="_blank">
     <span class="material-symbols-outlined">code</span>&nbsp;Code&nbsp;
     </a>
-    <a href="https://wandb.ai/relational-convolutions" class="btn" target="_blank">
+    <a href="https://wandb.ai/relational-convolutions/projects" class="btn" target="_blank">
     <span class="material-symbols-outlined">experiment</span>&nbsp;Experimental Logs&nbsp;
     </a>
 </div>
@@ -93,8 +95,7 @@ Awni Altabaa<sup>1</sup>, John Lafferty<sup>2</sup>
 
 ## Abstract
 
-A maturing area of research in deep learning is the study of architectures and inductive biases for learning representations of relational features. In this paper, we focus on the problem of learning representations of *hierarchical* relations, proposing an architectural framework we call ``relational convolutional networks''.
-Given a collection of objects, pairwise relations are modeled via inner products of feature maps. We formalize a relational convolution operation in which graphlet filters are matched against patches of the input (i.e, groupings of objects), capturing the relational pattern in each group of objects. We also propose mechanisms for explicitly learning groupings of objects which are relevant to the downstream task. Composing these operations yields representations of higher-order, hierarchical relations. We present the motivation and details of the architecture, together with a set of experiments to demonstrate how relational convolutional networks can provide an effective framework for modeling relational tasks that have hierarchical structure.
+An evolving area of research in deep learning is the study of architectures and inductive biases that support the learning of relational feature representations. In this paper, we address the challenge of learning representations of hierarchical relations—that is, higher-order relational patterns among groups of objects. We introduce “relational convolutional networks”, a neural architecture equipped with computational mechanisms that capture progressively more complex relational features through the composition of simple modules. A key component of this framework is a novel operation that captures relational patterns in groups of objects by convolving graphlet filters—learnable templates of relational patterns—against subsets of the input. Composing relational convolutions gives rise to a deep architecture that learns representations of higher-order, hierarchical relations. We present the motivation and details of the architecture, together with a set of experiments to demonstrate how relational convolutional networks can provide an effective framework for modeling relational tasks that have hierarchical structure.
 
 ## Method Overview
 
@@ -112,7 +113,7 @@ A schematic of the proposed architecture is shown in the figure to the right. Th
 
 **Relational Convolutions.** The relational convolution operation does two things: 1) extracts features of the relations between groups of objects using pairwise relations 2) transforms the relation tensor back into a sequence of objects, allowing it be composed with another relational layer to compute higher-order relations. In a relational convolution module, we learn a set of "graphlet filters," which form a template of relations among a subset of the objects (a graphlet). The output of a relational convolution operation is a sequence of objects $$R \ast \boldsymbol{f} = \left(\langle R[g], \boldsymbol{f} \rangle_{\mathrm{rel}} \right)_{g \in \mathcal{G}} = (z_1, \ldots, z_{n_g})$$ where each output object represents the relational pattern within some group of input objects, obtained through an appropriately-defined inner-product comparison with the graphlet filters.
 
-**Grouping layers.** Rather than considering the relational patterns within all groups of objects, we explicitly model and determine relevant groupings through an attention operation.
+**Modeling groups.** Rather than considering the relational patterns within all groups of objects, we explicitly model and determine relevant groupings through an attention operation.
 
 Please see the paper for more details on the proposed architecture.
 
@@ -173,7 +174,7 @@ MathJax.Hub.Queue(["Typeset",MathJax.Hub,'contains_set_conv_rep']);
 
 ## Experiment Logs
 
-Detailed experimental logs are publicly available. They include training and validation metrics tracked during training, test metrics after training, code/git state, resource utilization, etc. Experimental logs for all experiments in the paper can be accessed through the following <a href = "https://wandb.ai/relational-convolutions/projects">web portal</a>.
+Detailed experimental logs are publicly available. They include training and validation metrics tracked during training, test metrics after training, code/git state, resource utilization, etc. Experimental logs for all experiments in the paper can be accessed through the following <a href = "https://wandb.ai/relational-convolutions/projects" target="_blank">web portal</a>.
 
 
 <!-- **Relational games.** For code and instructions to reproduce the experiments, see [`this readme in the github repo`](https://github.com/Awni00/relational-convolutions/tree/main/experiments/relational_games). The experimental logs for each task can be found at the following links: [`same`](https://wandb.ai/awni00/relational_games-same), [`occurs`](https://wandb.ai/awni00/relational_games-occurs), [`xoccurs`](https://wandb.ai/awni00/relational_games-xoccurs), [`between`](https://wandb.ai/awni00/relational_games-1task_between), and [`match pattern`](https://wandb.ai/awni00/relational_games-1task_match_patt).
@@ -182,13 +183,14 @@ Detailed experimental logs are publicly available. They include training and val
 
 ## Citation
 
-```
-@article{altabaa2023relational,
-      title={Relational Convolutional Networks: A framework for learning representations of hierarchical relations}, 
+```bibtex
+@misc{altabaa2024learninghierarchicalrelationalrepresentations,
+      title={Learning Hierarchical Relational Representations through Relational Convolutions}, 
       author={Awni Altabaa and John Lafferty},
-      year={2023},
+      year={2024},
       eprint={2310.03240},
       archivePrefix={arXiv},
-      primaryClass={cs.LG}
+      primaryClass={cs.LG},
+      url={https://arxiv.org/abs/2310.03240}, 
 }
 ```

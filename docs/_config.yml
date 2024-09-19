@@ -21,7 +21,7 @@
 title: Relational Convolutional Networks
 # email: your-email@example.com
 description: >- # this means to ignore newlines until "baseurl:"
-  The project page for the paper "Relational Convolutional Networks: A framework for learning representations of hierarchical relations."
+  The project page for the paper "Learning Hierarchical Relational Representations through Relational Convolutions."
 # baseurl: "" # the subpath of your site, e.g. /blog
 # url: "" # the base hostname & protocol for your site, e.g. http://example.com
 # twitter_username: #jekyllrb
