@@ -1,0 +1,55 @@
+\section{Introduction}\label{sec:intro}
+
+Objects in the real world rarely exist in isolation; 
+% understanding and 
+modeling the relationships between them is essential to accurately capturing complex systems. As increasingly powerful machine learning models advance towards building internal ``world models,'' it becomes crucial to explore natural inductive biases to enable efficient learning of relational representations. The computational challenge lies in developing the components required to construct robust, flexible, and progressively more complex relational representations.
+
+\begin{wrapfigure}{r}{0.25\textwidth}
+    \vskip-10pt
+    \includegraphics[width=0.24\textwidth]{figs/triplet_rmts_fig.pdf}
+    \caption{A variant of a relational match-to-sample task.}\label{fig:rmts_example}
+    \vskip-10pt
+\end{wrapfigure}
+An important component of relational cognitive processing in humans is an ability to reason about higher-order relational patterns between groups of objects. To illustrate this, it is instructive to consider experimental tasks from the cognitive psychology literature that probe abstract relational reasoning ability. Consider, for example, the task depicted to the right in~\Cref{fig:rmts_example} which is a variant of a relational ``match-to-sample'' task~\citep{ferster1960intermittent, webbEmergentSymbols2021}. The subject is presented with a \textit{source} triplet of objects and several \textit{target} triplets, with each triplet having a particular relational pattern. The task is to match the source to a target triplet with the same relational pattern (in this case, the source has an ``ABA'' pattern that matches the second target).
+This task requires going beyond reasoning about pairwise relations; the subject must reason about each triplet of objects \textit{as a group}, determine its relational pattern, then compare it to those of the target triplets, inferring the abstract rule in the process.
+%  Related tasks have been studied in human and non-human animals throughout cognitive development~\citep{carpenter1990one,marcus1999rule,Hochmann2017ChildrensRO}, and more complex versions of the task form a basis for human cognitive assessment batteries~\citep{englund1987unified}. 
+The ability to infer generalizable abstract rules in such tasks is believed to be unique to humans~\citep{fagot2001discriminating}.
+
+Compositionality---used here to mean an ability to compose modules together to build iteratively more complex feature representations---is essential to the success of deep representation learning. 
+% For example, in a feedforward network, each layer builds on the one before, and in a CNN, each convolution builds an iteratively more complex feature map~\citep{zeiler2014visualizing}. 
+For example, in the domain of visual processing, CNNs are able to extract higher-level features (e.g., textures and object-specific features) by composing simpler feature maps~\citep{zeiler2014visualizing}, resulting in a flexible architecture for computing ``features of features''.
+In contrast, existing work on relational representation learning has primarily been limited to ``shallow'' first-order architectures (e.g., only explicitly capturing pairwise relations).
+
+In this work, we propose \textit{\bfseries relational convolutional networks} as a compositional framework for learning hierarchical relational representations. The key to the framework involves formalizing the concept of convolving learnable templates of a relational pattern against a larger relation tensor. This operation produces a sequence of vectors representing the relational pattern within each group of objects. Crucially, composing relational convolutions captures higher-order relational features---i.e., relations between relations. Specifically, our proposed architecture introduces the following concepts and computational mechanisms.
+
+\begin{itemize}%[itemsep=1pt]
+    \item \textit{\bfseries Graphlet filters.} A ``graphlet filter'' is a template for the pattern of relations between a (small) collection of objects. 
+    Since pairwise relations can be viewed as edges on a graph, the term ``graphlet'' is used to refer to a subgraph, and the term ``filter'' is used to refer to a learnable template or pattern.
+    % Graphlet filters are analogous to filters (also called kernels) in traditional CNNs for images, which represent templates for local regions of an image.
+    \item \textit{\bfseries Relational convolutions.} 
+    We formalize a notion of \textit{relational} convolution, analogous to spatial convolutions in CNNs, where a graphlet filter is matched against the relations within \textit{groups} of objects to obtain a representation of the relational pattern in different groupings of the input.
+    % In CNNs for image processing, each filter is
+    %  ``swept,'' or 
+    % spatially convolved across the image. For relational learning, we formalize an analogous notion of convolution where a graphlet filter can be matched against the relations between each group of objects.
+    \item \textit{\bfseries Grouping mechanisms.} For large problem instances, considering relational convolutions across all object combinations would be intractable. To achieve scalability, we introduce a learnable grouping mechanism based on attention which identifies the relevant groups that should be considered for the downstream task.
+    \item \textit{\bfseries Compositional relational modules.} The proposed architecture supports composable modules, where each module has learnable graphlet filters and groups. This enables learning higher-order relationships between objects---relations between relations.
+\end{itemize}
+
+
+The components of the architecture are presented in detail in Sections~\ref{sec:mdipr} and~\ref{sec:relconv}, and a schematic of the proposed architecture is shown in~\Cref{fig:relconv_architecture}. In a series of experiments, we show how relational convolutional networks provide a powerful framework
+% and inductive bias 
+for relational learning. We first carry out experiments on the ``relational games'' benchmark for relational reasoning proposed by~\citet{shanahanExplicitlyRelationalNeural}, which consists of a suite of binary classification tasks for identifying abstract relational rules between a set of geometric objects represented as images. 
+We next carry out experiments on a version of the \textit{Set} card game, which requires processing of higher-order relations across multiple attributes. We find that relational convolutional networks outperform Transformers, graph neural networks, and existing relational architectures. These results demonstrate that both compositionality and relational inductive biases are essential for efficiently learning representations of complex higher-order relations.
+
+\begin{wrapfigure}{R}{0.5\textwidth}
+    \centering
+    % \vskip-12pt
+    \includegraphics[width=.48\textwidth]{figs/relconv_architecture.pdf}
+    % \vskip-12pt
+    \caption{Proposed architecture for relational convolutional networks. Hierarchical relations are modeled by iteratively computing pairwise relations between objects and convolving the resultant relation tensor with graphlet filters representing templates of relations between groups of objects.
+    }\label{fig:relconv_architecture}
+    \vskip-24pt
+\end{wrapfigure}
+
+
+\input{related}
